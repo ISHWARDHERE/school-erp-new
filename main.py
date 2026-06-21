@@ -19,6 +19,30 @@ def login_page(request: Request):
         context={}
     )
 
+@app.post("/login")
+def login(
+    username: str = Form(...),
+    password: str = Form(...)
+):
+    conn = connect_db()
+    cursor = conn.cursor(dictionary=True)
+
+    cursor.execute("""
+        SELECT * FROM users
+        WHERE username=%s AND password=%s
+    """, (username, password))
+
+    user = cursor.fetchone()
+    conn.close()
+
+    if user:
+        return RedirectResponse(
+            url="/admin_dashboard",
+            status_code=303
+        )
+
+    return {"status": "Login Failed"}
+
 @app.get("/students")
 def get_students():
     conn = connect_db()
