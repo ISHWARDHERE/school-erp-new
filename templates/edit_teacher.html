@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Edit Teacher</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+<div class="sidebar">
+    <h2>School ERP</h2>
+    <a href="/admin_dashboard">Dashboard</a>
+    <a href="/web_teachers">Teacher List</a>
+    <a href="/add_teacher_web">Add Teacher</a>
+</div>
+
+<div class="main">
+    <div class="login-box">
+        <h2>Edit Teacher</h2>
+
+        <form action="/update_teacher_web/{{ teacher.id }}" method="post">
+
+            <input type="text"
+                   name="teacher_name"
+                   value="{{ teacher.teacher_name }}"><br><br>
+
+            <input type="text"
+                   name="mobile"
+                   value="{{ teacher.mobile }}"><br><br>
+
+            <input type="text"
+                   name="subject"
+                   value="{{ teacher.subject }}"><br><br>
+
+            <input type="text"
+                   name="salary"
+                   value="{{ teacher.salary }}"><br><br>
+
+            <button type="submit">Update Teacher</button>
+
+        </form>
+    </div>
+</div>
+
+</body>
+</html>

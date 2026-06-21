@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Teachers</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+<div class="sidebar">
+    <h2>School ERP</h2>
+    <a href="/admin_dashboard">Dashboard</a>
+    <a href="/web_teachers">Teachers</a>
+    <a href="/add_teacher_web">Add Teacher</a>
+    <a href="/export_teachers_excel">
+        Download Excel
+    </a>
+</div>
+
+<div class="main">
+    <h2>Teacher List</h2>
+
+    <table>
+        <tr>
+            <th>Name</th>
+            <th>Mobile</th>
+            <th>Subject</th>
+            <th>Salary</th>
+            <th>Action</th>
+        </tr>
+
+        {% for teacher in teachers %}
+        <tr>
+            <td>{{ teacher.teacher_name }}</td>
+            <td>{{ teacher.mobile }}</td>
+            <td>{{ teacher.subject }}</td>
+            <td>{{ teacher.salary }}</td>
+            <td>
+                <a href="/edit_teacher_web/{{ teacher.id }}">Edit</a>
+                |
+                <a href="/delete_teacher_web/{{ teacher.id }}">Delete</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+
+</body>
+</html>

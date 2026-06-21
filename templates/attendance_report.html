@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Attendance Report</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+<div class="sidebar">
+    <h2>School ERP</h2>
+    <a href="/admin_dashboard">Dashboard</a>
+    <a href="/web_attendance">Add Attendance</a>
+</div>
+
+<div class="main">
+    <div class="login-box">
+        <h2>Attendance Report</h2>
+
+        <table border="1" width="100%">
+            <tr>
+                <th>Student Name</th>
+                <th>Date</th>
+                <th>Status</th>
+            </tr>
+
+            {% if records %}
+                {% for row in records %}
+                <tr>
+                    <td>{{ row.student_name }}</td>
+                    <td>{{ row.date }}</td>
+                    <td>{{ row.status }}</td>
+                </tr>
+                {% endfor %}
+            {% else %}
+                <tr>
+                    <td colspan="3">Data Not Found</td>
+                </tr>
+            {% endif %}
+        </table>
+
+        <br>
+
+        <a href="/export_attendance_excel">
+            Download Excel
+        </a>
+
+    </div>
+</div>
+
+</body>
+</html>

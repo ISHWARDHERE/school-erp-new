@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+<!-- Sidebar -->
+<div class="sidebar">
+    <img src="/static/logo.png" class="logo">
+    <h2>🎓 School ERP</h2>
+
+    <a href="/web_students">👨‍🎓 Students</a>
+    <a href="/add_student_web">➕ Add Student</a>
+    <a href="/web_teachers">👨‍🏫 Teachers</a>
+    <a href="/add_teacher_web">➕ Add Teacher</a>
+    <a href="/web_fees">💰 Fees</a>
+    <a href="/add_fee_web">💳 Collect Fee</a>
+    <a href="/pending_fees_web">⌛ Pending Fees</a>
+    <a href="/web_attendance">📅 Attendance</a>
+    <a href="/attendance_report">📊 Attendance Report</a>
+    <a href="/web_result">📝 Add Result</a>
+    <a href="/web_result_list">📄 Results</a>
+</div>
+
+<!-- Main Content -->
+<div class="main">
+
+    <!-- Topbar -->
+    <div class="topbar">
+        <h1>Welcome Admin 👋</h1>
+    </div>
+
+    <!-- Stats -->
+    <div class="stats">
+       
+        <div class="stat-card">
+            👨‍🎓 Total Students <br>
+            {{ students }}
+        </div>
+
+        <div class="stat-card">
+            👨‍🏫 Total Teachers <br>
+            {{ teachers }}
+        </div>
+
+        <div class="stat-card">
+            💰 Fees Collected <br>
+            ₹ {{ fees }}
+        </div>
+
+        <div class="stat-card">
+            📊 Total Results <br>
+            {{ results }}
+        </div>
+
+    </div>
+
+    <!-- Dashboard Cards -->
+    <div class="dashboard-grid">
+        <div class="card">
+            <h3>Student Management</h3>
+            <p>Manage admissions, edit and delete students</p>
+        </div>
+
+        <div class="card">
+            <h3>Teacher Management</h3>
+            <p>Manage teacher records and staff</p>
+        </div>
+
+        <div class="card">
+            <h3>Fee Management</h3>
+            <p>Track paid and pending fees</p>
+        </div>
+
+        <div class="card">
+            <h3>Reports</h3>
+            <p>Attendance, marksheets and receipts</p>
+        </div>
+    </div>
+
+    <!-- Banner Image -->
+    <div class="banner">
+        <img src="/static/school.jpg" alt="School Banner">
+    </div>
+
+</div>
+
+</body>
+</html>

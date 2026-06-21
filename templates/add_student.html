@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Add Student</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+{% if success %}
+<script>
+    alert("Student Saved Successfully");
+</script>
+{% endif %}
+
+<div class="sidebar">
+    <h2>School ERP</h2>
+    <a href="/admin_dashboard">Dashboard</a>
+    <a href="/web_students">Student List</a>
+    <a href="/add_student_web">Add Student</a>
+</div>
+
+<div class="main">
+    <div class="login-box">
+        <h2>Add Student</h2>
+
+        <form action="/save_student_web" method="post" enctype="multipart/form-data">
+
+            <input type="text"
+                   name="student_name"
+                   placeholder="Student Name"
+                   required><br><br>
+
+            <input type="text"
+                   name="class_name"
+                   placeholder="Class Name"
+                   required><br><br>
+
+            <input type="text"
+                   name="mobile"
+                   placeholder="Mobile Number"
+                   required><br><br>
+
+            <input type="text"
+                   name="yearly_fee"
+                   placeholder="Yearly Fee"
+                   required><br><br>
+
+            <input type="file" name="photo" required>
+
+            <button type="submit">Save Student</button>
+
+        <form action="/save_student_web"
+            method="post"
+            enctype="multipart/form-data"
+            onsubmit="return validateForm()">
+        <script>
+        function validateForm() {
+            let student_name =
+                document.getElementsByName("student_name")[0].value;
+
+            let class_name =
+                document.getElementsByName("class_name")[0].value;
+
+            let mobile =
+                document.getElementsByName("mobile")[0].value;
+
+            let yearly_fee =
+                document.getElementsByName("yearly_fee")[0].value;
+
+            if (
+                student_name == "" ||
+                class_name == "" ||
+                mobile == "" ||
+                yearly_fee == ""
+            ) {
+                alert("Please fill all fields");
+                return false;
+            }
+
+            return true;
+        }
+</script>
+ 
+
+    </div>
+</div>
+
+</body>
+</html>

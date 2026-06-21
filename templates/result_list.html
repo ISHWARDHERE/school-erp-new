@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Result Report</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+<div class="sidebar">
+    <h2>School ERP</h2>
+    <a href="/admin_dashboard">Dashboard</a>
+    <a href="/web_result">Add Result</a>
+    <a href="/web_result_list">Result Report</a>
+</div>
+
+<div class="main">
+    <h2>Result Report</h2>
+
+    <table>
+        <tr>
+            <th>Student Name</th>
+            <th>Subject</th>
+            <th>Marks</th>
+            <th>Total Marks</th>
+            <th>Percentage</th>
+            <th>Status</th>
+            <th>Print</th>
+        </tr>
+
+        {% for result in results %}
+        <tr>
+            <td>{{ result.student_name }}</td>
+            <td>{{ result.subject }}</td>
+            <td>{{ result.marks }}</td>
+            <td>{{ result.total_marks }}</td>
+            <td>{{ result.percentage }}</td>
+            <td>{{ result.result_status }}</td>
+            <td>
+                <a href="/marksheet/{{ result.student_id }}" target="_blank">
+                    Print Marksheet
+                </a>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+
+</body>
+</html>

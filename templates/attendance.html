@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Mark Attendance</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+{% if success %}
+<script>
+    alert("Attendance Saved Successfully");
+</script>
+{% endif %}
+
+<div class="sidebar">
+    <h2>School ERP</h2>
+    <a href="/admin_dashboard">Dashboard</a>
+    <a href="/web_attendance">Mark Attendance</a>
+    <a href="/web_attendance_list">Attendance Report</a>
+</div>
+
+<div class="main">
+    <div class="login-box">
+        <h2>Mark Attendance</h2>
+
+        <form action="/save_attendance_web" method="post">
+
+            <select name="student_id">
+                {% for student in students %}
+                <option value="{{ student.id }}">
+                    {{ student.student_name }}
+                </option>
+                {% endfor %}
+            </select><br><br>
+
+            <select name="status">
+                <option value="Present">Present</option>
+                <option value="Absent">Absent</option>
+            </select><br><br>
+
+            <button type="submit">Save Attendance</button>
+
+        </form>
+    </div>
+</div>
+
+</body>
+</html>
