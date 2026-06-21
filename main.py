@@ -1,33 +1,23 @@
-from fastapi import FastAPI, Request, Form
+from fastapi import FastAPI, Request, Form, UploadFile, File
 from db import connect_db
-from fastapi import Request, Form
-from fastapi.responses import HTMLResponse
+from fastapi.responses import HTMLResponse, RedirectResponse, FileResponse
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
-from fastapi import Form
-from fastapi.responses import RedirectResponse
 from reportlab.pdfgen import canvas
-from fastapi.responses import FileResponse
-from fastapi import UploadFile, File
-import shutil
-from fastapi import UploadFile, File, Form
-import shutil
-from fastapi.responses import RedirectResponse
 from openpyxl import Workbook
-from fastapi.responses import FileResponse
+import shutil
 
 app = FastAPI()
 app.mount("/static", StaticFiles(directory="static"), name="static")
 templates = Jinja2Templates(directory="templates")
 
-
 @app.get("/", response_class=HTMLResponse)
 def login_page(request: Request):
     return templates.TemplateResponse(
-        "login.html",
-        {"request": request}
+        request=request,
+        name="login.html",
+        context={}
     )
-
 
 @app.get("/students")
 def get_students():
@@ -44,31 +34,6 @@ def get_students():
     conn.close()
 
     return students
-
-
-@app.post("/login")
-def login(
-    username: str = Form(...),
-    password: str = Form(...)
-):
-    conn = connect_db()
-    cursor = conn.cursor(dictionary=True)
-
-    cursor.execute("""
-        SELECT * FROM users
-        WHERE username=%s AND password=%s
-    """, (username, password))
-
-    user = cursor.fetchone()
-    conn.close()
-
-    if user:
-        return RedirectResponse(
-            url="/admin_dashboard",
-            status_code=303
-       )
-    else:
-        return {"status": "failed"}
 
 
 # ADD attendance FIRST
@@ -326,47 +291,13 @@ def pending_fees_web(request: Request):
     conn.close()
 
     return templates.TemplateResponse(
-        "pending_fees.html",
-        {
-            "request": request,
+        request=request,
+        name="pending_fees.html",
+        context={
             "pending_fees": pending_fees
         }
     )
 
-@app.post("/add_attendance")
-def add_attendance(
-    student_id: int,
-    status: str
-):
-    conn = connect_db()
-    cursor = conn.cursor()
-
-    cursor.execute("""
-        INSERT INTO attendance (student_id, date, status)
-        VALUES (%s, CURDATE(), %s)
-    """, (student_id, status))
-
-    conn.commit()
-    conn.close()
-
-    return {"status": "success"}
-
-@app.get("/attendance_list")
-def attendance_list():
-    conn = connect_db()
-    cursor = conn.cursor(dictionary=True)
-
-    cursor.execute("""
-        SELECT a.id, s.student_name, a.date, a.status
-        FROM attendance a
-        JOIN students s ON s.id = a.student_id
-        ORDER BY a.date DESC
-    """)
-
-    result = cursor.fetchall()
-    conn.close()
-
-    return result
 
 @app.post("/add_result")
 def add_result(
@@ -565,13 +496,6 @@ def delete_teacher(id: int):
 
     return {"status": "success"}
 
-@app.get("/", response_class=HTMLResponse)
-def admin_login(request: Request):
-    return templates.TemplateResponse(
-        "login.html",
-        {"request": request}
-    )
-
 @app.get("/admin_dashboard", response_class=HTMLResponse)
 def admin_dashboard(request: Request):
     conn = connect_db()
@@ -599,10 +523,11 @@ def admin_dashboard(request: Request):
 
     conn.close()
 
+    
     return templates.TemplateResponse(
-        "admin_dashboard.html",
-        {
-            "request": request,
+        request=request,
+        name="admin_dashboard.html",
+        context={
             "students": students,
             "teachers": teachers,
             "fees": fees,
@@ -621,23 +546,10 @@ def web_students(request: Request):
     conn.close()
 
     return templates.TemplateResponse(
-        "students.html",
-        {
-            "request": request,
+        request=request,
+        name="students.html",
+        context={
             "students": students
-        }
-    )
-
-@app.get("/add_student_web", response_class=HTMLResponse)
-def add_student_web(
-    request: Request,
-    success: str = None
-):
-    return templates.TemplateResponse(
-        "add_student.html",
-        {
-            "request": request,
-            "success": success
         }
     )
 
@@ -712,13 +624,14 @@ def edit_student_web(
     conn.close()
 
     return templates.TemplateResponse(
-        "edit_student.html",
-        {
-            "request": request,
+        request=request,
+        name="students.html",
+        context={
             "student": student
         }
     )
 
+    
 @app.post("/update_student_web/{student_id}")
 def update_student_web(
     student_id: int,
@@ -764,9 +677,9 @@ def web_teachers(request: Request):
     conn.close()
 
     return templates.TemplateResponse(
-        "teachers.html",
-        {
-            "request": request,
+        request=request,
+        name="teachers.html",
+        context={
             "teachers": teachers
         }
     )
@@ -777,9 +690,9 @@ def add_teacher_web(
     success: str = None
 ):
     return templates.TemplateResponse(
-        "add_teacher.html",
-        {
-            "request": request,
+        request=request,
+        name="teachers.html",
+        context={
             "success": success
         }
     )
@@ -848,9 +761,9 @@ def edit_teacher_web(
     conn.close()
 
     return templates.TemplateResponse(
-        "edit_teacher.html",
-        {
-            "request": request,
+        request=request,
+        name="teachers.html",
+        context={
             "teacher": teacher
         }
     )
@@ -894,9 +807,9 @@ def web_fees(request: Request):
     conn.close()
 
     return templates.TemplateResponse(
-        "fees.html",
-        {
-            "request": request,
+        request=request,
+        name="fees.html",
+        context={
             "fees": fees
         }
     )
@@ -915,11 +828,11 @@ def add_fee_web(
     conn.close()
 
     return templates.TemplateResponse(
-        "add_fee.html",
-        {
-            "request": request,
+        request=request,
+        name="fees.html",
+        context={
             "students": students,
-            "success": success
+            "success": success,
         }
     )
 
@@ -979,9 +892,9 @@ def web_pending_fees(request: Request):
     conn.close()
 
     return templates.TemplateResponse(
-        "pending_fees.html",
-        {
-            "request": request,
+        request=request,
+        name="pending_fees.html",
+        context={
             "pending_fees": pending_fees
         }
     )
@@ -1000,9 +913,9 @@ def web_attendance(
     conn.close()
 
     return templates.TemplateResponse(
-        "attendance.html",
-        {
-            "request": request,
+        request=request,
+        name="attendance.html",
+        context={
             "students": students,
             "success": success
         }
@@ -1049,10 +962,10 @@ def web_attendance_list(request: Request):
     attendance_list = cursor.fetchall()
     conn.close()
 
-    return templates.TemplateResponse(  
-        "attendance_list.html",
-        {
-            "request": request,
+    return templates.TemplateResponse(
+        request=request,
+        name="attendance_list.html",
+        context={
             "attendance_list": attendance_list
         }
     )
@@ -1071,9 +984,9 @@ def web_result(
     conn.close()
 
     return templates.TemplateResponse(
-        "result.html",
-        {
-            "request": request,
+        request=request,
+        name="result.html",
+        context={
             "students": students,
             "success": success
         }
@@ -1138,9 +1051,9 @@ def web_result_list(request: Request):
     conn.close()
 
     return templates.TemplateResponse(
-        "result_list.html",
-        {
-            "request": request,
+        request=request,
+        name="result_list.html",
+        context={
             "results": results
         }
     )
@@ -1213,47 +1126,6 @@ def parent_result():
     conn.close()
 
     return results
-
-@app.get("/", response_class=HTMLResponse)
-def home(request: Request):
-    return templates.TemplateResponse(
-        "login.html",
-        {"request": request}
-    )
-
-@app.post("/login")
-def login(
-    username: str = Form(...),
-    password: str = Form(...)
-):
-    conn = connect_db()
-    cursor = conn.cursor(dictionary=True)
-
-    cursor.execute("""
-        SELECT * FROM users
-        WHERE username=%s AND password=%s
-    """, (username, password))
-
-    user = cursor.fetchone()
-    conn.close()
-
-    if user:
-        return RedirectResponse(
-            url="/admin_dashboard",
-            status_code=302
-        )
-
-    return templates.TemplateResponse(
-        "login.html",
-        {"request": {}}
-    )
-
-@app.get("/admin_dashboard", response_class=HTMLResponse)
-def admin_dashboard(request: Request):
-    return templates.TemplateResponse(
-        "dashboard.html",
-        {"request": request}
-    )
 
 @app.get("/fee_receipt/{student_id}")
 def fee_receipt(student_id: int):
@@ -1810,9 +1682,9 @@ def attendance_report(request: Request):
     conn.close()
 
     return templates.TemplateResponse(
-        "attendance_report.html",
-        {
-            "request": request,
+        request=request,
+        name="records.html",
+        context={
             "records": records
         }
     )
