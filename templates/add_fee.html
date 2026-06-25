@@ -10,7 +10,7 @@
 <script>
     alert("Fee Saved Successfully");
 </script>
-{% endif %}    
+{% endif %}
 
 <div class="sidebar">
     <h2>School ERP</h2>
@@ -26,7 +26,7 @@
 
         <form action="/save_fee_web" method="post">
 
-            <select name="student_id">
+            <select name="student_id" required>
                 {% for student in students %}
                 <option value="{{ student.id }}">
                     {{ student.student_name }}
@@ -34,9 +34,19 @@
                 {% endfor %}
             </select><br><br>
 
-            <input type="text"
-                   name="paid_amount"
-                   placeholder="Paid Amount"><br><br>
+            <input type="number"
+                   name="amount"
+                   placeholder="Paid Amount"
+                   required><br><br>
+
+            <input type="date"
+                   name="paid_date"
+                   required><br><br>
+
+            <select name="status" required>
+                <option value="Paid">Paid</option>
+                <option value="Pending">Pending</option>
+            </select><br><br>
 
             <button type="submit">Save Fee</button>
 

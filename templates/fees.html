@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Fees</title>
+    <title>Fees Management</title>
     <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
@@ -12,36 +12,39 @@
     <a href="/web_fees">Fees</a>
     <a href="/add_fee_web">Collect Fee</a>
     <a href="/web_pending_fees">Pending Fees</a>
-    <a href="/export_fees_excel">
-        Download Excel
-    </a>
+    <a href="/export_fees_excel">Download Excel</a>
 </div>
 
 <div class="main">
     <h2>Fees Management</h2>
 
-    <table>
-        <tr>
-            <th>Student</th>
-            <th>Total Fee</th>
-            <th>Paid Amount</th>
-            <th>Pending Fee</th>
-            <th>Print</th>
-        </tr>
+    <table border="1" width="100%">
+        <thead>
+            <tr>
+                <th>Student</th>
+                <th>Total Fee</th>
+                <th>Paid Amount</th>
+                <th>Pending Fee</th>
+                <th>Print</th>
+            </tr>
+        </thead>
 
-        {% for fee in fees %}
-        <tr>
-            <td>{{ fee.student_name }}</td>
-            <td>{{ fee.total_fee }}</td>
-            <td>{{ fee.paid_amount }}</td>
-            <td>{{ fee.pending_fee }}</td>
-            <td>
-                <a href="/fee_receipt/{{ fee.student_id }}" target="_blank">
-                    Print Receipt
-                </a>
-            </td>
-        </tr>
-        {% endfor %}
+        <tbody>
+            {% for fee in fees %}
+            <tr>
+                <td>{{ fee.student_name }}</td>
+                <td>{{ fee.yearly_fee }}</td>
+                <td>{{ fee.paid_amount }}</td>
+                <td>{{ fee.pending_fee }}</td>
+                <td>
+                    <a href="/fee_receipt/{{ fee.student_id }}">
+                        Print Receipt
+                    </a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+
     </table>
 </div>
 

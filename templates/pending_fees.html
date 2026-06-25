@@ -9,30 +9,36 @@
 <div class="sidebar">
     <h2>School ERP</h2>
     <a href="/admin_dashboard">Dashboard</a>
-    <a href="/web_fees">Fees List</a>
+    <a href="/web_fees">Fees</a>
     <a href="/add_fee_web">Collect Fee</a>
     <a href="/web_pending_fees">Pending Fees</a>
+    <a href="/export_fees_excel">Download Excel</a>
 </div>
 
 <div class="main">
     <h2>Pending Fees Report</h2>
 
-    <table>
-        <tr>
-            <th>Student Name</th>
-            <th>Total Fee</th>
-            <th>Paid Amount</th>
-            <th>Pending Fee</th>
-        </tr>
+    <table border="1" width="100%">
+        <thead>
+            <tr>
+                <th>Student Name</th>
+                <th>Total Fee</th>
+                <th>Paid Amount</th>
+                <th>Pending Fee</th>
+            </tr>
+        </thead>
 
-        {% for fee in pending_fees %}
-        <tr>
-            <td>{{ fee.student_name }}</td>
-            <td>{{ fee.total_fee }}</td>
-            <td>{{ fee.paid_amount }}</td>
-            <td>{{ fee.pending_fee }}</td>
-        </tr>
-        {% endfor %}
+        <tbody>
+            {% for fee in fees %}
+            <tr>
+                <td>{{ fee.student_name }}</td>
+                <td>{{ fee.yearly_fee }}</td>
+                <td>{{ fee.paid_amount }}</td>
+                <td>{{ fee.pending_fee }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+
     </table>
 </div>
 

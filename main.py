@@ -1,15 +1,23 @@
+from database import connect_db
 from fastapi import FastAPI, Request, Form, UploadFile, File
-from db import connect_db
 from fastapi.responses import HTMLResponse, RedirectResponse, FileResponse
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 from reportlab.pdfgen import canvas
 from openpyxl import Workbook
 import shutil
+import os
+from starlette.middleware.sessions import SessionMiddleware
+import bcrypt
 
 app = FastAPI()
 app.mount("/static", StaticFiles(directory="static"), name="static")
 templates = Jinja2Templates(directory="templates")
+
+app.add_middleware(
+    SessionMiddleware,
+    secret_key="school_secret_key"
+)
 
 @app.get("/", response_class=HTMLResponse)
 def login_page(request: Request):
@@ -19,8 +27,10 @@ def login_page(request: Request):
         context={}
     )
 
+
 @app.post("/login")
 def login(
+    request: Request,
     username: str = Form(...),
     password: str = Form(...)
 ):
@@ -29,17 +39,36 @@ def login(
 
     cursor.execute("""
         SELECT * FROM users
-        WHERE username=%s AND password=%s
-    """, (username, password))
+        WHERE username=%s
+    """, (username,))
 
     user = cursor.fetchone()
     conn.close()
 
-    if user:
-        return RedirectResponse(
-            url="/admin_dashboard",
-            status_code=303
-        )
+    if user and bcrypt.checkpw(
+        password.encode("utf-8"),
+        user["password"].encode("utf-8")
+    ):
+        request.session["user"] = user["username"]
+        request.session["role"] = user["role"]
+
+        if user["role"] == "admin":
+            return RedirectResponse(
+                url="/admin_dashboard",
+                status_code=303
+            )
+
+        elif user["role"] == "teacher":
+            return RedirectResponse(
+                url="/teacher_dashboard",
+                status_code=303
+            )
+
+        elif user["role"] == "parent":
+            return RedirectResponse(
+                url=f"/parent_dashboard/{user['student_id']}",
+                status_code=303
+            )
 
     return {"status": "Login Failed"}
 
@@ -198,39 +227,6 @@ def get_marks(student_id: int):
 
     return result
 
-@app.post("/add_student")
-def add_student(
-    name: str,
-    class_name: str,
-    roll_no: str,
-    mobile: str,
-    address: str,
-    fees: str
-):
-    conn = connect_db()
-    cursor = conn.cursor()
-
-    query = """
-    INSERT INTO students
-    (admission_no, student_name, class_name, father_name, mobile, yearly_fee)
-    VALUES (%s, %s, %s, %s, %s, %s)
-    """
-
-    cursor.execute(query, (
-        roll_no,      # admission_no
-        name,         # student_name
-        class_name,   # class_name
-        address,      # father_name साठी तात्पुरते
-        mobile,       # mobile
-        fees          # yearly_fee
-    ))
-
-    conn.commit()
-    cursor.close()
-    conn.close()
-
-    return {"status": "success"}
-
 @app.delete("/delete_student/{student_id}")
 def delete_student(student_id: int):
     conn = connect_db()
@@ -274,54 +270,27 @@ def update_student(
 @app.post("/add_fee")
 def add_fee(
     student_id: int,
-    total_fee: float,
-    paid_fee: float
+    amount: float,
+    paid_date: str,
+    status: str
 ):
-    pending_fee = total_fee - paid_fee
-
     conn = connect_db()
     cursor = conn.cursor()
 
     cursor.execute("""
-        INSERT INTO fees (student_id, total_fee, paid_fee, pending_fee)
-        VALUES (%s, %s, %s, %s)
-    """, (student_id, total_fee, paid_fee, pending_fee))
+        INSERT INTO fees (student_id, amount, paid_date, status)
+        VALUES (%s,%s,%s,%s)
+    """, (
+        student_id,
+        amount,
+        paid_date,
+        status
+    ))
 
     conn.commit()
     conn.close()
 
-    return {
-        "status": "success",
-        "pending_fee": pending_fee
-    }
-
-@app.get("/pending_fees_web", response_class=HTMLResponse)
-def pending_fees_web(request: Request):
-    conn = connect_db()
-    cursor = conn.cursor(dictionary=True)
-
-    cursor.execute("""
-        SELECT s.student_name,
-               f.total_fee,
-               f.paid_amount,
-               f.pending_fee
-        FROM fees f
-        JOIN students s
-        ON f.student_id = s.id
-        WHERE f.pending_fee > 0
-    """)
-
-    pending_fees = cursor.fetchall()
-    conn.close()
-
-    return templates.TemplateResponse(
-        request=request,
-        name="pending_fees.html",
-        context={
-            "pending_fees": pending_fees
-        }
-    )
-
+    return {"status": "success"}
 
 @app.post("/add_result")
 def add_result(
@@ -443,7 +412,7 @@ def dashboard_stats():
     total_students = cursor.fetchone()["total_students"]
 
     # Total Fees Collected
-    cursor.execute("SELECT SUM(paid_fee) as total_fees FROM fees")
+    cursor.execute("SELECT SUM(amount) AS total_fees FROM fees")
     total_fees = cursor.fetchone()["total_fees"] or 0
 
     # Pending Fees
@@ -522,32 +491,35 @@ def delete_teacher(id: int):
 
 @app.get("/admin_dashboard", response_class=HTMLResponse)
 def admin_dashboard(request: Request):
+
+    if "user" not in request.session:
+        return RedirectResponse("/", status_code=303)
+
     conn = connect_db()
     cursor = conn.cursor(dictionary=True)
 
-    # Students
+    # Students Count
     cursor.execute("SELECT COUNT(*) AS total_students FROM students")
     student_data = cursor.fetchone()
     students = student_data["total_students"]
 
-    # Teachers
+    # Teachers Count
     cursor.execute("SELECT COUNT(*) AS total_teachers FROM teachers")
     teacher_data = cursor.fetchone()
     teachers = teacher_data["total_teachers"]
 
-    # Fees
-    cursor.execute("SELECT SUM(paid_amount) AS total_fees FROM fees")
+    # Fees Collected
+    cursor.execute("SELECT SUM(amount) AS total_fees FROM fees")
     fee_data = cursor.fetchone()
     fees = fee_data["total_fees"] if fee_data["total_fees"] else 0
 
-    # Results
+    # Results Count
     cursor.execute("SELECT COUNT(*) AS total_results FROM results")
     result_data = cursor.fetchone()
     results = result_data["total_results"]
 
     conn.close()
 
-    
     return templates.TemplateResponse(
         request=request,
         name="admin_dashboard.html",
@@ -577,41 +549,80 @@ def web_students(request: Request):
         }
     )
 
+@app.get("/add_student_web", response_class=HTMLResponse)
+def add_student_web(request: Request):
+    return templates.TemplateResponse(
+        request=request,
+        name="add_student.html",
+        context={}
+    )
+
+
 @app.post("/save_student_web")
-def save_student_web(
-    student_name: str = Form(...),
-    class_name: str = Form(...),
-    mobile: str = Form(...),
-    yearly_fee: float = Form(...),
+async def save_student_web(
+    request: Request,
     photo: UploadFile = File(...)
 ):
-    file_path = f"uploads/{photo.filename}"
+    try:
+        form = await request.form()
+        print("Form Data:", form)
 
-    with open(file_path, "wb") as buffer:
-        shutil.copyfileobj(photo.file, buffer)
+        admission_no = form.get("admission_no")
+        student_name = form.get("student_name")
+        student_class = form.get("class_name")
+        father_name = form.get("father_name")
+        mobile = form.get("mobile")
+        yearly_fee = form.get("yearly_fee")
+        discount = form.get("discount") or 0
 
-    conn = connect_db()
-    cursor = conn.cursor()
+        final_fee = float(yearly_fee) - float(discount)
 
-    cursor.execute("""
-        INSERT INTO students
-        (student_name, class_name, mobile, yearly_fee, photo)
-        VALUES (%s,%s,%s,%s,%s)
-    """, (
-        student_name,
-        class_name,
-        mobile,
-        yearly_fee,
-        file_path
-    ))
+        photo_path = f"static/uploads/{photo.filename}"
+        print("Saving photo:", photo_path)
 
-    conn.commit()
-    conn.close()
+        with open(photo_path, "wb") as buffer:
+            shutil.copyfileobj(photo.file, buffer)
 
-    return RedirectResponse(
-        url="/add_student_web?success=1",
-        status_code=303
-    )
+        conn = connect_db()
+        cursor = conn.cursor()
+
+        cursor.execute("""
+            INSERT INTO students
+            (
+                admission_no,
+                student_name,
+                class_name,
+                father_name,
+                mobile,
+                yearly_fee,
+                discount,
+                final_fee,
+                photo
+            )
+            VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s)
+        """, (
+            admission_no,
+            student_name,
+            student_class,
+            father_name,
+            mobile,
+            yearly_fee,
+            discount,
+            final_fee,
+            photo_path
+        ))
+
+        conn.commit()
+        conn.close()
+
+        return RedirectResponse(
+            "/web_students",
+            status_code=303
+        )
+
+    except Exception as e:
+        print("Student Save Error:", e)
+        return {"error": str(e)}
 
 @app.get("/delete_student_web/{student_id}")
 def delete_student_web(student_id: int):
@@ -649,7 +660,7 @@ def edit_student_web(
 
     return templates.TemplateResponse(
         request=request,
-        name="students.html",
+        name="edit_student.html",
         context={
             "student": student
         }
@@ -715,7 +726,7 @@ def add_teacher_web(
 ):
     return templates.TemplateResponse(
         request=request,
-        name="teachers.html",
+        name="add_teacher.html",
         context={
             "success": success
         }
@@ -786,7 +797,7 @@ def edit_teacher_web(
 
     return templates.TemplateResponse(
         request=request,
-        name="teachers.html",
+        name="edit_teacher.html",
         context={
             "teacher": teacher
         }
@@ -796,7 +807,9 @@ def edit_teacher_web(
 def update_teacher_web(
     teacher_id: int,
     teacher_name: str = Form(...),
-    mobile: str = Form(...)
+    mobile: str = Form(...),
+    subject: str = Form(...),
+    salary: float = Form(...)
 ):
     conn = connect_db()
     cursor = conn.cursor()
@@ -804,9 +817,17 @@ def update_teacher_web(
     cursor.execute("""
         UPDATE teachers
         SET teacher_name=%s,
-            mobile=%s
+            mobile=%s,
+            subject=%s,
+            salary=%s
         WHERE id=%s
-    """, (teacher_name, mobile, teacher_id))
+    """, (
+        teacher_name,
+        mobile,
+        subject,
+        salary,
+        teacher_id
+    ))
 
     conn.commit()
     conn.close()
@@ -853,7 +874,7 @@ def add_fee_web(
 
     return templates.TemplateResponse(
         request=request,
-        name="fees.html",
+        name="add_fee.html",
         context={
             "students": students,
             "success": success,
@@ -863,29 +884,45 @@ def add_fee_web(
 @app.post("/save_fee_web")
 def save_fee_web(
     student_id: int = Form(...),
-    paid_amount: float = Form(...)
+    amount: float = Form(...),
+    paid_date: str = Form(...),
+    status: str = Form(...)
 ):
     conn = connect_db()
     cursor = conn.cursor(dictionary=True)
 
-    cursor.execute(
-        "SELECT yearly_fee FROM students WHERE id=%s",
-        (student_id,)
-    )
+    # Student total fee fetch
+    cursor.execute("""
+        SELECT yearly_fee
+        FROM students
+        WHERE id=%s
+    """, (student_id,))
 
     student = cursor.fetchone()
 
-    total_fee = student["yearly_fee"]
-    pending_fee = total_fee - paid_amount
+    total_fee = float(student["yearly_fee"])
+    paid_fee = amount
+    pending_fee = total_fee - paid_fee
 
     cursor.execute("""
         INSERT INTO fees
-        (student_id, total_fee, paid_amount, pending_fee)
-        VALUES (%s,%s,%s,%s)
+        (
+            student_id,
+            amount,
+            paid_date,
+            status,
+            total_fee,
+            paid_fee,
+            pending_fee
+        )
+        VALUES (%s,%s,%s,%s,%s,%s,%s)
     """, (
         student_id,
+        amount,
+        paid_date,
+        status,
         total_fee,
-        paid_amount,
+        paid_fee,
         pending_fee
     ))
 
@@ -903,24 +940,27 @@ def web_pending_fees(request: Request):
     cursor = conn.cursor(dictionary=True)
 
     cursor.execute("""
-        SELECT s.student_name,
-               f.total_fee,
-               f.paid_amount,
-               f.pending_fee
-        FROM fees f
-        JOIN students s ON f.student_id = s.id
-        WHERE f.pending_fee > 0
+        SELECT 
+            s.id,
+            s.student_name,
+            s.yearly_fee,
+            IFNULL(SUM(f.amount), 0) AS paid_amount
+        FROM students s
+        LEFT JOIN fees f ON s.id = f.student_id
+        GROUP BY s.id
     """)
 
-    pending_fees = cursor.fetchall()
+    fees = cursor.fetchall()
+
+    for fee in fees:
+        fee["pending_fee"] = fee["yearly_fee"] - fee["paid_amount"]
+
     conn.close()
 
     return templates.TemplateResponse(
         request=request,
         name="pending_fees.html",
-        context={
-            "pending_fees": pending_fees
-        }
+        context={"fees": fees}
     )
 
 @app.get("/web_attendance", response_class=HTMLResponse)
@@ -1019,29 +1059,51 @@ def web_result(
 @app.post("/save_result_web")
 def save_result_web(
     student_id: int = Form(...),
+    exam_name: str = Form(...),
     subject: str = Form(...),
     marks: float = Form(...),
     total_marks: float = Form(...)
 ):
     percentage = (marks / total_marks) * 100
 
+    # Result status
     result_status = "Pass"
     if percentage < 35:
         result_status = "Fail"
+
+    # Grade calculate
+    if percentage >= 75:
+        grade = "A"
+    elif percentage >= 60:
+        grade = "B"
+    elif percentage >= 35:
+        grade = "C"
+    else:
+        grade = "F"
 
     conn = connect_db()
     cursor = conn.cursor()
 
     cursor.execute("""
         INSERT INTO results
-        (student_id, subject, marks, total_marks,
-         percentage, result_status)
-        VALUES (%s,%s,%s,%s,%s,%s)
+        (
+            student_id,
+            exam_name,
+            subject,
+            marks,
+            total_marks,
+            grade,
+            percentage,
+            result_status
+        )
+        VALUES (%s,%s,%s,%s,%s,%s,%s,%s)
     """, (
         student_id,
+        exam_name,
         subject,
         marks,
         total_marks,
+        grade,
         percentage,
         result_status
     ))
@@ -1052,7 +1114,7 @@ def save_result_web(
     return RedirectResponse(
         url="/web_result?success=1",
         status_code=303
-   )
+    )
 
 @app.get("/web_result_list", response_class=HTMLResponse)
 def web_result_list(request: Request):
@@ -1103,9 +1165,9 @@ def parent_fee_status():
     cursor = conn.cursor(dictionary=True)
 
     cursor.execute("""
-        SELECT total_fee,
-               paid_amount,
-               pending_fee
+        SELECT amount,
+               paid_date,
+               status
         FROM fees
         LIMIT 1
     """)
@@ -1161,89 +1223,32 @@ def fee_receipt(student_id: int):
                s.student_name,
                s.class_name,
                s.mobile,
-               f.total_fee,
-               f.paid_amount,
-               f.pending_fee
+               s.yearly_fee,
+               f.amount
         FROM fees f
         JOIN students s ON f.student_id = s.id
         WHERE s.id=%s
     """, (student_id,))
 
     fee = cursor.fetchone()
+
+    if not fee:
+        return {"error": "Fee not found"}
+
     conn.close()
+
+    pending_fee = fee["yearly_fee"] - fee["amount"]
 
     file_name = f"receipt_{student_id}.pdf"
     c = canvas.Canvas(file_name)
 
-    # Outer Border
-    c.rect(40, 100, 520, 700)
-
-    # Header
-    c.setFont("Helvetica-Bold", 18)
-    c.drawCentredString(300, 780, "RISING STAR ENGLISH MEDIUM SCHOOL")
-
-    c.setFont("Helvetica", 11)
-    c.drawCentredString(300, 760, "Nagar Jamkhed Road, Kolhewadi Phata Takali Kazi, Tal Dist Ahilyanagar - 414201")
-    c.drawCentredString(300, 745, "Ph: 8329001412")
-
-    # Receipt Title Box
-    c.rect(60, 700, 480, 40)
-    c.setFont("Helvetica-Bold", 20)
-    c.drawCentredString(300, 712, "FEES RECEIPT")
-
-    # Student Info Table
-    y = 660
-    c.setFont("Helvetica-Bold", 12)
-
-    c.drawString(60, y, "Receipt No.")
-    c.drawString(180, y, f": {fee['id']}")
-
-    c.drawString(350, y, "Date")
-    c.drawString(420, y, ": __________")
-
-    y -= 30
-    c.drawString(60, y, "Student Name")
-    c.drawString(180, y, f": {fee['student_name']}")
-
-    y -= 30
-    c.drawString(60, y, "Class")
-    c.drawString(180, y, f": {fee['class_name']}")
-
-    y -= 30
-    c.drawString(60, y, "Mobile")
-    c.drawString(180, y, f": {fee['mobile']}")
-
-    # Fees Box
-    c.rect(60, 420, 480, 140)
-
-    c.line(350, 420, 350, 560)
-
-    c.setFont("Helvetica-Bold", 13)
-    c.drawString(120, 535, "Student's Fees Details")
-    c.drawString(400, 535, "Amount")
-
-    c.line(60, 520, 540, 520)
-
-    c.setFont("Helvetica", 12)
-
-    c.drawString(100, 490, "Total Fee")
-    c.drawString(400, 490, str(int(fee['total_fee'])))
-
-    c.drawString(100, 460, "Paid Fee")
-    c.drawString(400, 460, str(int(fee['paid_amount'])))
-
-    c.drawString(100, 430, "Balance Fee")
-    c.drawString(400, 430, str(int(fee['pending_fee'])))
-
-    # Footer
-    c.setFont("Helvetica-Bold", 12)
-    c.drawString(
-        60,
-        380,
-        f"Rupees {int(fee['paid_amount'])} Only"
-   )
-
-    c.drawString(380, 150, "Signature")
+    c.drawString(100, 800, "SCHOOL FEE RECEIPT")
+    c.drawString(100, 760, f"Student Name: {fee['student_name']}")
+    c.drawString(100, 730, f"Class: {fee['class_name']}")
+    c.drawString(100, 700, f"Mobile: {fee['mobile']}")
+    c.drawString(100, 670, f"Total Fee: {fee['yearly_fee']}")
+    c.drawString(100, 640, f"Paid Fee: {fee['amount']}")
+    c.drawString(100, 610, f"Pending Fee: {pending_fee}")
 
     c.save()
 
@@ -1269,6 +1274,10 @@ def marksheet(student_id: int):
     """, (student_id,))
 
     results = cursor.fetchall()
+
+    if not results:
+        return {"error": "No results found"}
+
     conn.close()
 
     file_name = f"marksheet_{student_id}.pdf"
@@ -1507,43 +1516,40 @@ def id_card(student_id: int):
 
     return FileResponse(file_name)
 
-@app.get("/export_students_excel")
-def export_students_excel():
+@app.get("/export_fees_excel")
+def export_fees_excel():
     conn = connect_db()
     cursor = conn.cursor(dictionary=True)
 
-    cursor.execute("SELECT * FROM students")
-    students = cursor.fetchall()
+    cursor.execute("SELECT * FROM fees")
+    fees = cursor.fetchall()
     conn.close()
 
     wb = Workbook()
     ws = wb.active
-    ws.title = "Students"
+    ws.title = "Fees"
 
     ws.append([
         "ID",
-        "Student Name",
-        "Class",
-        "Mobile",
-        "Yearly Fee"
+        "Student ID",
+        "Amount",
+        "Paid Date",
+        "Status"
     ])
 
-    for student in students:
+    for fee in fees:
         ws.append([
-            student["id"],
-            student["student_name"],
-            student["class_name"],
-            student["mobile"],
-            student["yearly_fee"]
+            fee["id"],
+            fee["student_id"],
+            fee["amount"],
+            str(fee["paid_date"]),
+            fee["status"]
         ])
 
-    file_name = "students_report.xlsx"
+    file_name = "fees_report.xlsx"
     wb.save(file_name)
 
-    return FileResponse(
-        file_name,
-        filename=file_name
-    )
+    return FileResponse(file_name, filename=file_name)
 
 @app.get("/export_teachers_excel")
 def export_teachers_excel():
@@ -1580,40 +1586,6 @@ def export_teachers_excel():
 
     return FileResponse(file_name, filename=file_name)
 
-@app.get("/export_fees_excel")
-def export_fees_excel():
-    conn = connect_db()
-    cursor = conn.cursor(dictionary=True)
-
-    cursor.execute("SELECT * FROM fees")
-    fees = cursor.fetchall()
-    conn.close()
-
-    wb = Workbook()
-    ws = wb.active
-    ws.title = "Fees"
-
-    ws.append([
-        "ID",
-        "Student ID",
-        "Total Fee",
-        "Paid Amount",
-        "Pending Fee"
-    ])
-
-    for fee in fees:
-        ws.append([
-            fee["id"],
-            fee["student_id"],
-            fee["total_fee"],
-            fee["paid_amount"],
-            fee["pending_fee"]
-        ])
-
-    file_name = "fees_report.xlsx"
-    wb.save(file_name)
-
-    return FileResponse(file_name, filename=file_name)
 
 @app.get("/export_attendance_excel")
 def export_attendance_excel():
@@ -1712,3 +1684,99 @@ def attendance_report(request: Request):
             "records": records
         }
     )
+
+@app.get("/logout")
+def logout(request: Request):
+    request.session.clear()
+
+    return RedirectResponse(
+        url="/",
+        status_code=303
+    )
+
+@app.get("/parent_dashboard/{student_id}", response_class=HTMLResponse)
+def parent_dashboard(
+    request: Request,
+    student_id: int
+):
+    conn = connect_db()
+    cursor = conn.cursor(dictionary=True)
+
+    cursor.execute(
+        "SELECT * FROM students WHERE id=%s",
+        (student_id,)
+    )
+    student = cursor.fetchone()
+
+    cursor.execute("""
+        SELECT *
+        FROM fees
+        WHERE student_id=%s
+        ORDER BY id DESC
+        LIMIT 1
+    """, (student_id,))
+    fee = cursor.fetchone()
+
+    cursor.execute("""
+        SELECT *
+        FROM attendance
+        WHERE student_id=%s
+        ORDER BY date DESC
+        LIMIT 5
+    """, (student_id,))
+    attendance = cursor.fetchall()
+
+    cursor.execute("""
+        SELECT *
+        FROM results
+        WHERE student_id=%s
+    """, (student_id,))
+    results = cursor.fetchall()
+
+    conn.close()
+
+    if not student:
+        return {"error": "Student not found"}
+
+    if not fee:
+        fee = {
+            "total_fee": 0,
+            "paid_fee": 0,
+            "pending_fee": 0
+        }
+
+    return templates.TemplateResponse(
+        request=request,
+        name="parent_dashboard.html",
+        context={
+            "student": student,
+            "fee": fee,
+            "attendance": attendance,
+            "results": results
+        }
+    )
+
+@app.get("/teacher_dashboard", response_class=HTMLResponse)
+def teacher_dashboard(request: Request):
+
+    if "user" not in request.session:
+        return RedirectResponse("/", status_code=303)
+
+    if request.session["role"] != "teacher":
+        return RedirectResponse("/", status_code=303)
+
+    conn = connect_db()
+    cursor = conn.cursor(dictionary=True)
+
+    cursor.execute("SELECT * FROM students")
+    students = cursor.fetchall()
+
+    conn.close()
+
+    return templates.TemplateResponse(
+        request=request,
+        name="teacher_dashboard.html",
+        context={
+            "students": students
+        }
+    )   

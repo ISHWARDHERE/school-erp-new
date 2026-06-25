@@ -11,21 +11,37 @@
         <h1>School ERP</h1>
         <h3>Admin Login</h3>
 
-        <form action="/login" method="post">
+        <form action="/login" method="post" onsubmit="return validateForm()">
 
             <input type="text"
                    name="username"
-                   placeholder="Username"><br><br>
+                   placeholder="Username"
+                   required><br><br>
 
             <input type="password"
                    name="password"
-                   placeholder="Password"><br><br>
+                   placeholder="Password"
+                   required><br><br>
 
             <button type="submit">Login</button>
 
         </form>
+
     </div>
 </div>
+
+<script>
+function validateForm() {
+    let username = document.getElementsByName("username")[0].value;
+    let password = document.getElementsByName("password")[0].value;
+
+    if (username == "" || password == "") {
+        alert("Please fill all fields");
+        return false;
+    }
+    return true;
+}
+</script>
 
 </body>
 </html>

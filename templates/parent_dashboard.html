@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Parent Dashboard</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+<div class="main">
+    <h1>Parent Dashboard</h1>
+
+    <h2>Student Details</h2>
+    <p>Name: {{ student.student_name }}</p>
+    <p>Class: {{ student.class_name }}</p>
+    <p>Mobile: {{ student.mobile }}</p>
+
+    <h2>Fee Status</h2>
+    <p>Total Fee: {{ fee.total_fee }}</p>
+    <p>Paid Fee: {{ fee.paid_fee }}</p>
+    <p>Pending Fee: {{ fee.pending_fee }}</p>
+
+    <h2>Attendance</h2>
+    <table border="1">
+        <tr>
+            <th>Date</th>
+            <th>Status</th>
+        </tr>
+
+        {% for a in attendance %}
+        <tr>
+            <td>{{ a.date }}</td>
+            <td>{{ a.status }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <h2>Results</h2>
+    <table border="1">
+        <tr>
+            <th>Subject</th>
+            <th>Marks</th>
+            <th>Total</th>
+            <th>Percentage</th>
+            <th>Status</th>
+        </tr>
+
+        {% for r in results %}
+        <tr>
+            <td>{{ r.subject }}</td>
+            <td>{{ r.marks }}</td>
+            <td>{{ r.total_marks }}</td>
+            <td>{{ r.percentage }}</td>
+            <td>{{ r.result_status }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+</div>
+
+</body>
+</html>

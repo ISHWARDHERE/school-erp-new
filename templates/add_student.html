@@ -23,7 +23,15 @@
     <div class="login-box">
         <h2>Add Student</h2>
 
-        <form action="/save_student_web" method="post" enctype="multipart/form-data">
+        <form action="/save_student_web"
+              method="post"
+              enctype="multipart/form-data"
+              onsubmit="return validateForm()">
+
+            <input type="text"
+                   name="admission_no"
+                   placeholder="Admission Number"
+                   required><br><br>
 
             <input type="text"
                    name="student_name"
@@ -36,54 +44,62 @@
                    required><br><br>
 
             <input type="text"
+                   name="father_name"
+                   placeholder="Father Name"
+                   required><br><br>
+
+            <input type="text"
                    name="mobile"
                    placeholder="Mobile Number"
                    required><br><br>
 
-            <input type="text"
+            <input type="number"
                    name="yearly_fee"
                    placeholder="Yearly Fee"
                    required><br><br>
 
-            <input type="file" name="photo" required>
+            <input type="number"
+                   name="discount"
+                   placeholder="Discount"
+                   required><br><br>
+
+            <input type="file"
+                   name="photo"
+                   required><br><br>
 
             <button type="submit">Save Student</button>
 
-        <form action="/save_student_web"
-            method="post"
-            enctype="multipart/form-data"
-            onsubmit="return validateForm()">
-        <script>
-        function validateForm() {
-            let student_name =
-                document.getElementsByName("student_name")[0].value;
-
-            let class_name =
-                document.getElementsByName("class_name")[0].value;
-
-            let mobile =
-                document.getElementsByName("mobile")[0].value;
-
-            let yearly_fee =
-                document.getElementsByName("yearly_fee")[0].value;
-
-            if (
-                student_name == "" ||
-                class_name == "" ||
-                mobile == "" ||
-                yearly_fee == ""
-            ) {
-                alert("Please fill all fields");
-                return false;
-            }
-
-            return true;
-        }
-</script>
- 
-
+        </form>
     </div>
 </div>
+
+<script>
+function validateForm() {
+    let student_name =
+        document.getElementsByName("student_name")[0].value;
+
+    let class_name =
+        document.getElementsByName("class_name")[0].value;
+
+    let mobile =
+        document.getElementsByName("mobile")[0].value;
+
+    let yearly_fee =
+        document.getElementsByName("yearly_fee")[0].value;
+
+    if (
+        student_name == "" ||
+        class_name == "" ||
+        mobile == "" ||
+        yearly_fee == ""
+    ) {
+        alert("Please fill all fields");
+        return false;
+    }
+
+    return true;
+}
+</script>
 
 </body>
 </html>
