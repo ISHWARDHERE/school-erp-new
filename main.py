@@ -35,6 +35,10 @@ def login(
     password: str = Form(...)
 ):
     conn = connect_db()
+
+    if conn is None:
+        return {"error": "Database connection failed"}
+        
     cursor = conn.cursor(dictionary=True)
 
     cursor.execute("""
