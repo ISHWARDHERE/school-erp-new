@@ -3,15 +3,12 @@ import mysql.connector
 
 def connect_db():
     try:
-        print("DB_HOST:", os.getenv("DB_HOST"))
-        print("DB_PORT:", os.getenv("DB_PORT"))
-
         conn = mysql.connector.connect(
             host=os.getenv("DB_HOST"),
             user=os.getenv("DB_USER"),
             password=os.getenv("DB_PASS"),
             database=os.getenv("DB_NAME"),
-            port=int(os.getenv("DB_PORT"))
+            port=int(os.getenv("DB_PORT"))   # IMPORTANT
         )
         print("Database Connected")
         return conn
