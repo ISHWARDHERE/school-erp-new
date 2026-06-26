@@ -16,7 +16,7 @@ templates = Jinja2Templates(directory="templates")
 
 app.add_middleware(
     SessionMiddleware,
-    SECRET_KEY = os.getenv("SECRET_KEY"),
+    secret_key=SECRET_KEY,
     max_age=1800
 )
 
