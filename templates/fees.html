@@ -13,9 +13,7 @@
     <a href="/add_fee_web">Collect Fee</a>
     <a href="/web_pending_fees">Pending Fees</a>
     <a href="/export_fees_excel">Download Excel</a>
-    <a href="/fee_receipt/{{ fee.student_id }}">
-        <button>Print Receipt</button>
-    </a>
+    <a href="/logout">Logout</a>
 </div>
 
 <div class="main">
@@ -36,12 +34,12 @@
             {% for fee in fees %}
             <tr>
                 <td>{{ fee.student_name }}</td>
-                <td>{{ fee.yearly_fee }}</td>
-                <td>{{ fee.paid_amount }}</td>
+                <td>{{ fee.total_fee }}</td>
+                <td>{{ fee.paid_fee }}</td>
                 <td>{{ fee.pending_fee }}</td>
                 <td>
                     <a href="/fee_receipt/{{ fee.student_id }}">
-                        Print Receipt
+                        <button>Print Receipt</button>
                     </a>
                 </td>
             </tr>
