@@ -10,6 +10,7 @@ def connect_db():
             database=os.getenv("DB_NAME"),
             port=int(os.getenv("DB_PORT"))
         )
+        print("Database Connected")
         return conn
 
     except Exception as e:
