@@ -2022,3 +2022,74 @@ def reject_admission(admission_id: int):
         "/admission_requests",
         status_code=303
     )
+
+@app.get("/add_homework", response_class=HTMLResponse)
+def add_homework_page(request: Request):
+    return templates.TemplateResponse(
+        request=request,
+        name="add_homework.html",
+        context={}
+    )
+
+@app.post("/save_homework")
+async def save_homework(request: Request):
+    form = await request.form()
+
+    class_name = form.get("class_name")
+    subject = form.get("subject")
+    homework_text = form.get("homework_text")
+    homework_date = form.get("homework_date")
+
+    conn = connect_db()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        INSERT INTO homework
+        (
+            class_name,
+            subject,
+            homework_text,
+            homework_date
+        )
+        VALUES (%s,%s,%s,%s)
+    """, (
+        class_name,
+        subject,
+        homework_text,
+        homework_date
+    ))
+
+    conn.commit()
+    conn.close()
+
+    return RedirectResponse(
+        "/add_homework",
+        status_code=303
+    )
+
+@app.get("/parent_homework/{student_id}", response_class=HTMLResponse)
+def parent_homework(request: Request, student_id: int):
+    conn = connect_db()
+    cursor = conn.cursor(dictionary=True)
+
+    cursor.execute(
+        "SELECT class_name FROM students WHERE id=%s",
+        (student_id,)
+    )
+
+    student = cursor.fetchone()
+
+    cursor.execute(
+        "SELECT * FROM homework WHERE class_name=%s",
+        (student["class_name"],)
+    )
+
+    homework = cursor.fetchall()
+
+    conn.close()
+
+    return templates.TemplateResponse(
+        request=request,
+        name="parent_homework.html",
+        context={"homework": homework}
+    )

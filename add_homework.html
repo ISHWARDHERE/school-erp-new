@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Add Homework</title>
+</head>
+<body>
+
+<h2>Add Homework</h2>
+
+<form action="/save_homework" method="post">
+
+    <label>Class</label>
+    <input type="text" name="class_name" required>
+
+    <label>Subject</label>
+    <input type="text" name="subject" required>
+
+    <label>Homework</label>
+    <textarea name="homework_text" required></textarea>
+
+    <label>Date</label>
+    <input type="date" name="homework_date" required>
+
+    <button type="submit">Save Homework</button>
+
+</form>
+
+</body>
+</html>

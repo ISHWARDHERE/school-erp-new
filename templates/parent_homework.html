@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Homework</title>
+</head>
+<body>
+
+<h2>Homework List</h2>
+
+<table border="1">
+    <tr>
+        <th>Subject</th>
+        <th>Homework</th>
+        <th>Date</th>
+    </tr>
+
+    {% for h in homework %}
+    <tr>
+        <td>{{ h.subject }}</td>
+        <td>{{ h.homework_text }}</td>
+        <td>{{ h.homework_date }}</td>
+    </tr>
+    {% endfor %}
+
+</table>
+
+</body>
+</html>
