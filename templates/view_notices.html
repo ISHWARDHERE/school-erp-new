@@ -7,7 +7,16 @@
 <body>
 
 <div class="main">
+
     <h2>School Notices</h2>
+
+    <br>
+
+    <a href="/add_notice">
+        <button>Add New Notice</button>
+    </a>
+
+    <br><br>
 
     <table border="1" width="100%">
         <tr>
@@ -15,16 +24,32 @@
             <th>Message</th>
             <th>Date</th>
             <th>View</th>
+            <th>Edit</th>
+            <th>Delete</th>
         </tr>
 
         {% for n in notices %}
         <tr>
             <td>{{ n.title }}</td>
-            <td>{{ n.notice_text }}</td>
+            <td>{{ n.message }}</td>
             <td>{{ n.notice_date }}</td>
+
             <td>
                 <a href="/notice/{{ n.id }}">
-                    View Notice
+                    View
+                </a>
+            </td>
+
+            <td>
+                <a href="/edit_notice/{{ n.id }}">
+                    Edit
+                </a>
+            </td>
+
+            <td>
+                <a href="/delete_notice/{{ n.id }}"
+                   onclick="return confirm('Delete this notice?')">
+                    Delete
                 </a>
             </td>
         </tr>

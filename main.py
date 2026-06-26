@@ -2157,35 +2157,24 @@ def add_notice_page(request: Request):
     )
 
 @app.post("/save_notice")
-async def save_notice(request: Request):
-    form = await request.form()
-
-    title = form.get("title")
-    message = form.get("message")
-    notice_date = form.get("notice_date")
-
+def save_notice(
+    title: str = Form(...),
+    notice_text: str = Form(...),
+    notice_date: str = Form(...)
+):
     conn = connect_db()
     cursor = conn.cursor()
 
     cursor.execute("""
-        INSERT INTO notices
-        (
-            title,
-            message,
-            notice_date
-        )
-        VALUES (%s,%s,%s)
-    """, (
-        title,
-        message,
-        notice_date
-    ))
+        INSERT INTO notices (title, message, notice_date)
+        VALUES (%s, %s, %s)
+    """, (title, notice_text, notice_date))
 
     conn.commit()
     conn.close()
 
     return RedirectResponse(
-        "/add_notice",
+        url="/view_notices",
         status_code=303
     )
 
@@ -2225,4 +2214,43 @@ def notice_details(request: Request, notice_id: int):
         context={
             "notice": notice
         }
+    )
+
+@app.get("/delete_notice/{notice_id}")
+def delete_notice(notice_id: int):
+
+    conn = connect_db()
+    cursor = conn.cursor()
+
+    cursor.execute(
+        "DELETE FROM notices WHERE id=%s",
+        (notice_id,)
+    )
+
+    conn.commit()
+    conn.close()
+
+    return RedirectResponse(
+        "/view_notices",
+        status_code=303
+    )
+
+@app.get("/edit_notice/{notice_id}", response_class=HTMLResponse)
+def edit_notice(request: Request, notice_id: int):
+
+    conn = connect_db()
+    cursor = conn.cursor(dictionary=True)
+
+    cursor.execute(
+        "SELECT * FROM notices WHERE id=%s",
+        (notice_id,)
+    )
+
+    notice = cursor.fetchone()
+    conn.close()
+
+    return templates.TemplateResponse(
+        request=request,
+        name="edit_notice.html",
+        context={"notice": notice}
     )
