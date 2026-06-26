@@ -986,7 +986,10 @@ def web_pending_fees(request: Request):
     fees = cursor.fetchall()
 
     for fee in fees:
-        fee["pending_fee"] = fee["yearly_fee"] - fee["paid_amount"]
+        yearly_fee = fee["yearly_fee"] or 0
+        paid_amount = fee["paid_amount"] or 0
+
+        fee["pending_fee"] = float(yearly_fee) - float(paid_amount)
 
     conn.close()
 
