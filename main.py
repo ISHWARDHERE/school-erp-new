@@ -1883,3 +1883,62 @@ async def submit_admission(
 
     except Exception as e:
         return {"error": str(e)}
+
+@app.get("/admission_requests", response_class=HTMLResponse)
+def admission_requests(request: Request):
+    conn = connect_db()
+    cursor = conn.cursor(dictionary=True)
+
+    cursor.execute("SELECT * FROM online_admissions")
+    admissions = cursor.fetchall()
+
+    conn.close()
+
+    return templates.TemplateResponse(
+        request=request,
+        name="admission_requests.html",
+        context={"admissions": admissions}
+    )
+
+@app.get("/approve_admission/{admission_id}")
+def approve_admission(admission_id: int):
+    conn = connect_db()
+    cursor = conn.cursor(dictionary=True)
+
+    cursor.execute(
+        "SELECT * FROM online_admissions WHERE id=%s",
+        (admission_id,)
+    )
+
+    student = cursor.fetchone()
+
+    cursor.execute("""
+        INSERT INTO students
+        (
+            student_name,
+            class_name,
+            father_name,
+            mobile,
+            photo
+        )
+        VALUES (%s,%s,%s,%s,%s)
+    """, (
+        student["student_name"],
+        student["class_name"],
+        student["father_name"],
+        student["mobile"],
+        student["photo"]
+    ))
+
+    cursor.execute(
+        "DELETE FROM online_admissions WHERE id=%s",
+        (admission_id,)
+    )
+
+    conn.commit()
+    conn.close()
+
+    return RedirectResponse(
+        "/admission_requests",
+        status_code=303
+    )            
