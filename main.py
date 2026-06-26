@@ -2004,3 +2004,21 @@ async def update_password(
     conn.close()
 
     return {"status": "Password Changed Successfully"}
+
+@app.get("/reject_admission/{admission_id}")
+def reject_admission(admission_id: int):
+    conn = connect_db()
+    cursor = conn.cursor()
+
+    cursor.execute(
+        "DELETE FROM online_admissions WHERE id=%s",
+        (admission_id,)
+    )
+
+    conn.commit()
+    conn.close()
+
+    return RedirectResponse(
+        "/admission_requests",
+        status_code=303
+    )

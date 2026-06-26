@@ -29,8 +29,15 @@
             <img src="/{{ student.photo }}" width="80">
         </td>
         <td>
-            <a href="/approve_admission/{{ student.id }}">Approve</a>
+            <a href="/approve_admission/{{ student.id }}">
+                <button>Approve</button>
+            </a>
+
+            <a href="/reject_admission/{{ student.id }}">
+                <button>Reject</button>
+            </a>
         </td>
+        
     </tr>
     {% endfor %}
 
