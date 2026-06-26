@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Online Admission Form</title>
+    <style>
+        body {
+            font-family: Arial;
+            background: #f4f4f4;
+        }
+
+        .container {
+            width: 600px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            margin-top: 30px;
+            border-radius: 10px;
+        }
+
+        h2 {
+            text-align: center;
+            color: blue;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 10px;
+            margin-top: 8px;
+            margin-bottom: 15px;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background: green;
+            color: white;
+            border: none;
+            font-size: 18px;
+        }
+
+        button:hover {
+            background: darkgreen;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>School Online Admission Form</h2>
+
+    <form action="/submit_admission" method="post" enctype="multipart/form-data">
+
+        <label>Student Name</label>
+        <input type="text" name="student_name" required>
+
+        <label>Class</label>
+        <select name="class_name" required>
+            <option value="">Select Class</option>
+            <option>Nursery</option>
+            <option>KG</option>
+            <option>1</option>
+            <option>2</option>
+            <option>3</option>
+            <option>4</option>
+            <option>5</option>
+            <option>6</option>
+            <option>7</option>
+            <option>8</option>
+            <option>9</option>
+            <option>10</option>
+        </select>
+
+        <label>Father Name</label>
+        <input type="text" name="father_name" required>
+
+        <label>Mother Name</label>
+        <input type="text" name="mother_name" required>
+
+        <label>Mobile Number</label>
+        <input type="text" name="mobile" required>
+
+        <label>Address</label>
+        <textarea name="address" required></textarea>
+
+        <label>Date of Birth</label>
+        <input type="date" name="dob" required>
+
+        <label>Aadhaar Number</label>
+        <input type="text" name="aadhaar" required>
+
+        <label>Previous School</label>
+        <input type="text" name="previous_school">
+
+        <label>Upload Photo</label>
+        <input type="file" name="photo" required>
+
+        <button type="submit">Submit Admission</button>
+
+    </form>
+</div>
+
+</body>
+</html>

@@ -1813,3 +1813,73 @@ def teacher_dashboard(request: Request):
             "students": students
         }
     )   
+
+@app.get("/online_admission", response_class=HTMLResponse)
+def online_admission_page(request: Request):
+    return templates.TemplateResponse(
+        request=request,
+        name="online_admission.html",
+        context={}
+    )
+
+@app.post("/submit_admission")
+async def submit_admission(
+    request: Request,
+    photo: UploadFile = File(...)
+):
+    try:
+        form = await request.form()
+
+        student_name = form.get("student_name")
+        class_name = form.get("class_name")
+        father_name = form.get("father_name")
+        mother_name = form.get("mother_name")
+        mobile = form.get("mobile")
+        address = form.get("address")
+        dob = form.get("dob")
+        aadhaar = form.get("aadhaar")
+        previous_school = form.get("previous_school")
+
+        photo_path = f"static/uploads/{photo.filename}"
+
+        with open(photo_path, "wb") as buffer:
+            shutil.copyfileobj(photo.file, buffer)
+
+        conn = connect_db()
+        cursor = conn.cursor()
+
+        cursor.execute("""
+            INSERT INTO online_admissions
+            (
+                student_name,
+                class_name,
+                father_name,
+                mother_name,
+                mobile,
+                address,
+                dob,
+                aadhaar,
+                previous_school,
+                photo
+            )
+            VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
+        """, (
+            student_name,
+            class_name,
+            father_name,
+            mother_name,
+            mobile,
+            address,
+            dob,
+            aadhaar,
+            previous_school,
+            photo_path
+        ))
+
+        conn.commit()
+        conn.close()
+
+        return {"status": "Admission Submitted Successfully"}
+
+    except Exception as e:
+        return {"error": str(e)}
