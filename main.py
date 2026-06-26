@@ -1967,3 +1967,40 @@ def approve_admission(admission_id: int):
         "/admission_requests",
         status_code=303
     )
+
+@app.get("/change_password/{student_id}", response_class=HTMLResponse)
+def change_password_page(request: Request, student_id: int):
+    return templates.TemplateResponse(
+        request=request,
+        name="change_password.html",
+        context={"student_id": student_id}
+    )
+
+@app.post("/update_password/{student_id}")
+async def update_password(
+    request: Request,
+    student_id: int,
+    new_password: str = Form(...)
+):
+    hashed_password = bcrypt.hashpw(
+        new_password.encode("utf-8"),
+        bcrypt.gensalt()
+    ).decode("utf-8")
+
+    conn = connect_db()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        UPDATE users
+        SET password=%s
+        WHERE student_id=%s
+        AND role='parent'
+    """, (
+        hashed_password,
+        student_id
+    ))
+
+    conn.commit()
+    conn.close()
+
+    return {"status": "Password Changed Successfully"}
