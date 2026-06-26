@@ -2204,3 +2204,25 @@ def view_notices(request: Request):
         name="view_notices.html",
         context={"notices": notices}
     )
+
+@app.get("/notice/{notice_id}", response_class=HTMLResponse)
+def notice_details(request: Request, notice_id: int):
+
+    conn = connect_db()
+    cursor = conn.cursor(dictionary=True)
+
+    cursor.execute(
+        "SELECT * FROM notices WHERE id=%s",
+        (notice_id,)
+    )
+
+    notice = cursor.fetchone()
+    conn.close()
+
+    return templates.TemplateResponse(
+        request=request,
+        name="notice_details.html",
+        context={
+            "notice": notice
+        }
+    )

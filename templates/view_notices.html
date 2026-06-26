@@ -2,27 +2,37 @@
 <html>
 <head>
     <title>View Notices</title>
+    <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
 
-<h2>School Notices</h2>
+<div class="main">
+    <h2>School Notices</h2>
 
-<table border="1">
-    <tr>
-        <th>Title</th>
-        <th>Message</th>
-        <th>Date</th>
-    </tr>
+    <table border="1" width="100%">
+        <tr>
+            <th>Title</th>
+            <th>Message</th>
+            <th>Date</th>
+            <th>View</th>
+        </tr>
 
-    {% for n in notices %}
-    <tr>
-        <td>{{ n.title }}</td>
-        <td>{{ n.message }}</td>
-        <td>{{ n.notice_date }}</td>
-    </tr>
-    {% endfor %}
+        {% for n in notices %}
+        <tr>
+            <td>{{ n.title }}</td>
+            <td>{{ n.notice_text }}</td>
+            <td>{{ n.notice_date }}</td>
+            <td>
+                <a href="/notice/{{ n.id }}">
+                    View Notice
+                </a>
+            </td>
+        </tr>
+        {% endfor %}
 
-</table>
+    </table>
+
+</div>
 
 </body>
 </html>
