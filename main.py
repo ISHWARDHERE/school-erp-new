@@ -1804,16 +1804,32 @@ def teacher_dashboard(request: Request):
     cursor.execute("SELECT * FROM students")
     students = cursor.fetchall()
 
+    total_students = len(students)
+
+    cursor.execute("SELECT COUNT(*) as total FROM attendance")
+    today_attendance = cursor.fetchone()["total"]
+
+    cursor.execute("SELECT COUNT(*) as total FROM homework")
+    pending_homework = cursor.fetchone()["total"]
+
+    cursor.execute("SELECT COUNT(*) as total FROM results")
+    total_results = cursor.fetchone()["total"]
+
     conn.close()
 
     return templates.TemplateResponse(
         request=request,
         name="teacher_dashboard.html",
         context={
-            "students": students
+            "teacher_name": request.session["user"],
+            "students": students,
+            "total_students": total_students,
+            "today_attendance": today_attendance,
+            "pending_homework": pending_homework,
+            "total_results": total_results
         }
-    )   
-
+    )
+    
 @app.get("/online_admission", response_class=HTMLResponse)
 def online_admission_page(request: Request):
     return templates.TemplateResponse(

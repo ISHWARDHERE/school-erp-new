@@ -7,41 +7,28 @@
 <body>
 
 <div class="login-container">
+
+    <div class="login-left">
+        <h1>THE RISING STAR</h1>
+        <p>ENGLISH MEDIUM SCHOOL</p>
+    </div>
+
     <div class="login-box">
-        <h1>School ERP</h1>
-        <h3>Admin Login</h3>
+        <h2>School ERP Login</h2>
 
-        <form action="/login" method="post" onsubmit="return validateForm()">
+        <form action="/login" method="post">
 
-            <input type="text"
-                   name="username"
-                   placeholder="Username"
-                   required><br><br>
+            <input type="text" name="username" placeholder="Username" required>
 
-            <input type="password"
-                   name="password"
-                   placeholder="Password"
-                   required><br><br>
+            <input type="password" name="password" placeholder="Password" required>
 
             <button type="submit">Login</button>
 
         </form>
 
     </div>
+
 </div>
-
-<script>
-function validateForm() {
-    let username = document.getElementsByName("username")[0].value;
-    let password = document.getElementsByName("password")[0].value;
-
-    if (username == "" || password == "") {
-        alert("Please fill all fields");
-        return false;
-    }
-    return true;
-}
-</script>
 
 </body>
 </html>
