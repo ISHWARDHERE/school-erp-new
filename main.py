@@ -65,26 +65,28 @@ def login(
         # Reset failed attempts after successful login
         failed_attempts[username] = 0
 
+        user_role = str(user["role"]).strip().lower()
+
         request.session["user"] = user["username"]
-        request.session["role"] = user["role"]
+        request.session["role"] = str(user["role"]).strip().lower()
 
-        if user["role"] == "admin":
+        if user_role == "admin":
             return RedirectResponse(
-                url="/admin_dashboard",
-                status_code=303
-            )
+            url="/admin_dashboard",
+            status_code=303
+        )  
 
-        elif user["role"] == "teacher":
+        elif user_role == "teacher":
             return RedirectResponse(
-                url="/teacher_dashboard",
-                status_code=303
-            )
+            url="/teacher_dashboard",
+            status_code=303
+        )
 
-        elif user["role"] == "parent":
+        elif user_role == "parent":
             return RedirectResponse(
-                url=f"/parent_dashboard/{user['student_id']}",
-                status_code=303
-            )
+            url=f"/parent_dashboard/{user['student_id']}",
+            status_code=303
+        )
 
     # Increase failed attempts
     failed_attempts[username] = failed_attempts.get(username, 0) + 1
