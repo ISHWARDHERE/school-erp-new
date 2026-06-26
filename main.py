@@ -16,7 +16,8 @@ templates = Jinja2Templates(directory="templates")
 
 app.add_middleware(
     SessionMiddleware,
-    secret_key="school_secret_key"
+    SECRET_KEY = os.getenv("SECRET_KEY"),
+    max_age=1800
 )
 
 @app.get("/", response_class=HTMLResponse)
@@ -28,17 +29,23 @@ def login_page(request: Request):
     )
 
 
+failed_attempts = {}
+
 @app.post("/login")
 def login(
     request: Request,
     username: str = Form(...),
     password: str = Form(...)
 ):
+    # Account lock after 5 wrong attempts
+    if failed_attempts.get(username, 0) >= 5:
+        return {"error": "Account locked. Try later."}
+
     conn = connect_db()
 
     if conn is None:
         return {"error": "Database connection failed"}
-        
+
     cursor = conn.cursor(dictionary=True)
 
     cursor.execute("""
@@ -53,6 +60,9 @@ def login(
         password.encode("utf-8"),
         user["password"].encode("utf-8")
     ):
+        # Reset failed attempts after successful login
+        failed_attempts[username] = 0
+
         request.session["user"] = user["username"]
         request.session["role"] = user["role"]
 
@@ -73,6 +83,9 @@ def login(
                 url=f"/parent_dashboard/{user['student_id']}",
                 status_code=303
             )
+
+    # Increase failed attempts
+    failed_attempts[username] = failed_attempts.get(username, 0) + 1
 
     return {"status": "Login Failed"}
 
@@ -581,6 +594,16 @@ async def save_student_web(
 
         final_fee = float(yearly_fee) - float(discount)
 
+        # File upload security
+        if not photo.filename:
+            return {"error": "No file selected"}
+
+        allowed_extensions = ["jpg", "jpeg", "png"]
+        file_ext = photo.filename.split(".")[-1].lower()
+
+        if file_ext not in allowed_extensions:
+            return {"error": "Only JPG, JPEG, PNG files allowed"}
+
         photo_path = f"static/uploads/{photo.filename}"
         print("Saving photo:", photo_path)
 
@@ -588,6 +611,10 @@ async def save_student_web(
             shutil.copyfileobj(photo.file, buffer)
 
         conn = connect_db()
+
+        if conn is None:
+            return {"error": "Database connection failed"}
+
         cursor = conn.cursor()
 
         cursor.execute("""

@@ -5,7 +5,7 @@ def connect_db():
         conn = mysql.connector.connect(
             host="reseau.proxy.rlwy.net",
             user="root",
-            password="rtWhYEPElwzIYDTTFkYgUZxxAcBZekLq",
+            password=os.getenv("DB_PASS"),
             database="railway",
             port=57454
         )
