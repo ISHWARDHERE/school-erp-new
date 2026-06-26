@@ -1,13 +1,14 @@
+import os
 import mysql.connector
 
 def connect_db():
     try:
         conn = mysql.connector.connect(
-            host="reseau.proxy.rlwy.net",
-            user="root",
+            host=os.getenv("DB_HOST"),
+            user=os.getenv("DB_USER"),
             password=os.getenv("DB_PASS"),
-            database="railway",
-            port=57454
+            database=os.getenv("DB_NAME"),
+            port=int(os.getenv("DB_PORT"))
         )
         return conn
 
