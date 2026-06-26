@@ -1006,6 +1006,13 @@ def web_attendance(
     request: Request,
     success: str = None
 ):
+
+    if "user" not in request.session:
+        return RedirectResponse("/", status_code=303)
+
+    if request.session.get("role") != "teacher":
+        return RedirectResponse("/", status_code=303)
+
     conn = connect_db()
     cursor = conn.cursor(dictionary=True)
 
@@ -1050,6 +1057,14 @@ def save_attendance_web(
 
 @app.get("/web_attendance_list", response_class=HTMLResponse)
 def web_attendance_list(request: Request):
+
+    # Session check
+    if "user" not in request.session:
+        return RedirectResponse("/", status_code=303)
+
+    if request.session.get("role") != "teacher":
+        return RedirectResponse("/", status_code=303)
+
     conn = connect_db()
     cursor = conn.cursor(dictionary=True)
 
@@ -1077,6 +1092,14 @@ def web_result(
     request: Request,
     success: str = None
 ):
+
+    # Session check
+    if "user" not in request.session:
+        return RedirectResponse("/", status_code=303)
+
+    if request.session.get("role") != "teacher":
+        return RedirectResponse("/", status_code=303)
+
     conn = connect_db()
     cursor = conn.cursor(dictionary=True)
 
@@ -1156,6 +1179,14 @@ def save_result_web(
 
 @app.get("/web_result_list", response_class=HTMLResponse)
 def web_result_list(request: Request):
+
+    # Session check
+    if "user" not in request.session:
+        return RedirectResponse("/", status_code=303)
+
+    if request.session.get("role") != "teacher":
+        return RedirectResponse("/", status_code=303)
+
     conn = connect_db()
     cursor = conn.cursor(dictionary=True)
 
