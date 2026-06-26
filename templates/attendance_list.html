@@ -8,9 +8,16 @@
 
 <div class="sidebar">
     <h2>School ERP</h2>
-    <a href="/teacher_dashboard">Dashboard</a>
+
+    {% if request.session.role == "admin" %}
+        <a href="/admin_dashboard">Dashboard</a>
+    {% else %}
+        <a href="/teacher_dashboard">Dashboard</a>
+    {% endif %}
+
     <a href="/web_attendance">Mark Attendance</a>
     <a href="/web_attendance_list">Attendance Report</a>
+
     <a href="/export_attendance_excel">
         Download Excel
     </a>

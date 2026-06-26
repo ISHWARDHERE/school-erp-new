@@ -14,9 +14,16 @@
 
 <div class="sidebar">
     <h2>School ERP</h2>
-    <a href="/teacher_dashboard">Dashboard</a>
+
+    {% if request.session.role == "admin" %}
+        <a href="/admin_dashboard">Dashboard</a>
+    {% else %}
+        <a href="/teacher_dashboard">Dashboard</a>
+    {% endif %}
+
     <a href="/web_result">Add Result</a>
     <a href="/web_result_list">Result Report</a>
+
     <a href="/export_results_excel">
         Download Excel
     </a>
