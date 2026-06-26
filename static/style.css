@@ -1,7 +1,7 @@
 body{
     margin:0;
     font-family:Arial,sans-serif;
-    background:#f4f6f9;
+    background:#f5f7fb;
 }
 
 /* Sidebar */
@@ -9,18 +9,14 @@ body{
     width:250px;
     height:100vh;
     position:fixed;
-    left:0;
-    top:0;
-    background:linear-gradient(180deg,#0f172a,#1e293b);
+    background:linear-gradient(180deg,#162a72,#0d1d57);
+    color:white;
     padding:20px;
-    box-sizing:border-box;
-    overflow-y:auto;
 }
 
 .sidebar h2{
-    color:white;
     text-align:center;
-    font-size:26px;
+    font-size:22px;
     margin-bottom:30px;
 }
 
@@ -29,195 +25,118 @@ body{
     color:white;
     text-decoration:none;
     padding:14px;
-    margin:10px 0;
-    background:#334155;
+    margin:8px 0;
     border-radius:10px;
     transition:0.3s;
 }
 
 .sidebar a:hover{
-    background:#2563eb;
-    transform:scale(1.03);
+    background:rgba(255,255,255,0.15);
 }
 
 /* Main */
 .main{
-    margin-left:280px;
+    margin-left:270px;
     padding:30px;
 }
 
 /* Topbar */
 .topbar{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
     background:white;
     padding:20px;
     border-radius:15px;
-    margin-bottom:25px;
-    box-shadow:0 4px 10px rgba(0,0,0,0.1);
+    box-shadow:0 4px 15px rgba(0,0,0,0.08);
+    margin-bottom:30px;
 }
 
-/* Stats */
+/* Stats cards */
 .stats{
-    display:flex;
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
     gap:20px;
-    flex-wrap:wrap;
     margin-bottom:30px;
 }
 
 .stat-card{
-    flex:1;
-    min-width:200px;
-    background:linear-gradient(135deg,#2563eb,#3b82f6);
-    color:white;
+    background:white;
     padding:20px;
     border-radius:15px;
-    text-align:center;
-    font-size:18px;
+    box-shadow:0 5px 15px rgba(0,0,0,0.08);
+}
+
+.stat-card h3{
+    margin:0;
+    color:#555;
+}
+
+.stat-card p{
+    font-size:28px;
     font-weight:bold;
-    box-shadow:0 5px 15px rgba(0,0,0,0.15);
+    margin-top:10px;
+}
+
+/* Content */
+.content{
+    display:grid;
+    grid-template-columns:2fr 1fr;
+    gap:20px;
 }
 
 /* Cards */
 .card{
     background:white;
-    padding:25px;
+    padding:20px;
     border-radius:15px;
-    box-shadow:0 5px 15px rgba(0,0,0,0.1);
-    margin-bottom:20px;
-    transition:0.3s;
-}
-
-.card:hover{
-    transform:translateY(-5px);
-}
-
-/* Dashboard grid */
-.dashboard-grid{
-    display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
-    gap:25px;
-}
-
-/* Form */
-input,
-textarea,
-select{
-    width:100%;
-    padding:12px;
-    margin:8px 0 15px;
-    border:1px solid #ccc;
-    border-radius:8px;
-    font-size:15px;
-}
-
-textarea{
-    min-height:120px;
-}
-
-/* Buttons */
-button{
-    padding:10px 20px;
-    background:#2563eb;
-    color:white;
-    border:none;
-    border-radius:8px;
-    cursor:pointer;
-    transition:0.3s;
-}
-
-button:hover{
-    background:#1d4ed8;
+    box-shadow:0 5px 15px rgba(0,0,0,0.08);
 }
 
 /* Table */
 table{
     width:100%;
     border-collapse:collapse;
-    background:white;
-    border-radius:10px;
-    overflow:hidden;
-    box-shadow:0 4px 12px rgba(0,0,0,0.08);
-}
-
-table th,
-table td{
-    padding:14px;
-    border:1px solid #ddd;
-    text-align:center;
 }
 
 table th{
     background:#2563eb;
     color:white;
+    padding:14px;
 }
 
-table tr:hover{
-    background:#f8fafc;
+table td{
+    padding:12px;
+    border-bottom:1px solid #ddd;
 }
 
-/* Login */
-.login-container{
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    height:100vh;
-    background:linear-gradient(to right,#2563eb,#1e293b);
+/* Buttons */
+button{
+    padding:8px 16px;
+    border:none;
+    border-radius:8px;
+    color:white;
+    cursor:pointer;
 }
 
-.login-box{
-    background:white;
-    padding:40px;
-    border-radius:15px;
-    width:350px;
-    text-align:center;
-    box-shadow:0px 0px 20px rgba(0,0,0,0.2);
+.approve{
+    background:#16a34a;
 }
 
-.login-box input{
-    width:90%;
+.reject{
+    background:#dc2626;
 }
 
-.login-box button{
-    width:100%;
-}
-
-/* Logo */
-.logo{
-    width:170px;
-    height:170px;
-    object-fit:contain;
-    display:block;
-    margin:0 auto 15px auto;
-    background:white;
-    padding:8px;
-    border-radius:50%;
-}
-
-/* Banner */
-.banner{
-    width:100%;
-    background:white;
-    padding:10px;
-    border-radius:15px;
-}
-
-.banner img{
-    width:100%;
-    height:auto;
-    object-fit:contain;
-}
-
-/* Status colors */
-.status-pending{
+.pending{
     color:orange;
     font-weight:bold;
 }
 
-.status-approved{
-    color:green;
-    font-weight:bold;
-}
-
-.status-rejected{
-    color:red;
-    font-weight:bold;
+.quick-btn{
+    display:block;
+    width:100%;
+    margin:10px 0;
+    background:#2563eb;
+    padding:12px;
+    border-radius:10px;
 }
