@@ -1930,6 +1930,31 @@ def approve_admission(admission_id: int):
         student["photo"]
     ))
 
+    student_id = cursor.lastrowid
+
+    # Parent login auto create
+    parent_username = student["mobile"]
+    parent_password = bcrypt.hashpw(
+        "123456".encode("utf-8"),
+        bcrypt.gensalt()
+    ).decode("utf-8")
+
+    cursor.execute("""
+        INSERT INTO users
+        (
+            username,
+            password,
+            role,
+            student_id
+        )
+        VALUES (%s,%s,%s,%s)
+    """, (
+        parent_username,
+        parent_password,
+        "parent",
+        student_id
+    ))
+
     cursor.execute(
         "DELETE FROM online_admissions WHERE id=%s",
         (admission_id,)
@@ -1941,4 +1966,4 @@ def approve_admission(admission_id: int):
     return RedirectResponse(
         "/admission_requests",
         status_code=303
-    )            
+    )
