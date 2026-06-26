@@ -10,6 +10,8 @@ import os
 from starlette.middleware.sessions import SessionMiddleware
 import bcrypt
 
+SECRET_KEY = os.getenv("SECRET_KEY")
+
 app = FastAPI()
 app.mount("/static", StaticFiles(directory="static"), name="static")
 templates = Jinja2Templates(directory="templates")
