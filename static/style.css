@@ -180,3 +180,16 @@ button{
     border:1px solid #ddd;
     border-radius:10px;
 }
+
+.school-logo{
+    width:120px;
+    height:120px;
+    margin-bottom:20px;
+}
+
+.login-box button{
+    width:100%;
+    padding:16px;
+    font-size:18px;
+    background:#2563eb;
+}

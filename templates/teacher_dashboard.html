@@ -10,11 +10,11 @@
     <h2>THE RISING STAR</h2>
 
     <a href="/teacher_dashboard">Dashboard</a>
-    <a href="/teacher_students">My Students</a>
-    <a href="/attendance">Attendance</a>
+    <a href="/web_students">Students</a>
+    <a href="/web_attendance">Attendance</a>
     <a href="/add_homework">Homework</a>
     <a href="/view_notices">Notices</a>
-    <a href="/exam_results">Results</a>
+    <a href="/web_result">Results</a>
     <a href="/logout">Logout</a>
 </div>
 
@@ -33,64 +33,18 @@
         </div>
 
         <div class="stat-card">
-            <h3>Today Attendance</h3>
+            <h3>Attendance</h3>
             <p>{{ today_attendance }}</p>
         </div>
 
         <div class="stat-card">
-            <h3>Pending Homework</h3>
+            <h3>Homework</h3>
             <p>{{ pending_homework }}</p>
         </div>
 
         <div class="stat-card">
-            <h3>Results Uploaded</h3>
+            <h3>Results</h3>
             <p>{{ total_results }}</p>
-        </div>
-
-    </div>
-
-    <div class="content">
-
-        <div class="card">
-            <h2>My Class Students</h2>
-
-            <table>
-                <tr>
-                    <th>ID</th>
-                    <th>Name</th>
-                    <th>Class</th>
-                    <th>Mobile</th>
-                </tr>
-
-                {% for student in students %}
-                <tr>
-                    <td>{{ student.id }}</td>
-                    <td>{{ student.student_name }}</td>
-                    <td>{{ student.class_name }}</td>
-                    <td>{{ student.mobile }}</td>
-                </tr>
-                {% endfor %}
-            </table>
-        </div>
-
-        <div class="card">
-            <h2>Quick Actions</h2>
-
-            <a href="/attendance">
-                <button class="quick-btn">Take Attendance</button>
-            </a>
-
-            <a href="/add_homework">
-                <button class="quick-btn">Add Homework</button>
-            </a>
-
-            <a href="/exam_results">
-                <button class="quick-btn">Upload Result</button>
-            </a>
-
-            <a href="/view_notices">
-                <button class="quick-btn">View Notices</button>
-            </a>
         </div>
 
     </div>

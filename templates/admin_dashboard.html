@@ -9,93 +9,45 @@
 <div class="sidebar">
     <h2>THE RISING STAR</h2>
 
-    <a href="#">Dashboard</a>
+    <a href="/admin_dashboard">Dashboard</a>
     <a href="/web_students">Students</a>
-    <a href="/attendance">Attendance</a>
-    <a href="/fees">Fees</a>
-    <a href="/exam_results">Exams</a>
+    <a href="/web_teachers">Teachers</a>
+    <a href="/web_attendance">Attendance</a>
+    <a href="/web_fees">Fees</a>
+    <a href="/web_result">Results</a>
     <a href="/add_homework">Homework</a>
     <a href="/view_notices">Notices</a>
     <a href="/admission_requests">Admission</a>
-    <a href="/reports">Reports</a>
+    <a href="/attendance_report">Reports</a>
     <a href="/logout">Logout</a>
 </div>
 
 <div class="main">
 
     <div class="topbar">
-        <h1>Dashboard</h1>
-        <h3>Admin</h3>
+        <h1>Admin Dashboard</h1>
     </div>
 
     <div class="stats">
+
         <div class="stat-card">
             <h3>Total Students</h3>
-            <p>{{ total_students }}</p>
+            <p>{{ students }}</p>
         </div>
 
         <div class="stat-card">
-            <h3>Today Attendance</h3>
-            <p>{{ today_attendance }}</p>
+            <h3>Total Teachers</h3>
+            <p>{{ teachers }}</p>
         </div>
 
         <div class="stat-card">
             <h3>Total Fees</h3>
-            <p>{{ total_fees }}</p>
+            <p>{{ fees }}</p>
         </div>
 
         <div class="stat-card">
-            <h3>Pending Admissions</h3>
-            <p>{{ pending_admissions }}</p>
-        </div>
-    </div>
-
-    <div class="content">
-
-        <div class="card">
-            <h2>Online Admission Requests</h2>
-
-            <table>
-                <tr>
-                    <th>ID</th>
-                    <th>Name</th>
-                    <th>Class</th>
-                    <th>Mobile</th>
-                    <th>Status</th>
-                </tr>
-
-                {% for student in admissions %}
-                <tr>
-                    <td>{{ student.id }}</td>
-                    <td>{{ student.student_name }}</td>
-                    <td>{{ student.class_name }}</td>
-                    <td>{{ student.mobile }}</td>
-                    <td class="pending">{{ student.status }}</td>
-                </tr>
-                {% endfor %}
-            </table>
-        </div>
-
-        <div>
-            <div class="card">
-                <h2>Quick Actions</h2>
-
-                <a href="/add_student">
-                    <button class="quick-btn">Add Student</button>
-                </a>
-
-                <a href="/attendance">
-                    <button class="quick-btn">Take Attendance</button>
-                </a>
-
-                <a href="/add_notice">
-                    <button class="quick-btn">Add Notice</button>
-                </a>
-
-                <a href="/fees">
-                    <button class="quick-btn">Collect Fees</button>
-                </a>
-            </div>
+            <h3>Total Results</h3>
+            <p>{{ results }}</p>
         </div>
 
     </div>
