@@ -2093,3 +2093,60 @@ def parent_homework(request: Request, student_id: int):
         name="parent_homework.html",
         context={"homework": homework}
     )
+
+@app.get("/add_notice", response_class=HTMLResponse)
+def add_notice_page(request: Request):
+    return templates.TemplateResponse(
+        request=request,
+        name="add_notice.html",
+        context={}
+    )
+
+@app.post("/save_notice")
+async def save_notice(request: Request):
+    form = await request.form()
+
+    title = form.get("title")
+    message = form.get("message")
+    notice_date = form.get("notice_date")
+
+    conn = connect_db()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        INSERT INTO notices
+        (
+            title,
+            message,
+            notice_date
+        )
+        VALUES (%s,%s,%s)
+    """, (
+        title,
+        message,
+        notice_date
+    ))
+
+    conn.commit()
+    conn.close()
+
+    return RedirectResponse(
+        "/add_notice",
+        status_code=303
+    )
+
+@app.get("/view_notices", response_class=HTMLResponse)
+def view_notices(request: Request):
+    conn = connect_db()
+    cursor = conn.cursor(dictionary=True)
+
+    cursor.execute("SELECT * FROM notices ORDER BY id DESC")
+    notices = cursor.fetchall()
+
+    conn.close()
+
+    return templates.TemplateResponse(
+        request=request,
+        name="view_notices.html",
+        context={"notices": notices}
+    )

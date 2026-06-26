@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Add Notice</title>
+</head>
+<body>
+
+<h2>Add Notice</h2>
+
+<form action="/save_notice" method="post">
+
+    <label>Notice Title</label>
+    <input type="text" name="title" required>
+
+    <label>Message</label>
+    <textarea name="message" required></textarea>
+
+    <label>Date</label>
+    <input type="date" name="notice_date" required>
+
+    <button type="submit">Save Notice</button>
+
+</form>
+
+</body>
+</html>

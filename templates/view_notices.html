@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>View Notices</title>
+</head>
+<body>
+
+<h2>School Notices</h2>
+
+<table border="1">
+    <tr>
+        <th>Title</th>
+        <th>Message</th>
+        <th>Date</th>
+    </tr>
+
+    {% for n in notices %}
+    <tr>
+        <td>{{ n.title }}</td>
+        <td>{{ n.message }}</td>
+        <td>{{ n.notice_date }}</td>
+    </tr>
+    {% endfor %}
+
+</table>
+
+</body>
+</html>
