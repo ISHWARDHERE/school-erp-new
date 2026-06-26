@@ -1798,7 +1798,9 @@ def teacher_dashboard(request: Request):
     if "user" not in request.session:
         return RedirectResponse("/", status_code=303)
 
-    if request.session["role"] != "teacher":
+    user_role = request.session.get("role", "").lower()
+
+    if user_role != "teacher":
         return RedirectResponse("/", status_code=303)
 
     conn = connect_db()
