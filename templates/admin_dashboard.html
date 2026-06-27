@@ -2,12 +2,15 @@
 <html>
 <head>
     <title>Admin Dashboard</title>
+    <!-- Google Fonts & FontAwesome for Premium Design -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="/static/style.css?v=1.9"> </head>
+    <link rel="stylesheet" href="/static/style.css?v=2.0"> <!-- Cache Busting -->
+</head>
 <body>
 
 <div class="dashboard-container">
+    <!-- SIDEBAR (ALL MODULES RESTORED) -->
     <div class="sidebar">
         <div class="logo-area">
             <i class="fa-solid fa-graduation-cap"></i>
@@ -15,16 +18,37 @@
         </div>
         
         <div class="nav-links">
+            <!-- डॅशबोर्ड ॲक्टिव्ह राहील -->
             <a href="/admin_dashboard" class="active"><i class="fa-solid fa-chart-line"></i> Dashboard</a>
+            
             <a href="/web_students"><i class="fa-solid fa-user-graduate"></i> Students</a>
+            
             <a href="/web_teachers"><i class="fa-solid fa-chalkboard-user"></i> Teachers</a>
+            
+            <!-- Attendance पूर्ववत केले -->
+            <a href="/web_attendance"><i class="fa-regular fa-calendar-check"></i> Attendance</a>
+            
             <a href="/web_fees"><i class="fa-solid fa-credit-card"></i> Fees</a>
-            <a href="/admission_requests"><i class="fa-solid fa-user-plus"></i> Admission</a>
+            
+            <!-- Results पूर्ववत केले -->
+            <a href="/web_results"><i class="fa-solid fa-square-poll-vertical"></i> Results</a>
+            
+            <!-- Homework पूर्ववत केले -->
+            <a href="/web_homework"><i class="fa-solid fa-book-open"></i> Homework</a>
+            
             <a href="/view_notices"><i class="fa-solid fa-bullhorn"></i> Notices</a>
+            
+            <a href="/admission_requests"><i class="fa-solid fa-user-plus"></i> Admission</a>
+            
+            <!-- Reports पूर्ववत केले -->
+            <a href="/web_reports"><i class="fa-solid fa-chart-pie"></i> Reports</a>
+            
+            <!-- Logout तळाशी -->
             <a href="/logout" class="logout-link" style="margin-top: auto;"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
         </div>
     </div>
 
+    <!-- MAIN CONTENT AREA -->
     <div class="main">
         <div class="topbar">
             <h1>Admin Dashboard</h1>
@@ -34,8 +58,10 @@
             </div>
         </div>
 
+        <!-- STATS GRID CARDS -->
         <div class="dashboard-stats-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; margin-top: 20px;">
             
+            <!-- Card 1: Total Students -->
             <div class="stat-card" style="background: white; padding: 24px; border-radius: 16px; border: 1px solid #f1f5f9; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.02); display: flex; align-items: center; gap: 20px;">
                 <div style="background: #eff6ff; color: #2563eb; width: 50px; height: 50px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 22px;">
                     <i class="fa-solid fa-users"></i>
@@ -46,6 +72,7 @@
                 </div>
             </div>
 
+            <!-- Card 2: Total Teachers -->
             <div class="stat-card" style="background: white; padding: 24px; border-radius: 16px; border: 1px solid #f1f5f9; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.02); display: flex; align-items: center; gap: 20px;">
                 <div style="background: #f0fdf4; color: #16a34a; width: 50px; height: 50px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 22px;">
                     <i class="fa-solid fa-chalkboard-user"></i>
@@ -56,16 +83,18 @@
                 </div>
             </div>
 
+            <!-- Card 3: Total Fees -->
             <div class="stat-card" style="background: white; padding: 24px; border-radius: 16px; border: 1px solid #f1f5f9; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.02); display: flex; align-items: center; gap: 20px;">
                 <div style="background: #faf5ff; color: #7c3aed; width: 50px; height: 50px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 22px;">
                     <i class="fa-solid fa-indian-rupee-sign"></i>
                 </div>
                 <div>
-                    <p style="font-size: 13px; color: #64748b; font-weight: 500; margin: 0;">Total Fees Collected</p>
+                    <p style="font-size: 13px; color: #64748b; font-weight: 500; margin: 0;">Total Fees</p>
                     <h2 style="font-size: 24px; font-weight: 700; color: #0f172a; margin: 4px 0 0 0;">₹{{ total_fees if total_fees else '15000.00' }}</h2>
                 </div>
             </div>
 
+            <!-- Card 4: Total Results -->
             <div class="stat-card" style="background: white; padding: 24px; border-radius: 16px; border: 1px solid #f1f5f9; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.02); display: flex; align-items: center; gap: 20px;">
                 <div style="background: #fff7ed; color: #ea580c; width: 50px; height: 50px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 22px;">
                     <i class="fa-solid fa-award"></i>
@@ -78,9 +107,10 @@
 
         </div>
 
+        <!-- Welcome Premium Banner -->
         <div style="background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); color: white; padding: 30px; border-radius: 16px; margin-top: 24px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.05);">
             <h2 style="font-weight: 600; font-size: 20px; margin-bottom: 6px;">Welcome back, Administrator! 👋</h2>
-            <p style="color: #94a3b8; font-size: 13.5px; margin: 0;">Here is what's happening with your school ERP platform today. Use the sidebar to manage students, collect fees, or process new online admission requests smoothly.</p>
+            <p style="color: #94a3b8; font-size: 13.5px; margin: 0;">Here is what's happening with your school ERP platform today. Use the sidebar to manage students, track attendance, calculate results, collect fees, or process new online admission requests smoothly.</p>
         </div>
 
     </div>
