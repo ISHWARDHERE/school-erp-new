@@ -1,103 +1,122 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Online Admission Form</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <style>
+        /* RESET & PREMIUM GLOBAL STYLES */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
         body {
-            font-family: Arial;
-            background: #f4f4f4;
+            background-color: #f8fafc; /* मॉडर्न फिकट राखाडी बॅकग्राउंड */
+            color: #334155;
+            padding: 40px 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
         }
 
+        /* FORM CONTAINER CARD */
         .container {
-            width: 600px;
-            margin: auto;
-            background: white;
-            padding: 20px;
-            margin-top: 30px;
-            border-radius: 10px;
+            width: 100%;
+            max-width: 750px; /* फॉर्म व्यवस्थित सुटसुटीत दिसण्यासाठी रुंदी वाढवली */
+            background: #ffffff;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+            border: 1px solid #f1f5f9;
         }
 
-        h2 {
+        /* FORM HEADER */
+        .form-header {
             text-align: center;
-            color: blue;
+            margin-bottom: 32px;
+            border-bottom: 1px solid #f1f5f9;
+            padding-bottom: 20px;
         }
 
-        input, select, textarea {
+        .form-header h2 {
+            font-size: 24px;
+            font-weight: 700;
+            color: #0f172a; /* डार्क निळा कॉर्पोरेट रंग */
+            margin-bottom: 6px;
+        }
+
+        .form-header p {
+            font-size: 13.5px;
+            color: #64748b;
+        }
+
+        /* TWO-COLUMN GRID FOR INPUTS */
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        /* Full Width Utility Class (पत्ता आणि फोटो अपलोड पूर्ण रुंदीमध्ये दिसण्यासाठी) */
+        .full-width {
+            grid-column: span 2;
+        }
+
+        /* FORM GROUPS */
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            font-size: 13px;
+            font-weight: 500;
+            color: #475569;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .form-group label i {
+            color: #64748b;
+            font-size: 14px;
+        }
+
+        /* INPUTS, SELECT & TEXTAREA FOCUS STYLES */
+        input[type="text"],
+        input[type="date"],
+        select,
+        textarea {
             width: 100%;
-            padding: 10px;
-            margin-top: 8px;
-            margin-bottom: 15px;
+            padding: 12px 16px;
+            border: 1.5px solid #e2e8f0;
+            background: #f8fafc;
+            border-radius: 10px;
+            font-size: 14px;
+            color: #0f172a;
+            transition: all 0.3s ease;
+            outline: none;
         }
 
-        button {
-            width: 100%;
-            padding: 12px;
-            background: green;
-            color: white;
-            border: none;
-            font-size: 18px;
+        /* Select Input Specific Arrow Padding */
+        select {
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 16px center;
+            background-size: 16px;
+            padding-right: 40px;
         }
 
-        button:hover {
-            background: darkgreen;
-        }
-    </style>
-</head>
-<body>
-
-<div class="container">
-    <h2>School Online Admission Form</h2>
-
-    <form action="/submit_admission" method="post" enctype="multipart/form-data">
-
-        <label>Student Name</label>
-        <input type="text" name="student_name" required>
-
-        <label>Class</label>
-        <select name="class_name" required>
-            <option value="">Select Class</option>
-            <option>Nursery</option>
-            <option>KG</option>
-            <option>1</option>
-            <option>2</option>
-            <option>3</option>
-            <option>4</option>
-            <option>5</option>
-            <option>6</option>
-            <option>7</option>
-            <option>8</option>
-            <option>9</option>
-            <option>10</option>
-        </select>
-
-        <label>Father Name</label>
-        <input type="text" name="father_name" required>
-
-        <label>Mother Name</label>
-        <input type="text" name="mother_name" required>
-
-        <label>Mobile Number</label>
-        <input type="text" name="mobile" required>
-
-        <label>Address</label>
-        <textarea name="address" required></textarea>
-
-        <label>Date of Birth</label>
-        <input type="date" name="dob" required>
-
-        <label>Aadhaar Number</label>
-        <input type="text" name="aadhaar" required>
-
-        <label>Previous School</label>
-        <input type="text" name="previous_school">
-
-        <label>Upload Photo</label>
-        <input type="file" name="photo" required>
-
-        <button type="submit">Submit Admission</button>
-
-    </form>
-</div>
-
-</body>
-</html>
+        textarea {
+            resize: vertical;
+            min-height: 8
