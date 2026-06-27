@@ -2,45 +2,125 @@
 <html>
 <head>
     <title>Attendance Report</title>
-    <link rel="stylesheet" href="/static/style.css">
+    <!-- Google Fonts & FontAwesome for Premium Design -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/static/style.css?v=2.3"> <!-- Cache Busting -->
 </head>
 <body>
 
-<div class="sidebar">
-    <h2>School ERP</h2>
+<div class="dashboard-container">
+    <!-- SIDEBAR (ALL MODULES RESTORED & MATCHING) -->
+    <div class="sidebar">
+        <div class="logo-area">
+            <i class="fa-solid fa-graduation-cap"></i>
+            <h2>THE RISING STAR</h2>
+        </div>
+        
+        <div class="nav-links">
+            <!-- रोलनुसार योग्य डॅशबोर्ड लिंक -->
+            {% if request.session.role == "admin" %}
+                <a href="/admin_dashboard"><i class="fa-solid fa-chart-line"></i> Dashboard</a>
+            {% else %}
+                <a href="/teacher_dashboard"><i class="fa-solid fa-chart-line"></i> Dashboard</a>
+            {% endif %}
+            
+            <a href="/web_students"><i class="fa-solid fa-user-graduate"></i> Students</a>
+            <a href="/web_teachers"><i class="fa-solid fa-chalkboard-user"></i> Teachers</a>
+            
+            <!-- Attendance Active ठेवली आहे -->
+            <a href="/web_attendance" class="active"><i class="fa-regular fa-calendar-check"></i> Attendance</a>
+            
+            <a href="/web_fees"><i class="fa-solid fa-credit-card"></i> Fees</a>
+            <a href="/web_results"><i class="fa-solid fa-square-poll-vertical"></i> Results</a>
+            <a href="/web_homework"><i class="fa-solid fa-book-open"></i> Homework</a>
+            <a href="/view_notices"><i class="fa-solid fa-bullhorn"></i> Notices</a>
+            <a href="/admission_requests"><i class="fa-solid fa-user-plus"></i> Admission</a>
+            <a href="/web_reports"><i class="fa-solid fa-chart-pie"></i> Reports</a>
+            
+            <a href="/logout" class="logout-link" style="margin-top: auto;"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
+        </div>
+    </div>
 
-    {% if request.session.role == "admin" %}
-        <a href="/admin_dashboard">Dashboard</a>
-    {% else %}
-        <a href="/teacher_dashboard">Dashboard</a>
-    {% endif %}
+    <!-- MAIN CONTENT AREA -->
+    <div class="main">
+        <div class="topbar">
+            <h1>Attendance Report</h1>
+            <div class="user-profile">
+                <!-- Premium Green Excel Download Button -->
+                <a href="/export_attendance_excel" style="text-decoration: none;">
+                    <button class="btn-submit" style="margin-top: 0; padding: 10px 20px; background: #16a34a; box-shadow: 0 4px 12px rgba(22, 163, 74, 0.2);">
+                        <i class="fa-regular fa-file-excel"></i> Export Excel
+                    </button>
+                </a>
+            </div>
+        </div>
 
-    <a href="/web_attendance">Mark Attendance</a>
-    <a href="/web_attendance_list">Attendance Report</a>
+        <!-- QUICK TABS FOR NAVIGATION -->
+        <div style="display: flex; gap: 10px; margin-bottom: 20px; margin-top: 10px;">
+            <a href="/web_attendance" style="text-decoration: none;">
+                <span class="badge-class" style="background: #ffffff; color: #64748b; border: 1px solid #e2e8f0; padding: 8px 16px; cursor: pointer;">
+                    <i class="fa-solid fa-plus" style="margin-right: 4px;"></i> Mark Attendance
+                </span>
+            </a>
+            <span class="badge-class" style="background: #eff6ff; color: #2563eb; border: 1px solid #bfdbfe; padding: 8px 16px;">
+                <i class="fa-solid fa-list-check" style="margin-right: 4px;"></i> View Attendance Report
+            </span>
+        </div>
 
-    <a href="/export_attendance_excel">
-        Download Excel
-    </a>
-</div>
+        <!-- PREMIUM DATA TABLE CARD -->
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th style="width: 40%;">Student Name</th>
+                        <th style="width: 30%; text-align: center;">Status</th>
+                        <th style="width: 30%;">Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if attendance_list %}
+                        {% for att in attendance_list %}
+                        <tr>
+                            <!-- Student Name with Modern Avatar Icon -->
+                            <td style="font-weight: 600; color: #0f172a;">
+                                <i class="fa-solid fa-circle-user" style="color: #94a3b8; margin-right: 8px; font-size: 16px;"></i>
+                                {{ att.student_name }}
+                            </td>
+                            
+                            <!-- Dynamic Status Badges with Color-Coding -->
+                            <td style="text-align: center;">
+                                {% if att.status == "Present" or att.status == "present" %}
+                                    <span class="badge-class" style="background: #f0fdf4; color: #16a34a; border: 1px solid #bbf7d0; padding: 6px 14px; font-weight: 600; display: inline-block; min-width: 100px;">
+                                        <i class="fa-solid fa-circle-check" style="font-size: 11px; margin-right: 4px;"></i> Present
+                                    </span>
+                                {% else %}
+                                    <span class="badge-class" style="background: #fef2f2; color: #dc2626; border: 1px solid #fecaca; padding: 6px 14px; font-weight: 600; display: inline-block; min-width: 100px;">
+                                        <i class="fa-solid fa-circle-xmark" style="font-size: 11px; margin-right: 4px;"></i> Absent
+                                    </span>
+                                {% endif %}
+                            </td>
 
-<div class="main">
-    <h2>Attendance Report</h2>
-
-    <table>
-        <tr>
-            <th>Student Name</th>
-            <th>Status</th>
-            <th>Date</th>
-        </tr>
-
-        {% for att in attendance_list %}
-        <tr>
-            <td>{{ att.student_name }}</td>
-            <td>{{ att.status }}</td>
-            <td>{{ att.date }}</td>
-        </tr>
-        {% endfor %}
-    </table>
+                            <!-- Date Badge with Icon -->
+                            <td style="color: #475569; font-weight: 500;">
+                                <i class="fa-regular fa-calendar-days" style="color: #64748b; margin-right: 6px; font-size: 13px;"></i>
+                                {{ att.date }}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    {% else %}
+                        <!-- Empty Record Template -->
+                        <tr>
+                            <td colspan="3" style="text-align: center; color: #94a3b8; padding: 40px; font-size: 15px;">
+                                <i class="fa-solid fa-folder-open" style="font-size: 32px; display: block; margin-bottom: 12px; color: #cbd5e1;"></i>
+                                No attendance data found.
+                            </td>
+                        </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>
 
 </body>

@@ -2,8 +2,9 @@
 <html>
 <head>
     <title>Mark Attendance</title>
-    <link rel="stylesheet" href="/static/style.css">
-</head>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/static/style.css?v=2.1"> </head>
 <body>
 
 {% if success %}
@@ -12,41 +13,85 @@
 </script>
 {% endif %}
 
-<div class="sidebar">
-    <h2>School ERP</h2>
+<div class="dashboard-container">
+    <div class="sidebar">
+        <div class="logo-area">
+            <i class="fa-solid fa-graduation-cap"></i>
+            <h2>THE RISING STAR</h2>
+        </div>
+        
+        <div class="nav-links">
+            {% if request.session.role == "admin" %}
+                <a href="/admin_dashboard"><i class="fa-solid fa-chart-line"></i> Dashboard</a>
+            {% else %}
+                <a href="/teacher_dashboard"><i class="fa-solid fa-chart-line"></i> Dashboard</a>
+            {% endif %}
+            
+            <a href="/web_students"><i class="fa-solid fa-user-graduate"></i> Students</a>
+            <a href="/web_teachers"><i class="fa-solid fa-chalkboard-user"></i> Teachers</a>
+            
+            <a href="/web_attendance" class="active"><i class="fa-regular fa-calendar-check"></i> Attendance</a>
+            
+            <a href="/web_fees"><i class="fa-solid fa-credit-card"></i> Fees</a>
+            <a href="/web_results"><i class="fa-solid fa-square-poll-vertical"></i> Results</a>
+            <a href="/web_homework"><i class="fa-solid fa-book-open"></i> Homework</a>
+            <a href="/view_notices"><i class="fa-solid fa-bullhorn"></i> Notices</a>
+            <a href="/admission_requests"><i class="fa-solid fa-user-plus"></i> Admission</a>
+            <a href="/web_reports"><i class="fa-solid fa-chart-pie"></i> Reports</a>
+            
+            <a href="/logout" class="logout-link" style="margin-top: auto;"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
+        </div>
+    </div>
 
-    {% if request.session.role == "admin" %}
-        <a href="/admin_dashboard">Dashboard</a>
-    {% else %}
-        <a href="/teacher_dashboard">Dashboard</a>
-    {% endif %}
+    <div class="main">
+        <div class="topbar">
+            <h1>Attendance Management</h1>
+            <div class="user-profile">
+                <a href="/web_attendance_list" style="text-decoration: none; margin-right: 15px;">
+                    <button class="btn-idcard" style="padding: 8px 14px; background: #faf5ff; color: #7c3aed; border: 1px solid #e9d5ff;">
+                        <i class="fa-solid fa-file-invoice"></i> Attendance Report
+                    </button>
+                </a>
+                <div class="avatar">A</div>
+            </div>
+        </div>
 
-    <a href="/web_attendance">Mark Attendance</a>
-    <a href="/web_attendance_list">Attendance Report</a>
-</div>
+        <div class="form-container" style="max-width: 550px;">
+            <div class="form-header">
+                <h2><i class="fa-regular fa-calendar-check" style="color: #2563eb;"></i> Mark Student Attendance</h2>
+                <p>Select the student name and assign their daily status below.</p>
+            </div>
 
-<div class="main">
-    <div class="login-box">
-        <h2>Mark Attendance</h2>
+            <form action="/save_attendance_web" method="post">
 
-        <form action="/save_attendance_web" method="post">
+                <div class="form-group">
+                    <label><i class="fa-solid fa-user"></i> Select Student</label>
+                    <select name="student_id" required>
+                        <option value="" disabled selected>-- Choose Student --</option>
+                        {% for student in students %}
+                        <option value="{{ student.id }}">
+                            {{ student.student_name }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
 
-            <select name="student_id">
-                {% for student in students %}
-                <option value="{{ student.id }}">
-                    {{ student.student_name }}
-                </option>
-                {% endfor %}
-            </select><br><br>
+                <div class="form-group">
+                    <label><i class="fa-solid fa-signal"></i> Attendance Status</label>
+                    <select name="status" required>
+                        <option value="Present" style="color: #16a34a; font-weight: 500;">🟢 Present (हजर)</option>
+                        <option value="Absent" style="color: #dc2626; font-weight: 500;">🔴 Absent (गैरहजर)</option>
+                    </select>
+                </div>
 
-            <select name="status">
-                <option value="Present">Present</option>
-                <option value="Absent">Absent</option>
-            </select><br><br>
+                <div class="form-actions" style="margin-top: 24px;">
+                    <button type="submit" class="btn-submit" style="width: 100%; justify-content: center;">
+                        <i class="fa-solid fa-cloud-arrow-up"></i> Save Attendance
+                    </button>
+                </div>
 
-            <button type="submit">Save Attendance</button>
-
-        </form>
+            </form>
+        </div>
     </div>
 </div>
 
