@@ -1,56 +1,83 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard</title>
+    <!-- Premium Fonts & Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
 
-<div class="sidebar">
-    <h2>THE RISING STAR</h2>
-
-    <a href="/web_students">Students</a>
-    <a href="/web_teachers">Teachers</a>
-    <a href="/web_attendance">Attendance</a>
-    <a href="/web_fees">Fees</a>
-    <a href="/web_result">Results</a>
-    <a href="/add_homework">Homework</a>
-    <a href="/view_notices">Notices</a>
-    <a href="/admission_requests">Admission</a>
-    <a href="/attendance_report">Reports</a>
-    <a href="/logout">Logout</a>
-</div>
-
-<div class="main">
-
-    <div class="topbar">
-        <h1>Admin Dashboard</h1>
+<div class="dashboard-container">
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+        <div class="logo-area">
+            <i class="fa-solid fa-graduation-cap"></i>
+            <h2>THE RISING STAR</h2>
+        </div>
+        
+        <div class="nav-links">
+            <a href="/web_students" class="active"><i class="fa-solid fa-user-graduate"></i> Students</a>
+            <a href="/web_teachers"><i class="fa-solid fa-chalkboard-user"></i> Teachers</a>
+            <a href="/web_attendance"><i class="fa-solid fa-calendar-check"></i> Attendance</a>
+            <a href="/web_fees"><i class="fa-solid fa-credit-card"></i> Fees</a>
+            <a href="/web_result"><i class="fa-solid fa-poll-h"></i> Results</a>
+            <a href="/add_homework"><i class="fa-solid fa-book-open"></i> Homework</a>
+            <a href="/view_notices"><i class="fa-solid fa-bullhorn"></i> Notices</a>
+            <a href="/admission_requests"><i class="fa-solid fa-user-plus"></i> Admission</a>
+            <a href="/attendance_report"><i class="fa-solid fa-chart-pie"></i> Reports</a>
+            <a href="/logout" class="logout-btn"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
+        </div>
     </div>
 
-    <div class="stats">
-
-        <div class="stat-card">
-            <h3>Total Students</h3>
-            <p>{{ students }}</p>
+    <!-- MAIN CONTENT AREA -->
+    <div class="main">
+        <div class="topbar">
+            <h1>Admin Dashboard</h1>
+            <div class="user-profile">
+                <i class="fa-regular fa-bell icon-bell"></i>
+                <div class="avatar">A</div>
+            </div>
         </div>
 
-        <div class="stat-card">
-            <h3>Total Teachers</h3>
-            <p>{{ teachers }}</p>
-        </div>
+        <!-- STATS CARDS -->
+        <div class="stats">
+            <div class="stat-card">
+                <div class="card-icon blue"><i class="fa-solid fa-users"></i></div>
+                <div class="card-info">
+                    <h3>Total Students</h3>
+                    <p>{{ students }}</p>
+                </div>
+            </div>
 
-        <div class="stat-card">
-            <h3>Total Fees</h3>
-            <p>{{ fees }}</p>
-        </div>
+            <div class="stat-card">
+                <div class="card-icon green"><i class="fa-solid fa-user-tie"></i></div>
+                <div class="card-info">
+                    <h3>Total Teachers</h3>
+                    <p>{{ teachers }}</p>
+                </div>
+            </div>
 
-        <div class="stat-card">
-            <h3>Total Results</h3>
-            <p>{{ results }}</p>
-        </div>
+            <div class="stat-card">
+                <div class="card-icon purple"><i class="fa-solid fa-indian-rupee-sign"></i></div>
+                <div class="card-info">
+                    <h3>Total Fees</h3>
+                    <p>{{ fees }}</p>
+                </div>
+            </div>
 
+            <div class="stat-card">
+                <div class="card-icon orange"><i class="fa-solid fa-award"></i></div>
+                <div class="card-info">
+                    <h3>Total Results</h3>
+                    <p>{{ results }}</p>
+                </div>
+            </div>
+        </div>
     </div>
-
 </div>
 
 </body>
