@@ -357,3 +357,148 @@ body:has(.login-container) {
         padding: 32px 24px;
     }
 }
+
+/* ==========================================================================
+   PREMIUM TABLE & STUDENT MODULE STYLES
+   ========================================================================== */
+
+/* Table Card Container */
+.table-container {
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 10px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02), 0 10px 15px -3px rgba(0, 0, 0, 0.04);
+    border: 1px solid #f1f5f9;
+    overflow-x: auto; /* स्क्रीन लहान असल्यास टेबल स्क्रोल होईल */
+    margin-top: 20px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+}
+
+/* Table Header Style */
+th {
+    background-color: #f8fafc;
+    color: #64748b;
+    font-weight: 600;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 16px 20px;
+    border-bottom: 2px solid #edf2f7;
+}
+
+/* Table Body Row Style */
+td {
+    padding: 16px 20px;
+    border-bottom: 1px solid #f1f5f9;
+    font-size: 14px;
+    color: #334155;
+    vertical-align: middle;
+}
+
+/* Zebra Striping - आलटून पालटून येणारा फिकट रंग */
+tbody tr:nth-child(even) {
+    background-color: #fcfdfe;
+}
+
+tbody tr:hover {
+    background-color: #f8fafc; /* माउस नेल्यावर रो हायलाईट होईल */
+}
+
+/* Student Profile Badge in Table */
+.student-name-cell {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-weight: 500;
+    color: #0f172a;
+}
+
+.student-avatar {
+    width: 32px;
+    height: 32px;
+    background-color: #e0f2fe;
+    color: #0369a1;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 13px;
+}
+
+/* Class Badge */
+.badge-class {
+    background: #f0fdf4;
+    color: #16a34a;
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+/* Fee Cell Formatting */
+.fee-cell {
+    font-weight: 600;
+    color: #0f172a;
+}
+
+/* Action Buttons Grid */
+.action-buttons {
+    display: flex;
+    gap: 8px;
+}
+
+/* Edit & Delete & ID Card Buttons */
+.btn-edit, .btn-delete, .btn-idcard {
+    text-decoration: none;
+    font-size: 12px;
+    font-weight: 500;
+    padding: 6px 12px;
+    border-radius: 6px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.2s ease;
+}
+
+.btn-edit {
+    background: #eff6ff;
+    color: #2563eb;
+}
+.btn-edit:hover {
+    background: #2563eb;
+    color: #ffffff;
+}
+
+.btn-delete {
+    background: #fef2f2;
+    color: #dc2626;
+}
+.btn-delete:hover {
+    background: #dc2626;
+    color: #ffffff;
+}
+
+.btn-idcard {
+    background: #faf5ff;
+    color: #7c3aed;
+    border: 1px solid #e9d5ff;
+}
+.btn-idcard:hover {
+    background: #7c3aed;
+    color: #ffffff;
+    box-shadow: 0 4px 10px rgba(124, 58, 237, 0.2);
+}
+
+/* Sidebar Excel Button Specific Style */
+.nav-links .excel-btn {
+    color: #10b981 !important; /* ग्रीन रंगाचा एक्सेल ऑप्शन */
+}
+.nav-links .excel-btn:hover {
+    background: rgba(16, 185, 129, 0.1) !important;
+}
