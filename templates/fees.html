@@ -2,51 +2,70 @@
 <html>
 <head>
     <title>Fees Management</title>
-    <link rel="stylesheet" href="/static/style.css">
-</head>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/static/style.css?v=1.5"> </head>
 <body>
 
-<div class="sidebar">
-    <h2>School ERP</h2>
-    <a href="/admin_dashboard">Dashboard</a>
-    <a href="/web_fees">Fees</a>
-    <a href="/add_fee_web">Collect Fee</a>
-    <a href="/web_pending_fees">Pending Fees</a>
-    <a href="/export_fees_excel">Download Excel</a>
-    <a href="/logout">Logout</a>
-</div>
+<div class="dashboard-container">
+    <div class="sidebar">
+        <div class="logo-area">
+            <i class="fa-solid fa-graduation-cap"></i>
+            <h2>THE RISING STAR</h2>
+        </div>
+        
+        <div class="nav-links">
+            <a href="/admin_dashboard"><i class="fa-solid fa-chart-line"></i> Dashboard</a>
+            <a href="/web_fees" class="active"><i class="fa-solid fa-credit-card"></i> Fees</a>
+            <a href="/add_fee_web"><i class="fa-solid fa-hand-holding-dollar"></i> Collect Fee</a>
+            <a href="/web_pending_fees"><i class="fa-solid fa-clock-rotate-left"></i> Pending Fees</a>
+            <a href="/export_fees_excel" class="excel-btn"><i class="fa-solid fa-file-excel"></i> Download Excel</a>
+            <a href="/logout" class="logout-link" style="margin-top: auto;"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
+        </div>
+    </div>
 
-<div class="main">
-    <h2>Fees Management</h2>
+    <div class="main">
+        <div class="topbar">
+            <h1>Fees Management</h1>
+            <div class="user-profile">
+                <div class="avatar">A</div>
+            </div>
+        </div>
 
-    <table border="1" width="100%">
-        <thead>
-            <tr>
-                <th>Student</th>
-                <th>Total Fee</th>
-                <th>Paid Amount</th>
-                <th>Pending Fee</th>
-                <th>Print</th>
-            </tr>
-        </thead>
-
-        <tbody>
-            {% for fee in fees %}
-            <tr>
-                <td>{{ fee.student_name }}</td>
-                <td>{{ fee.total_fee }}</td>
-                <td>{{ fee.paid_fee }}</td>
-                <td>{{ fee.pending_fee }}</td>
-                <td>
-                    <a href="/fee_receipt/{{ fee.student_id }}">
-                        <button>Print Receipt</button>
-                    </a>
-                </td>
-            </tr>
-            {% endfor %}
-        </tbody>
-
-    </table>
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Student Name</th>
+                        <th>Total Fee</th>
+                        <th>Paid Amount</th>
+                        <th>Pending Fee</th>
+                        <th>Receipt</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for fee in fees %}
+                    <tr>
+                        <td class="student-name-cell">
+                            <div class="student-avatar" style="background-color: #eff6ff; color: #2563eb;">
+                                {{ fee.student_name[0].upper() }}
+                            </div>
+                            {{ fee.student_name }}
+                        </td>
+                        <td class="fee-cell">₹{{ fee.total_fee }}</td>
+                        <td class="fee-cell" style="color: #16a34a;">₹{{ fee.paid_fee }}</td>
+                        <td class="fee-cell" style="color: #dc2626;">₹{{ fee.pending_fee }}</td>
+                        <td>
+                            <a href="/fee_receipt/{{ fee.student_id }}" target="_blank" class="btn-idcard" style="background: #f0fdfa; color: #0d9488; border: 1px solid #ccfbf1;">
+                                <i class="fa-solid fa-print"></i> Print Receipt
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>
 
 </body>
