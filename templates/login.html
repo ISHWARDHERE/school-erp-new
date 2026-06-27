@@ -2,31 +2,36 @@
 <html>
 <head>
     <title>School ERP Login</title>
-    <link rel="stylesheet" href="/static/style.css">
-</head>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/static/style.css?v=1.2"> </head>
 <body>
 
 <div class="login-container">
 
     <div class="login-left">
-
         <img src="/static/logo.png" class="school-logo">
-
         <h1>THE RISING STAR</h1>
         <p>ENGLISH MEDIUM SCHOOL</p>
-
     </div>
 
     <div class="login-box">
         <h2>School ERP Login</h2>
+        <p class="subtitle">Please enter your credentials to look into your account.</p>
 
         <form action="/login" method="post">
 
-            <input type="text" name="username" placeholder="Username" required>
+            <div class="input-field">
+                <i class="fa-solid fa-user"></i>
+                <input type="text" name="username" placeholder="Username" required>
+            </div>
 
-            <input type="password" name="password" placeholder="Password" required>
+            <div class="input-field">
+                <i class="fa-solid fa-lock"></i>
+                <input type="password" name="password" placeholder="Password" required>
+            </div>
 
-            <button type="submit">Login</button>
+            <button type="submit">Login <i class="fa-solid fa-arrow-right-to-bracket"></i></button>
 
         </form>
 
