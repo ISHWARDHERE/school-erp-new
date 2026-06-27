@@ -1,31 +1,30 @@
-/* RESET & BASE STYLES */
+/* RESET & GLOBAL STYLES */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: 'Poppins', sans-serif;
+    font-family: 'Poppins', sans-serif; /* साधे फॉन्ट बदलून पोपिन्स केला */
 }
 
 body {
-    background-color: #f8fafc; /* Modern Off-White Background */
+    background-color: #f8fafc; /* हलका प्रीमियम बॅकग्राउंड */
     color: #334155;
-}
-
-.dashboard-container {
     display: flex;
-    min-height: 100vh;
 }
 
-/* SIDEBAR STYLES (PREMIUM DARK NAVY) */
+/* SIDEBAR MODERN LOOK */
 .sidebar {
     width: 260px;
-    background: linear-gradient(180deg, #0f172a 0%, #1e293b 100%);
+    background: linear-gradient(180deg, #0f172a 0%, #1e293b 100%); /* प्रिमियम डार्क ग्रेडियंट */
     color: #fff;
     padding: 24px 16px;
     display: flex;
     flex-direction: column;
     position: fixed;
     height: 100vh;
+    left: 0;
+    top: 0;
+    z-index: 100;
 }
 
 .logo-area {
@@ -33,13 +32,13 @@ body {
     align-items: center;
     gap: 12px;
     padding-bottom: 20px;
-    border-bottom: 1px solid rgba(255,255,255,0.1);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     margin-bottom: 24px;
 }
 
 .logo-area i {
     font-size: 24px;
-    color: #38bdf8; /* Light Blue Accent */
+    color: #38bdf8;
 }
 
 .logo-area h2 {
@@ -71,41 +70,50 @@ body {
 .nav-links a i {
     font-size: 16px;
     width: 20px;
+    text-align: center;
 }
 
-/* Hover & Active Effect */
+/* Hover & Active States */
 .nav-links a:hover {
     background: rgba(255, 255, 255, 0.05);
     color: #fff;
+    padding-left: 20px; /* हलका सरकणारा इफेक्ट */
 }
 
 .nav-links a.active {
-    background: #3b82f6; /* Premium Blue */
+    background: #3b82f6;
     color: #fff;
-    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.25);
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
 }
 
-.nav-links .logout-btn {
-    margin-top: auto; /* Pushes logout to the bottom */
+.nav-links .logout-link {
+    margin-top: auto; /* लॉगआउट खाली ढकलण्यासाठी */
     color: #f87171;
 }
 
-.nav-links .logout-btn:hover {
+.nav-links .logout-link:hover {
     background: rgba(248, 113, 113, 0.1);
+    color: #f87171;
 }
 
 /* MAIN CONTENT AREA */
 .main {
     flex: 1;
-    padding: 32px;
-    margin-left: 260px; /* Sidebar च्या जागेसाठी */
+    margin-left: 260px; /* Sidebar ची जागा सोडली */
+    padding: 40px;
 }
 
+/* TOPBAR STYLES */
 .topbar {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 32px;
+    margin-bottom: 40px;
+    background: #ffffff;
+    padding: 20px 32px;
+    border-radius: 16px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02), 0 2px 4px -1px rgba(0, 0, 0, 0.02);
+    border: 1px solid #f1f5f9;
 }
 
 .topbar h1 {
@@ -117,18 +125,20 @@ body {
 .user-profile {
     display: flex;
     align-items: center;
-    gap: 20px;
+    gap: 24px;
 }
 
 .icon-bell {
     font-size: 20px;
     color: #64748b;
     cursor: pointer;
+    transition: color 0.2s;
 }
+.icon-bell:hover { color: #3b82f6; }
 
 .avatar {
-    width: 38px;
-    height: 38px;
+    width: 40px;
+    height: 40px;
     background: #e2e8f0;
     color: #0f172a;
     border-radius: 50%;
@@ -136,12 +146,13 @@ body {
     align-items: center;
     justify-content: center;
     font-weight: 600;
+    border: 2px solid #3b82f6;
 }
 
-/* PREMIUM STAT CARDS LAYOUT */
+/* STATS CARDS LAYOUT (GRID) */
 .stats {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
     gap: 24px;
 }
 
@@ -151,42 +162,42 @@ body {
     border-radius: 16px;
     display: flex;
     align-items: center;
-    gap: 16px;
+    gap: 20px;
     box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02), 0 10px 15px -3px rgba(0, 0, 0, 0.04);
     border: 1px solid #f1f5f9;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .stat-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.05);
+    transform: translateY(-5px);
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.06);
 }
 
-/* Card Icons Background Colors */
-.card-icon {
-    width: 48px;
-    height: 48px;
-    border-radius: 12px;
+/* Card Icons Colored Boxes */
+.card-icon-box {
+    width: 56px;
+    height: 56px;
+    border-radius: 14px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 20px;
+    font-size: 22px;
 }
 
-.card-icon.blue { background: #eff6ff; color: #3b82f6; }
-.card-icon.green { background: #f0fdf4; color: #22c55e; }
-.card-icon.purple { background: #faf5ff; color: #a855f7; }
-.card-icon.orange { background: #fff7ed; color: #f97316; }
+.blue-box { background: #eff6ff; color: #3b82f6; }
+.green-box { background: #f0fdf4; color: #22c55e; }
+.purple-box { background: #faf5ff; color: #a855f7; }
+.orange-box { background: #fff7ed; color: #f97316; }
 
-.card-info h3 {
-    font-size: 13px;
+.card-content h3 {
+    font-size: 14px;
     font-weight: 500;
     color: #64748b;
-    margin-bottom: 2px;
+    margin-bottom: 4px;
 }
 
-.card-info p {
-    font-size: 22px;
+.card-content p {
+    font-size: 24px;
     font-weight: 700;
     color: #1e293b;
 }
