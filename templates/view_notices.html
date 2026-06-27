@@ -1,62 +1,102 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>View Notices</title>
-    <link rel="stylesheet" href="/static/style.css">
+    <title>School Notices</title>
+    <!-- Google Fonts & FontAwesome for Premium Design -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/static/style.css?v=1.7"> <!-- Cache Busting साठी ?v=1.7 जोडले -->
 </head>
 <body>
 
-<div class="main">
+<div class="dashboard-container">
+    <!-- SIDEBAR (DASHBOARD & OTHER TABLES MATCHING) -->
+    <div class="sidebar">
+        <div class="logo-area">
+            <i class="fa-solid fa-graduation-cap"></i>
+            <h2>THE RISING STAR</h2>
+        </div>
+        
+        <div class="nav-links">
+            <a href="/admin_dashboard"><i class="fa-solid fa-chart-line"></i> Dashboard</a>
+            <a href="/web_students"><i class="fa-solid fa-user-graduate"></i> Students</a>
+            <a href="/web_teachers"><i class="fa-solid fa-chalkboard-user"></i> Teachers</a>
+            <a href="/web_fees"><i class="fa-solid fa-credit-card"></i> Fees</a>
+            <a href="/view_notices" class="active"><i class="fa-solid fa-bullhorn"></i> Notices</a>
+            <a href="/logout" class="logout-link" style="margin-top: auto;"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
+        </div>
+    </div>
 
-    <h2>School Notices</h2>
+    <!-- MAIN CONTENT AREA -->
+    <div class="main">
+        <div class="topbar">
+            <h1>School Notices</h1>
+            
+            <!-- Add New Notice Button at Top Right -->
+            <a href="/add_notice" style="text-decoration: none;">
+                <button class="btn-submit" style="margin-top: 0; padding: 10px 20px;">
+                    <i class="fa-solid fa-plus"></i> Add New Notice
+                </button>
+            </a>
+        </div>
 
-    <br>
-
-    <a href="/add_notice">
-        <button>Add New Notice</button>
-    </a>
-
-    <br><br>
-
-    <table border="1" width="100%">
-        <tr>
-            <th>Title</th>
-            <th>Message</th>
-            <th>Date</th>
-            <th>View</th>
-            <th>Edit</th>
-            <th>Delete</th>
-        </tr>
-
-        {% for n in notices %}
-        <tr>
-            <td>{{ n.title }}</td>
-            <td>{{ n.message }}</td>
-            <td>{{ n.notice_date }}</td>
-
-            <td>
-                <a href="/notice/{{ n.id }}">
-                    View
-                </a>
-            </td>
-
-            <td>
-                <a href="/edit_notice/{{ n.id }}">
-                    Edit
-                </a>
-            </td>
-
-            <td>
-                <a href="/delete_notice/{{ n.id }}"
-                   onclick="return confirm('Delete this notice?')">
-                    Delete
-                </a>
-            </td>
-        </tr>
-        {% endfor %}
-
-    </table>
-
+        <!-- PREMIUM DATA TABLE -->
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th style="width: 25%;">Title</th>
+                        <th style="width: 40%;">Message</th>
+                        <th style="width: 15%;">Date</th>
+                        <th style="width: 20%; text-align: center;">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for n in notices %}
+                    <tr>
+                        <!-- Notice Title with Icon -->
+                        <td style="font-weight: 600; color: #0f172a;">
+                            <i class="fa-solid fa-hashtag" style="color: #94a3b8; margin-right: 6px;"></i>
+                            {{ n.title }}
+                        </td>
+                        
+                        <!-- Notice Message (Clean Text) -->
+                        <td style="color: #475569; font-size: 13.5px; line-height: 1.5;">
+                            {{ n.message }}
+                        </td>
+                        
+                        <!-- Notice Date Badge -->
+                        <td>
+                            <span class="badge-class" style="background: #f1f5f9; color: #475569;">
+                                <i class="fa-regular fa-calendar" style="margin-right: 4px;"></i> {{ n.notice_date }}
+                            </span>
+                        </td>
+                        
+                        <!-- Action Buttons Grid -->
+                        <td>
+                            <div class="action-buttons" style="justify-content: center; gap: 6px;">
+                                <!-- View Button -->
+                                <a href="/notice/{{ n.id }}" class="btn-edit" title="View" style="background: #f0fdf4; color: #16a34a;">
+                                    <i class="fa-solid fa-eye"></i>
+                                </a>
+                                
+                                <!-- Edit Button -->
+                                <a href="/edit_notice/{{ n.id }}" class="btn-edit" title="Edit">
+                                    <i class="fa-solid fa-pen"></i>
+                                </a>
+                                
+                                <!-- Delete Button -->
+                                <a href="/delete_notice/{{ n.id }}" class="btn-delete" title="Delete" onclick="return confirm('Delete this notice?')">
+                                    <i class="fa-solid fa-trash"></i>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>
 
 </body>

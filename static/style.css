@@ -502,3 +502,112 @@ tbody tr:hover {
 .nav-links .excel-btn:hover {
     background: rgba(16, 185, 129, 0.1) !important;
 }
+
+/* ==========================================================================
+   PREMIUM FORM LAYOUT STYLES (FOR ADD MODULES)
+   ========================================================================== */
+
+.form-container {
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 32px;
+    max-width: 700px; /* फॉर्मची रुंदी डोळ्यांना सुटसुटीत वाटेल अशी ठेवली आहे */
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02), 0 10px 15px -3px rgba(0, 0, 0, 0.04);
+    border: 1px solid #f1f5f9;
+    margin-top: 20px;
+}
+
+.form-header {
+    margin-bottom: 28px;
+    border-bottom: 1px solid #f1f5f9;
+    padding-bottom: 16px;
+}
+
+.form-header h2 {
+    font-size: 20px;
+    font-weight: 600;
+    color: #0f172a;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 4px;
+}
+
+.form-header p {
+    font-size: 13px;
+    color: #64748b;
+}
+
+/* Form Fields Styling */
+.form-group {
+    margin-bottom: 22px;
+}
+
+.form-group label {
+    display: block;
+    font-size: 13px;
+    font-weight: 500;
+    color: #475569;
+    margin-bottom: 8px;
+}
+
+.form-group label i {
+    color: #64748b;
+    margin-right: 4px;
+    font-size: 14px;
+}
+
+.form-group input[type="text"],
+.form-group input[type="date"],
+.form-group textarea {
+    width: 100%;
+    padding: 12px 16px;
+    border: 1.5px solid #e2e8f0;
+    background: #f8fafc;
+    border-radius: 10px;
+    font-size: 14px;
+    color: #0f172a;
+    transition: all 0.3s ease;
+    outline: none;
+}
+
+/* Message Box Specific */
+.form-group textarea {
+    resize: vertical; /* युझर बॉक्स उभा लहान-मोठा करू शकतो */
+    font-family: inherit;
+}
+
+/* Focus Effects */
+.form-group input:focus,
+.form-group textarea:focus {
+    border-color: #3b82f6;
+    background: #ffffff;
+    box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+}
+
+/* Submit Button Style */
+.form-actions {
+    margin-top: 32px;
+}
+
+.btn-submit {
+    background: #3b82f6;
+    color: #ffffff;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2);
+}
+
+.btn-submit:hover {
+    background: #2563eb;
+    box-shadow: 0 6px 20px rgba(37, 99, 235, 0.3);
+    transform: translateY(-1px);
+}

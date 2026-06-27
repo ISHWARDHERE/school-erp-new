@@ -2,25 +2,69 @@
 <html>
 <head>
     <title>Add Notice</title>
-</head>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/static/style.css?v=1.6"> </head>
 <body>
 
-<h2>Add Notice</h2>
+<div class="dashboard-container">
+    <div class="sidebar">
+        <div class="logo-area">
+            <i class="fa-solid fa-graduation-cap"></i>
+            <h2>THE RISING STAR</h2>
+        </div>
+        
+        <div class="nav-links">
+            <a href="/admin_dashboard"><i class="fa-solid fa-chart-line"></i> Dashboard</a>
+            <a href="/web_students"><i class="fa-solid fa-user-graduate"></i> Students</a>
+            <a href="/web_teachers"><i class="fa-solid fa-chalkboard-user"></i> Teachers</a>
+            <a href="/web_fees"><i class="fa-solid fa-credit-card"></i> Fees</a>
+            <a href="/view_notices" class="active"><i class="fa-solid fa-bullhorn"></i> Notices</a>
+            <a href="/logout" class="logout-link" style="margin-top: auto;"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
+        </div>
+    </div>
 
-<form action="/save_notice" method="post">
+    <div class="main">
+        <div class="topbar">
+            <h1>Add New Notice</h1>
+            <div class="user-profile">
+                <div class="avatar">A</div>
+            </div>
+        </div>
 
-    <label>Notice Title</label>
-    <input type="text" name="title" required>
+        <div class="form-container">
+            <div class="form-header">
+                <h2><i class="fa-solid fa-bullhorn" style="color: #f97316;"></i> Create Notice</h2>
+                <p>Fill out the details below to publish a new notice for the school.</p>
+            </div>
 
-    <label>Message</label>
-    <textarea name="message" required></textarea>
+            <form action="/save_notice" method="post">
 
-    <label>Date</label>
-    <input type="date" name="notice_date" required>
+                <div class="form-group">
+                    <label><i class="fa-solid fa-heading"></i> Notice Title</label>
+                    <input type="text" name="title" placeholder="e.g. Independence Day Celebration" required>
+                </div>
 
-    <button type="submit">Save Notice</button>
+                <div class="form-group">
+                    <label><i class="fa-regular fa-calendar-days"></i> Notice Date</label>
+                    <input type="date" name="notice_date" required>
+                </div>
 
-</form>
+                <div class="form-group">
+                    <label><i class="fa-regular fa-comment-dot"></i> Message / Description</label>
+                    <textarea name="message" rows="6" placeholder="Write your notice message here..." required></textarea>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn-submit">
+                        <i class="fa-solid fa-paper-plane"></i> Save & Publish Notice
+                    </button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
 
 </body>
 </html>
