@@ -4,7 +4,8 @@
     <title>Edit Student</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="/static/style.css?v=3.4"> </head>
+    <link rel="stylesheet" href="/static/style.css?v=3.5">
+</head>
 <body>
 
 <div class="dashboard-container">
@@ -13,39 +14,45 @@
             <i class="fa-solid fa-graduation-cap"></i>
             <h2>THE RISING STAR</h2>
         </div>
-        
+
         <div class="nav-links">
+
             {% if request.session.get("role") == "admin" %}
-    <a href="/admin_dashboard"><i class="fa-solid fa-chart-line"></i> Dashboard</a>
-{% else %}
-    <a href="/teacher_dashboard"><i class="fa-solid fa-chart-line"></i> Dashboard</a>
-{% endif %}
-        {% else %}
-            <a href="/teacher_dashboard"><i class="fa-solid fa-chart-line"></i> Dashboard</a>
-        {% endif %}
-            
-            <a href="/web_students" class="active"><i class="fa-solid fa-user-graduate"></i> Students</a>
-            
-            <a href="/web_teachers"><i class="fa-solid fa-chalkboard-user"></i> Teachers</a>
-            <a href="/web_attendance"><i class="fa-regular fa-calendar-check"></i> Attendance</a>
-            <a href="/web_fees"><i class="fa-solid fa-credit-card"></i> Fees</a>
-            <a href="/web_results"><i class="fa-solid fa-square-poll-vertical"></i> Results</a>
-            <a href="/web_homework"><i class="fa-solid fa-book-open"></i> Homework</a>
-            <a href="/view_notices"><i class="fa-solid fa-bullhorn"></i> Notices</a>
-            <a href="/admission_requests"><i class="fa-solid fa-user-plus"></i> Admission</a>
-            {% if request.session.get("role") == "admin" %}
-    <a href="/web_reports"><i class="fa-solid fa-chart-pie"></i> Reports</a>
-{% else %}
-    <a href="/teacher_reports"><i class="fa-solid fa-chart-pie"></i> Reports</a>
-{% endif %}
-            
-            <a href="/logout" class="logout-link" style="margin-top: auto;"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
+
+                <a href="/admin_dashboard"><i class="fa-solid fa-chart-line"></i> Dashboard</a>
+                <a href="/web_students" class="active"><i class="fa-solid fa-user-graduate"></i> Students</a>
+                <a href="/web_teachers"><i class="fa-solid fa-chalkboard-user"></i> Teachers</a>
+                <a href="/web_attendance"><i class="fa-regular fa-calendar-check"></i> Attendance</a>
+                <a href="/web_fees"><i class="fa-solid fa-credit-card"></i> Fees</a>
+                <a href="/web_result"><i class="fa-solid fa-square-poll-vertical"></i> Results</a>
+                <a href="/add_homework"><i class="fa-solid fa-book-open"></i> Homework</a>
+                <a href="/view_notices"><i class="fa-solid fa-bullhorn"></i> Notices</a>
+                <a href="/admission_requests"><i class="fa-solid fa-user-plus"></i> Admission</a>
+                <a href="/web_reports"><i class="fa-solid fa-chart-pie"></i> Reports</a>
+
+            {% else %}
+
+                <a href="/teacher_dashboard"><i class="fa-solid fa-chart-line"></i> Dashboard</a>
+                <a href="/web_students" class="active"><i class="fa-solid fa-user-graduate"></i> Students</a>
+                <a href="/web_attendance"><i class="fa-regular fa-calendar-check"></i> Attendance</a>
+                <a href="/add_homework"><i class="fa-solid fa-book-open"></i> Homework</a>
+                <a href="/view_notices"><i class="fa-solid fa-bullhorn"></i> Notices</a>
+                <a href="/web_result_list"><i class="fa-solid fa-square-poll-vertical"></i> Results</a>
+                <a href="/teacher_reports"><i class="fa-solid fa-chart-pie"></i> Reports</a>
+
+            {% endif %}
+
+            <a href="/logout" class="logout-link" style="margin-top: auto;">
+                <i class="fa-solid fa-right-from-bracket"></i> Logout
+            </a>
+
         </div>
     </div>
 
     <div class="main">
         <div class="topbar">
             <h1>Edit Student Profile</h1>
+
             <div class="user-profile">
                 <a href="/web_students" style="text-decoration: none; margin-right: 15px;">
                     <button class="btn-idcard" style="padding: 8px 14px; background: #eff6ff; color: #2563eb; border: 1px solid #bfdbfe;">
@@ -58,38 +65,60 @@
 
         <div class="form-container" style="max-width: 650px; margin-top: 20px;">
             <div class="form-header">
-                <h2><i class="fa-solid fa-user-pen" style="color: #2563eb;"></i> Modify Student Details</h2>
-                <p>Update the student's personal or academic records. Make sure to double-check values before saving.</p>
+                <h2>
+                    <i class="fa-solid fa-user-pen" style="color: #2563eb;"></i>
+                    Modify Student Details
+                </h2>
+                <p>Update the student's personal or academic records.</p>
             </div>
 
             <form action="/update_student_web/{{ student.id }}" method="post">
 
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+
                     <div class="form-group">
-                        <label><i class="fa-solid fa-user"></i> Student Name</label>
-                        <input type="text" name="student_name" value="{{ student.student_name }}" placeholder="Enter student name" required>
+                        <label>Student Name</label>
+                        <input type="text" name="student_name" value="{{ student.student_name }}" required>
                     </div>
 
                     <div class="form-group">
-                        <label><i class="fa-solid fa-school"></i> Class Name</label>
-                        <input type="text" name="class_name" value="{{ student.class_name }}" placeholder="e.g. 10th-B" required>
+                        <label>Class Name</label>
+                        <input type="text" name="class_name" value="{{ student.class_name }}" required>
                     </div>
+
                 </div>
 
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 15px;">
+
                     <div class="form-group">
-                        <label><i class="fa-solid fa-phone"></i> Mobile Number</label>
-                        <input type="text" name="mobile" value="{{ student.mobile }}" placeholder="10-digit number" required>
+                        <label>Division</label>
+                        <select name="division" required>
+                            <option value="{{ student.division }}">{{ student.division }}</option>
+                            <option>A</option>
+                            <option>B</option>
+                            <option>C</option>
+                            <option>D</option>
+                        </select>
                     </div>
 
                     <div class="form-group">
-                        <label><i class="fa-solid fa-indian-rupee-sign"></i> Yearly Fee</label>
-                        <input type="text" name="yearly_fee" value="{{ student.yearly_fee }}" placeholder="Total annual fee" required>
+                        <label>Mobile Number</label>
+                        <input type="text" name="mobile" value="{{ student.mobile }}" required>
                     </div>
+
+                </div>
+
+                <div style="margin-top: 15px;">
+
+                    <div class="form-group">
+                        <label>Yearly Fee</label>
+                        <input type="text" name="yearly_fee" value="{{ student.yearly_fee }}" required>
+                    </div>
+
                 </div>
 
                 <div class="form-actions" style="margin-top: 25px;">
-                    <button type="submit" class="btn-submit" style="width: 100%; justify-content: center; padding: 12px; background: #2563eb; box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);">
+                    <button type="submit" class="btn-submit" style="width: 100%;">
                         <i class="fa-solid fa-check-double"></i> Update & Save Changes
                     </button>
                 </div>
