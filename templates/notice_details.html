@@ -19,7 +19,7 @@
 
         <div class="nav-links">
 
-            {% if request.session.role == "admin" %}
+            {% if request.session.get("role") == "admin" %}
 
                 <a href="/admin_dashboard">
                     <i class="fa-solid fa-chart-line"></i> Dashboard

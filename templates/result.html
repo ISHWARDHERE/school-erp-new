@@ -14,7 +14,7 @@
 {% endif %}
 
 <div class="dashboard-container">
-    {% if request.session.role == "admin" %}
+    {% if request.session.get("role") == "admin" %}
 
         <a href="/web_students">Students</a>
         <a href="/web_teachers">Teachers</a>
