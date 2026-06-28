@@ -571,7 +571,7 @@ def web_students(request: Request):
         teacher_class = request.session.get("class_name")
 
         cursor.execute(
-            "SELECT * FROM students WHERE class_name=?",
+            "SELECT * FROM students WHERE class_name=%s",
             (teacher_class,)
         )
     else:
@@ -1036,7 +1036,7 @@ def web_attendance(
 
     if request.session.get("role") == "teacher":
         cursor.execute(
-            "SELECT * FROM students WHERE class_name=?",
+            "SELECT * FROM students WHERE class_name=%s",
             (request.session.get("class_name"),)
         )
     else:
