@@ -1092,11 +1092,10 @@ def web_result(
     success: str = None
 ):
 
-    # Session check
     if "user" not in request.session:
         return RedirectResponse("/", status_code=303)
 
-    if request.session.get("role") != "teacher":
+    if request.session.get("role") not in ["teacher", "admin"]:
         return RedirectResponse("/", status_code=303)
 
     conn = connect_db()
