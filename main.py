@@ -2504,10 +2504,32 @@ def fix_db():
     conn = connect_db()
     cursor = conn.cursor()
 
-    cursor.execute("ALTER TABLE teachers ADD class_name VARCHAR(50)")
-    cursor.execute("ALTER TABLE teachers ADD division VARCHAR(20)")
+    try:
+        cursor.execute("ALTER TABLE teachers ADD class_name VARCHAR(50)")
+    except:
+        pass
+
+    try:
+        cursor.execute("ALTER TABLE teachers ADD division VARCHAR(20)")
+    except:
+        pass
+
+    try:
+        cursor.execute("ALTER TABLE users ADD class_name VARCHAR(50)")
+    except:
+        pass
+
+    try:
+        cursor.execute("ALTER TABLE users ADD division VARCHAR(20)")
+    except:
+        pass
+
+    try:
+        cursor.execute("ALTER TABLE users ADD mobile VARCHAR(15)")
+    except:
+        pass
 
     conn.commit()
     conn.close()
 
-    return {"status": "done"}
+    return {"status": "database fixed"}
