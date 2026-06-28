@@ -2149,6 +2149,13 @@ def parent_homework(request: Request, student_id: int):
 
 @app.get("/add_notice", response_class=HTMLResponse)
 def add_notice_page(request: Request):
+
+    if "user" not in request.session:
+        return RedirectResponse("/", status_code=303)
+
+    if request.session.get("role") != "admin":
+        return RedirectResponse("/", status_code=303)
+
     return templates.TemplateResponse(
         request=request,
         name="add_notice.html",
@@ -2156,24 +2163,28 @@ def add_notice_page(request: Request):
     )
 
 @app.post("/save_notice")
-def save_notice(
-    title: str = Form(...),
-    notice_text: str = Form(...),
-    notice_date: str = Form(...)
-):
+async def save_notice(request: Request):
+    form = await request.form()
+
+    title = form.get("title")
+    message = form.get("message")
+
     conn = connect_db()
     cursor = conn.cursor()
 
     cursor.execute("""
         INSERT INTO notices (title, message, notice_date)
-        VALUES (%s, %s, %s)
-    """, (title, notice_text, notice_date))
+        VALUES (%s, %s, CURDATE())
+    """, (
+        title,
+        message
+    ))
 
     conn.commit()
     conn.close()
 
     return RedirectResponse(
-        url="/view_notices",
+        "/view_notices",
         status_code=303
     )
 
