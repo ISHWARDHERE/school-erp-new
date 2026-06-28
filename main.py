@@ -72,6 +72,7 @@ def login(
 
         request.session["user"] = user["username"]
         request.session["role"] = str(user["role"]).strip().lower()
+        request.session["class_name"] = user.get("class_name", "")
 
         if user_role == "admin":
             return RedirectResponse(
@@ -560,7 +561,16 @@ def web_students(request: Request):
     conn = connect_db()
     cursor = conn.cursor(dictionary=True)
 
-    cursor.execute("SELECT * FROM students")
+    if user_role == "teacher":
+        teacher_class = request.session.get("class_name")
+
+        cursor.execute(
+            "SELECT * FROM students WHERE class_name = ?",
+            (teacher_class,)
+        )
+    else:
+        cursor.execute("SELECT * FROM students")
+
     students = cursor.fetchall()
 
     conn.close()
@@ -1019,8 +1029,14 @@ def web_attendance(
     conn = connect_db()
     cursor = conn.cursor(dictionary=True)
 
-    cursor.execute("SELECT * FROM students")
-    students = cursor.fetchall()
+    if request.session.get("role") == "teacher":
+        cursor.execute(
+            "SELECT * FROM students WHERE class_name=?",
+            (request.session.get("class_name"),)
+        )
+    else:
+        cursor.execute("SELECT * FROM students")
+        students = cursor.fetchall()
 
     conn.close()
 
