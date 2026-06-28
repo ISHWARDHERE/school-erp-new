@@ -1118,62 +1118,69 @@ def web_result(
     )
 
 @app.post("/save_result_web")
-def save_result_web(
-    student_id: int = Form(...),
-    exam_name: str = Form(...),
-    subject: str = Form(...),
-    marks: float = Form(...),
-    total_marks: float = Form(...)
-):
-    percentage = (marks / total_marks) * 100
+async def save_result_web(request: Request):
+    form = await request.form()
 
-    # Result status
-    result_status = "Pass"
-    if percentage < 35:
-        result_status = "Fail"
+    student_id = form.get("student_id")
+    exam_name = form.get("exam_name")
+    class_name = form.get("class_name")
+    division = form.get("division")
 
-    # Grade calculate
-    if percentage >= 75:
-        grade = "A"
-    elif percentage >= 60:
-        grade = "B"
-    elif percentage >= 35:
-        grade = "C"
-    else:
-        grade = "F"
+    subjects = form.getlist("subject[]")
+    marks_list = form.getlist("marks[]")
+    total_marks_list = form.getlist("total_marks[]")
+    grades = form.getlist("grade[]")
 
     conn = connect_db()
     cursor = conn.cursor()
 
-    cursor.execute("""
-        INSERT INTO results
-        (
+    for i in range(len(subjects)):
+
+        subject = subjects[i]
+        marks = float(marks_list[i])
+        total_marks = float(total_marks_list[i])
+        grade = grades[i]
+
+        percentage = (marks / total_marks) * 100
+
+        if percentage >= 35:
+            result_status = "Pass"
+        else:
+            result_status = "Fail"
+
+        cursor.execute("""
+            INSERT INTO results
+            (
+                student_id,
+                exam_name,
+                class_name,
+                division,
+                subject,
+                marks,
+                total_marks,
+                percentage,
+                grade,
+                result_status
+            )
+            VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
+        """, (
             student_id,
             exam_name,
+            class_name,
+            division,
             subject,
             marks,
             total_marks,
-            grade,
             percentage,
+            grade,
             result_status
-        )
-        VALUES (%s,%s,%s,%s,%s,%s,%s,%s)
-    """, (
-        student_id,
-        exam_name,
-        subject,
-        marks,
-        total_marks,
-        grade,
-        percentage,
-        result_status
-    ))
+        ))
 
     conn.commit()
     conn.close()
 
     return RedirectResponse(
-        url="/web_result?success=1",
+        "/web_result?success=1",
         status_code=303
     )
 

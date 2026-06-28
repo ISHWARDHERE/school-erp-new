@@ -2,10 +2,13 @@
 <html>
 <head>
     <title>Add Result</title>
-    <!-- Google Fonts & FontAwesome for Premium Design -->
+
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="/static/style.css?v=3.1"> <!-- Cache Busting -->
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <link rel="stylesheet" href="/static/style.css?v=3.2">
 </head>
 <body>
 
@@ -16,80 +19,109 @@
 {% endif %}
 
 <div class="dashboard-container">
-    <!-- SIDEBAR (ALL MODULES INTEGRATED & MATCHING WITH DASHBOARD) -->
+
+    <!-- Sidebar -->
     <div class="sidebar">
+
         <div class="logo-area">
             <i class="fa-solid fa-graduation-cap"></i>
             <h2>THE RISING STAR</h2>
         </div>
-        
+
         <div class="nav-links">
-            <!-- रोलनुसार योग्य डॅशबोर्ड लिंक (पायथन कंडिशन सुरक्षित) -->
+
             {% if request.session.role == "admin" %}
-                <a href="/admin_dashboard"><i class="fa-solid fa-chart-line"></i> Dashboard</a>
+                <a href="/admin_dashboard">
+                    <i class="fa-solid fa-chart-line"></i> Dashboard
+                </a>
             {% else %}
-                <a href="/teacher_dashboard"><i class="fa-solid fa-chart-line"></i> Dashboard</a>
+                <a href="/teacher_dashboard">
+                    <i class="fa-solid fa-chart-line"></i> Dashboard
+                </a>
             {% endif %}
-            
+
             <a href="/web_students"><i class="fa-solid fa-user-graduate"></i> Students</a>
             <a href="/web_teachers"><i class="fa-solid fa-chalkboard-user"></i> Teachers</a>
             <a href="/web_attendance"><i class="fa-regular fa-calendar-check"></i> Attendance</a>
             <a href="/web_fees"><i class="fa-solid fa-credit-card"></i> Fees</a>
-            
-            <!-- Results Active ठेवले आहे -->
             <a href="/web_result_list" class="active"><i class="fa-solid fa-square-poll-vertical"></i> Results</a>
-            
             <a href="/add_homework"><i class="fa-solid fa-book-open"></i> Homework</a>
             <a href="/view_notices"><i class="fa-solid fa-bullhorn"></i> Notices</a>
             <a href="/admission_requests"><i class="fa-solid fa-user-plus"></i> Admission</a>
             <a href="/web_result_list"><i class="fa-solid fa-chart-pie"></i> Reports</a>
-            
-            <a href="/logout" class="logout-link" style="margin-top: auto;"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
+
+            <a href="/logout" class="logout-link" style="margin-top:auto;">
+                <i class="fa-solid fa-right-from-bracket"></i> Logout
+            </a>
+
         </div>
     </div>
 
-    <!-- MAIN CONTENT AREA -->
+    <!-- Main -->
     <div class="main">
+
         <div class="topbar">
             <h1>Add Exam Result</h1>
+
             <div class="user-profile">
-                <!-- एक्सेल डाउनलोड शॉर्टकट बटण वर उजवीकडे -->
-                <a href="/export_results_excel" style="text-decoration: none; margin-right: 15px;">
-                    <button class="btn-submit" style="margin-top: 0; padding: 10px 18px; background: #16a34a; box-shadow: 0 4px 12px rgba(22, 163, 74, 0.2);">
+
+                <a href="/export_results_excel"
+                   style="text-decoration:none; margin-right:15px;">
+                    <button class="btn-submit"
+                            style="margin-top:0; padding:10px 18px; background:#16a34a;">
                         <i class="fa-regular fa-file-excel"></i> Export Excel
                     </button>
                 </a>
+
                 <div class="avatar">A</div>
+
             </div>
         </div>
 
-        <!-- QUICK SUB-NAVIGATION TABS -->
-        <div style="display: flex; gap: 10px; margin-bottom: 20px; margin-top: 10px;">
-            <span class="badge-class" style="background: #fff7ed; color: #ea580c; border: 1px solid #fed7aa; padding: 8px 16px;">
-                <i class="fa-solid fa-pen-to-square" style="margin-right: 4px;"></i> Add New Result Form
+        <!-- Sub Nav -->
+        <div style="display:flex; gap:10px; margin-bottom:20px; margin-top:10px;">
+
+            <span class="badge-class"
+                  style="background:#fff7ed; color:#ea580c; border:1px solid #fed7aa; padding:8px 16px;">
+                <i class="fa-solid fa-pen-to-square"></i>
+                Add New Result Form
             </span>
-            <a href="/web_result_list" style="text-decoration: none;">
-                <span class="badge-class" style="background: #ffffff; color: #64748b; border: 1px solid #e2e8f0; padding: 8px 16px; cursor: pointer;">
-                    <i class="fa-solid fa-file-invoice" style="margin-right: 4px;"></i> View Result Report
+
+            <a href="/web_result_list" style="text-decoration:none;">
+                <span class="badge-class"
+                      style="background:#ffffff; color:#64748b; border:1px solid #e2e8f0; padding:8px 16px;">
+                    <i class="fa-solid fa-file-invoice"></i>
+                    View Result Report
                 </span>
             </a>
+
         </div>
 
-        <!-- PREMIUM FORM CARD LAYOUT -->
-        <div class="form-container" style="max-width: 650px; margin-top: 10px;">
+        <!-- Form -->
+        <div class="form-container" style="max-width:950px; margin-top:10px;">
+
             <div class="form-header">
-                <h2><i class="fa-solid fa-award" style="color: #ea580c;"></i> Student Marks Entry</h2>
-                <p>Select student and carefully enter subject-wise exam marks into the system.</p>
+                <h2>
+                    <i class="fa-solid fa-award" style="color:#ea580c;"></i>
+                    Student Marks Entry
+                </h2>
+
+                <p>
+                    Select student and carefully enter subject-wise exam marks.
+                </p>
             </div>
 
-            <!-- मूळ फॉर्म ॲक्शन आणि मेथड्स सुरक्षित ठेवल्या आहेत -->
             <form action="/save_result_web" method="post">
 
-                <!-- 1. Student Selection Dropdown -->
+                <!-- Student -->
                 <div class="form-group">
-                    <label><i class="fa-solid fa-user-graduate"></i> Select Student</label>
+                    <label>Select Student</label>
+
                     <select name="student_id" required>
-                        <option value="" disabled selected>-- Choose Student --</option>
+                        <option value="" disabled selected>
+                            -- Choose Student --
+                        </option>
+
                         {% for student in students %}
                         <option value="{{ student.id }}">
                             {{ student.student_name }}
@@ -98,38 +130,110 @@
                     </select>
                 </div>
 
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 15px;">
-                    <!-- 2. Exam Name -->
+                <!-- Exam -->
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px; margin-top:15px;">
+
                     <div class="form-group">
-                        <label><i class="fa-solid fa-file-signature"></i> Exam Name</label>
-                        <input type="text" name="exam_name" placeholder="e.g. Final Exam, Unit Test-1" required>
+                        <label>Exam Name</label>
+                        <input type="text"
+                               name="exam_name"
+                               placeholder="Final Exam"
+                               required>
                     </div>
 
-                    <!-- 3. Subject -->
                     <div class="form-group">
-                        <label><i class="fa-solid fa-book"></i> Subject</label>
-                        <input type="text" name="subject" placeholder="e.g. Mathematics" required>
+                        <label>Class</label>
+                        <input type="text"
+                               name="class_name"
+                               placeholder="Class"
+                               required>
                     </div>
+
                 </div>
 
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 15px;">
-                    <!-- 4. Obtained Marks -->
-                    <div class="form-group">
-                        <label><i class="fa-solid fa-star"></i> Marks Obtained</label>
-                        <input type="text" name="marks" placeholder="e.g. 85" required>
-                    </div>
-
-                    <!-- 5. Total Marks -->
-                    <div class="form-group">
-                        <label><i class="fa-solid fa-square-poll-vertical"></i> Out Of (Total Marks)</label>
-                        <input type="text" name="total_marks" placeholder="e.g. 100" required>
-                    </div>
+                <!-- Division -->
+                <div class="form-group" style="margin-top:15px;">
+                    <label>Division</label>
+                    <input type="text"
+                           name="division"
+                           placeholder="Division"
+                           required>
                 </div>
 
-                <!-- Submit Button Area -->
-                <div class="form-actions" style="margin-top: 25px;">
-                    <button type="submit" class="btn-submit" style="width: 100%; justify-content: center; padding: 12px; background: #ea580c; box-shadow: 0 4px 12px rgba(234, 88, 12, 0.2);">
-                        <i class="fa-solid fa-floppy-disk"></i> Save & Publish Result
+                <!-- Subject Section -->
+                <div style="margin-top:20px;">
+
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                        <h3>Subject Marks</h3>
+
+                        <button type="button"
+                                onclick="addRow()"
+                                class="btn-submit"
+                                style="padding:8px 14px; background:#2563eb;">
+                            + Add Subject
+                        </button>
+                    </div>
+
+                    <table border="1"
+                           width="100%"
+                           id="subjectTable"
+                           style="margin-top:15px; border-collapse:collapse;">
+
+                        <tr>
+                            <th>Sr No.</th>
+                            <th>Subject Name</th>
+                            <th>Marks Obtained</th>
+                            <th>Out Of</th>
+                            <th>Grade</th>
+                            <th>Action</th>
+                        </tr>
+
+                        <tr>
+                            <td>1</td>
+
+                            <td>
+                                <input type="text"
+                                       name="subject[]"
+                                       required>
+                            </td>
+
+                            <td>
+                                <input type="number"
+                                       name="marks[]"
+                                       required>
+                            </td>
+
+                            <td>
+                                <input type="number"
+                                       name="total_marks[]"
+                                       required>
+                            </td>
+
+                            <td>
+                                <input type="text"
+                                       name="grade[]"
+                                       required>
+                            </td>
+
+                            <td>
+                                <button type="button"
+                                        onclick="deleteRow(this)"
+                                        style="background:red; color:white; border:none; padding:8px;">
+                                    <i class="fa-solid fa-trash"></i>
+                                </button>
+                            </td>
+                        </tr>
+
+                    </table>
+                </div>
+
+                <!-- Submit -->
+                <div class="form-actions" style="margin-top:25px;">
+                    <button type="submit"
+                            class="btn-submit"
+                            style="width:100%; padding:12px; background:#ea580c;">
+                        <i class="fa-solid fa-floppy-disk"></i>
+                        Save & Publish Result
                     </button>
                 </div>
 
@@ -137,6 +241,35 @@
         </div>
     </div>
 </div>
+
+<script>
+function addRow() {
+    let table = document.getElementById("subjectTable");
+    let rowCount = table.rows.length;
+
+    let row = table.insertRow(rowCount);
+
+    row.innerHTML = `
+        <td>${rowCount}</td>
+        <td><input type="text" name="subject[]" required></td>
+        <td><input type="number" name="marks[]" required></td>
+        <td><input type="number" name="total_marks[]" required></td>
+        <td><input type="text" name="grade[]" required></td>
+        <td>
+            <button type="button"
+                    onclick="deleteRow(this)"
+                    style="background:red; color:white; border:none; padding:8px;">
+                <i class="fa-solid fa-trash"></i>
+            </button>
+        </td>
+    `;
+}
+
+function deleteRow(btn) {
+    let row = btn.parentNode.parentNode;
+    row.parentNode.removeChild(row);
+}
+</script>
 
 </body>
 </html>
