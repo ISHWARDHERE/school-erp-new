@@ -556,16 +556,22 @@ def admin_dashboard(request: Request):
         }
     )
 
-@app.get("/web_students", response_class=HTMLResponse)
+@app.get("/web_students")
 def web_students(request: Request):
+
+    if "user" not in request.session:
+        return RedirectResponse("/", status_code=303)
+
+    user_role = request.session.get("role", "").lower()
+
     conn = connect_db()
-    cursor = conn.cursor(dictionary=True)
+    cursor = conn.cursor()
 
     if user_role == "teacher":
         teacher_class = request.session.get("class_name")
 
         cursor.execute(
-            "SELECT * FROM students WHERE class_name = ?",
+            "SELECT * FROM students WHERE class_name=?",
             (teacher_class,)
         )
     else:
@@ -573,14 +579,10 @@ def web_students(request: Request):
 
     students = cursor.fetchall()
 
-    conn.close()
-
     return templates.TemplateResponse(
         request=request,
         name="students.html",
-        context={
-            "students": students
-        }
+        context={"students": students}
     )
 
 @app.get("/add_student_web", response_class=HTMLResponse)
@@ -1023,8 +1025,11 @@ def web_attendance(
     if "user" not in request.session:
         return RedirectResponse("/", status_code=303)
 
+    user_role = request.session.get("role", "").lower()
+
     if request.session.get("role") not in ["teacher", "admin"]:
         return RedirectResponse("/", status_code=303)
+        
 
     conn = connect_db()
     cursor = conn.cursor(dictionary=True)
