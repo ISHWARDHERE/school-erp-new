@@ -2172,13 +2172,17 @@ async def save_notice(request: Request):
     conn = connect_db()
     cursor = conn.cursor()
 
-    cursor.execute("""
-        INSERT INTO notices (title, message, notice_date)
-        VALUES (%s, %s, CURDATE())
-    """, (
-        title,
-        message
-    ))
+    try:
+        cursor.execute("""
+            INSERT INTO notices (title, message, notice_date)
+            VALUES (%s, %s, CURDATE())
+        """, (title, message))
+
+    except:
+        cursor.execute("""
+            INSERT INTO notices (title, notice_text, notice_date)
+            VALUES (%s, %s, CURDATE())
+        """, (title, message))
 
     conn.commit()
     conn.close()
