@@ -73,6 +73,7 @@ def login(
         request.session["user"] = user["username"]
         request.session["role"] = str(user["role"]).strip().lower()
         request.session["class_name"] = user.get("class_name", "")
+        request.session["division"] = user.get("division", "")
 
         if user_role == "admin":
             return RedirectResponse(
@@ -592,11 +593,15 @@ def web_students(request: Request):
 
     if user_role == "teacher":
         teacher_class = request.session.get("class_name")
+        teacher_division = request.session.get("division")
 
-        cursor.execute(
-            "SELECT * FROM students WHERE class_name=%s",
-            (teacher_class,)
-        )
+        cursor.execute("""
+            SELECT * FROM students
+            WHERE class_name=%s AND division=%s
+        """, (
+            teacher_class,
+            teacher_division
+        ))
     else:
         cursor.execute("SELECT * FROM students")
 
@@ -812,7 +817,8 @@ def save_teacher_web(
     subject: str = Form(...),
     salary: float = Form(...),
     password: str = Form(...),
-    class_name: str = Form(...)
+    class_name: str = Form(...),
+    division: str = Form(...)
 ):
     conn = connect_db()
     cursor = conn.cursor()
@@ -820,14 +826,15 @@ def save_teacher_web(
     # teachers table मध्ये save
     cursor.execute("""
         INSERT INTO teachers
-        (teacher_name, mobile, subject, salary, class_name)
-        VALUES (%s, %s, %s, %s, %s)
+        (teacher_name, mobile, subject, salary, class_name, division)
+        VALUES (%s, %s, %s, %s, %s, %s)
     """, (
         teacher_name,
         mobile,
         subject,
         salary,
-        class_name
+        class_name,
+        division
     ))
 
     # password hash
@@ -839,14 +846,15 @@ def save_teacher_web(
     # users table मध्ये login साठी save
     cursor.execute("""
         INSERT INTO users
-        (username, mobile, password, role, class_name)
-        VALUES (%s, %s, %s, %s, %s)
+        (username, mobile, password, role, class_name, division)
+        VALUES (%s, %s, %s, %s, %s, %s)
     """, (
         teacher_name,
         mobile,
         hashed_password,
         "teacher",
-        class_name
+        class_name,
+        division
     ))
 
     conn.commit()
