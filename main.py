@@ -2283,3 +2283,32 @@ def export_students_excel():
         filename=file_name,
         media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
     )
+
+@app.get("/web_homework_list", response_class=HTMLResponse)
+def web_homework_list(request: Request):
+
+    if "user" not in request.session:
+        return RedirectResponse("/", status_code=303)
+
+    if request.session.get("role") not in ["teacher", "admin"]:
+        return RedirectResponse("/", status_code=303)
+
+    conn = connect_db()
+    cursor = conn.cursor(dictionary=True)
+
+    cursor.execute("""
+        SELECT *
+        FROM homework
+        ORDER BY id DESC
+    """)
+
+    homework_list = cursor.fetchall()
+    conn.close()
+
+    return templates.TemplateResponse(
+        request=request,
+        name="homework_list.html",
+        context={
+            "homework_list": homework_list
+        }
+    )
