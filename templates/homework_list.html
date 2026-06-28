@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Homework Report</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+<div class="sidebar">
+    <h2>School ERP</h2>
+
+    <a href="/admin_dashboard">Dashboard</a>
+    <a href="/add_homework">Add Homework</a>
+    <a href="/web_homework_list">Homework Report</a>
+</div>
+
+<div class="main">
+    <h2>Homework Report</h2>
+
+    <table border="1" width="100%">
+        <tr>
+            <th>Class</th>
+            <th>Subject</th>
+            <th>Homework</th>
+            <th>Date</th>
+        </tr>
+
+        {% for hw in homework_list %}
+        <tr>
+            <td>{{ hw.class_name }}</td>
+            <td>{{ hw.subject }}</td>
+            <td>{{ hw.homework_text }}</td>
+            <td>{{ hw.homework_date }}</td>
+        </tr>
+        {% endfor %}
+
+    </table>
+</div>
+
+</body>
+</html>
