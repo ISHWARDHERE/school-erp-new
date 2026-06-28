@@ -823,42 +823,65 @@ def save_teacher_web(
     conn = connect_db()
     cursor = conn.cursor()
 
-    # teachers table मध्ये save
-    cursor.execute("""
-        INSERT INTO teachers
-        (teacher_name, mobile, subject, salary, class_name, division)
-        VALUES (%s, %s, %s, %s, %s, %s)
-    """, (
-        teacher_name,
-        mobile,
-        subject,
-        salary,
-        class_name,
-        division
-    ))
+    try:
+        print("Teacher Save Start")
+        print(
+            teacher_name,
+            mobile,
+            subject,
+            salary,
+            class_name,
+            division
+        )
 
-    # password hash
-    hashed_password = bcrypt.hashpw(
-        password.encode("utf-8"),
-        bcrypt.gensalt()
-    ).decode("utf-8")
+        # teachers table मध्ये save
+        cursor.execute("""
+            INSERT INTO teachers
+            (teacher_name, mobile, subject, salary, class_name, division)
+            VALUES (%s, %s, %s, %s, %s, %s)
+        """, (
+            teacher_name,
+            mobile,
+            subject,
+            salary,
+            class_name,
+            division
+        ))
 
-    # users table मध्ये login साठी save
-    cursor.execute("""
-        INSERT INTO users
-        (username, mobile, password, role, class_name, division)
-        VALUES (%s, %s, %s, %s, %s, %s)
-    """, (
-        teacher_name,
-        mobile,
-        hashed_password,
-        "teacher",
-        class_name,
-        division
-    ))
+        print("Teacher inserted")
 
-    conn.commit()
-    conn.close()
+        # password hash
+        hashed_password = bcrypt.hashpw(
+            password.encode("utf-8"),
+            bcrypt.gensalt()
+        ).decode("utf-8")
+
+        # users table मध्ये login साठी save
+        cursor.execute("""
+            INSERT INTO users
+            (username, mobile, password, role, class_name, division)
+            VALUES (%s, %s, %s, %s, %s, %s)
+        """, (
+            teacher_name,
+            mobile,
+            hashed_password,
+            "teacher",
+            class_name,
+            division
+        ))
+
+        print("User inserted")
+
+        conn.commit()
+        print("Commit successful")
+
+    except Exception as e:
+        conn.rollback()
+        print("Save Error:", e)
+
+    finally:
+        cursor.close()
+        conn.close()
 
     return RedirectResponse(
         url="/add_teacher_web?success=1",
