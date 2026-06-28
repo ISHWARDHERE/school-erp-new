@@ -2504,30 +2504,19 @@ def fix_db():
     conn = connect_db()
     cursor = conn.cursor()
 
-    try:
-        cursor.execute("ALTER TABLE teachers ADD class_name VARCHAR(50)")
-    except:
-        pass
+    queries = [
+        "ALTER TABLE teachers ADD class_name VARCHAR(50)",
+        "ALTER TABLE teachers ADD division VARCHAR(20)",
+        "ALTER TABLE users ADD class_name VARCHAR(50)",
+        "ALTER TABLE users ADD division VARCHAR(20)",
+        "ALTER TABLE users ADD mobile VARCHAR(15)"
+    ]
 
-    try:
-        cursor.execute("ALTER TABLE teachers ADD division VARCHAR(20)")
-    except:
-        pass
-
-    try:
-        cursor.execute("ALTER TABLE users ADD class_name VARCHAR(50)")
-    except:
-        pass
-
-    try:
-        cursor.execute("ALTER TABLE users ADD division VARCHAR(20)")
-    except:
-        pass
-
-    try:
-        cursor.execute("ALTER TABLE users ADD mobile VARCHAR(15)")
-    except:
-        pass
+    for q in queries:
+        try:
+            cursor.execute(q)
+        except Exception as e:
+            print("Skipped:", e)
 
     conn.commit()
     conn.close()
