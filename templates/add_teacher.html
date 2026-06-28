@@ -2,10 +2,9 @@
 <html>
 <head>
     <title>Add Teacher</title>
-    <!-- Google Fonts & FontAwesome for Premium Design -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="/static/style.css?v=2.5"> <!-- Cache Busting -->
+    <link rel="stylesheet" href="/static/style.css?v=2.6">
 </head>
 <body>
 
@@ -16,48 +15,53 @@
 {% endif %}
 
 <div class="dashboard-container">
-    <!-- SIDEBAR (ALL MODULES MATCHING WITH DASHBOARD) -->
+
     <div class="sidebar">
         <div class="logo-area">
             <i class="fa-solid fa-graduation-cap"></i>
             <h2>THE RISING STAR</h2>
         </div>
-        
+
         <div class="nav-links">
+
             {% if request.session.get("role") == "admin" %}
-    <a href="/admin_dashboard"><i class="fa-solid fa-chart-line"></i> Dashboard</a>
-{% else %}
-    <a href="/teacher_dashboard"><i class="fa-solid fa-chart-line"></i> Dashboard</a>
-{% endif %}
+                <a href="/admin_dashboard"><i class="fa-solid fa-chart-line"></i> Dashboard</a>
+            {% else %}
+                <a href="/teacher_dashboard"><i class="fa-solid fa-chart-line"></i> Dashboard</a>
+            {% endif %}
+
             <a href="/web_students"><i class="fa-solid fa-user-graduate"></i> Students</a>
-            
-            <!-- Teacher Module Active ठेवून या अंतर्गत हे काम सुरू आहे -->
-            <a href="/web_teachers" class="active"><i class="fa-solid fa-chalkboard-user"></i> Teachers</a>
-            
+
+            <a href="/web_teachers" class="active">
+                <i class="fa-solid fa-chalkboard-user"></i> Teachers
+            </a>
+
             <a href="/web_attendance"><i class="fa-regular fa-calendar-check"></i> Attendance</a>
             <a href="/web_fees"><i class="fa-solid fa-credit-card"></i> Fees</a>
             <a href="/web_result"><i class="fa-solid fa-square-poll-vertical"></i> Results</a>
             <a href="/add_homework"><i class="fa-solid fa-book-open"></i> Homework</a>
             <a href="/view_notices"><i class="fa-solid fa-bullhorn"></i> Notices</a>
             <a href="/admission_requests"><i class="fa-solid fa-user-plus"></i> Admission</a>
+
             {% if request.session.get("role") == "admin" %}
-    <a href="/web_reports"><i class="fa-solid fa-chart-pie"></i> Reports</a>
-{% else %}
-    <a href="/teacher_reports"><i class="fa-solid fa-chart-pie"></i> Reports</a>
-{% endif %}
-            
-            <a href="/logout" class="logout-link" style="margin-top: auto;"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
+                <a href="/web_reports"><i class="fa-solid fa-chart-pie"></i> Reports</a>
+            {% else %}
+                <a href="/teacher_reports"><i class="fa-solid fa-chart-pie"></i> Reports</a>
+            {% endif %}
+
+            <a href="/logout" class="logout-link" style="margin-top:auto;">
+                <i class="fa-solid fa-right-from-bracket"></i> Logout
+            </a>
         </div>
     </div>
 
-    <!-- MAIN CONTENT AREA -->
     <div class="main">
+
         <div class="topbar">
             <h1>Add New Teacher</h1>
             <div class="user-profile">
-                <!-- शिक्षकांची यादी पाहण्यासाठी क्विक लिंक बटण -->
-                <a href="/web_teachers" style="text-decoration: none; margin-right: 15px;">
-                    <button class="btn-idcard" style="padding: 8px 14px; background: #f0fdf4; color: #16a34a; border: 1px solid #bbf7d0;">
+                <a href="/web_teachers" style="text-decoration:none; margin-right:15px;">
+                    <button class="btn-idcard" style="padding:8px 14px; background:#f0fdf4; color:#16a34a; border:1px solid #bbf7d0;">
                         <i class="fa-solid fa-list"></i> Teacher List
                     </button>
                 </a>
@@ -65,52 +69,77 @@
             </div>
         </div>
 
-        <!-- PREMIUM FORM CARD LAYOUT -->
-        <div class="form-container" style="max-width: 650px; margin-top: 20px;">
+        <div class="form-container" style="max-width:650px; margin-top:20px;">
             <div class="form-header">
-                <h2><i class="fa-solid fa-user-plus" style="color: #16a34a;"></i> Teacher Registration Form</h2>
-                <p>Fill in the professional details below to register a new staff member.</p>
+                <h2>
+                    <i class="fa-solid fa-user-plus" style="color:#16a34a;"></i>
+                    Teacher Registration Form
+                </h2>
+                <p>Fill teacher details and assign class for login access.</p>
             </div>
 
             <form action="/save_teacher_web" method="post">
 
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
-                    <!-- Teacher Name -->
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px;">
                     <div class="form-group">
                         <label><i class="fa-solid fa-user-tie"></i> Teacher Full Name</label>
                         <input type="text" name="teacher_name" placeholder="Enter full name" required>
                     </div>
 
-                    <!-- Mobile Number -->
                     <div class="form-group">
                         <label><i class="fa-solid fa-phone"></i> Mobile Number</label>
                         <input type="text" name="mobile" placeholder="10-digit number" required>
                     </div>
                 </div>
 
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 10px;">
-                    <!-- Subject -->
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px; margin-top:10px;">
                     <div class="form-group">
                         <label><i class="fa-solid fa-book"></i> Specialized Subject</label>
-                        <input type="text" name="subject" placeholder="e.g. Mathematics, Science" required>
+                        <input type="text" name="subject" placeholder="e.g. Mathematics" required>
                     </div>
 
-                    <!-- Salary -->
                     <div class="form-group">
                         <label><i class="fa-solid fa-money-bill-wave"></i> Monthly Salary</label>
                         <input type="text" name="salary" placeholder="e.g. 25000" required>
                     </div>
                 </div>
 
-                <!-- Submit Button Area -->
-                <div class="form-actions" style="margin-top: 25px;">
-                    <button type="submit" class="btn-submit" style="width: 100%; justify-content: center; padding: 12px; background: #16a34a; box-shadow: 0 4px 12px rgba(22, 163, 74, 0.15);">
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px; margin-top:10px;">
+                    <div class="form-group">
+                        <label><i class="fa-solid fa-lock"></i> Login Password</label>
+                        <input type="password" name="password" placeholder="Enter password" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label><i class="fa-solid fa-school"></i> Assign Class</label>
+                        <select name="class_name" required>
+                            <option value="">-- Select Class --</option>
+                            <option>Nursery</option>
+                            <option>LKG</option>
+                            <option>UKG</option>
+                            <option>1</option>
+                            <option>2</option>
+                            <option>3</option>
+                            <option>4</option>
+                            <option>5</option>
+                            <option>6</option>
+                            <option>7</option>
+                            <option>8</option>
+                            <option>9</option>
+                            <option>10</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-actions" style="margin-top:25px;">
+                    <button type="submit" class="btn-submit" style="width:100%; justify-content:center; padding:12px; background:#16a34a;">
                         <i class="fa-solid fa-floppy-disk"></i> Register & Save Teacher
                     </button>
                 </div>
 
             </form>
         </div>
+
     </div>
 </div>
 
