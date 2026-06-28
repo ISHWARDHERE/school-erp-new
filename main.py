@@ -1099,22 +1099,23 @@ def web_pending_fees(request: Request):
 
 @app.get("/web_attendance", response_class=HTMLResponse)
 def web_attendance(request: Request):
-
     if "user" not in request.session:
         return RedirectResponse("/", status_code=303)
-
-    user_role = request.session.get("role", "").lower()
 
     conn = connect_db()
     cursor = conn.cursor(dictionary=True)
 
+    user_role = request.session.get("role")
+
     if user_role == "teacher":
         teacher_class = request.session.get("class_name")
+        teacher_division = request.session.get("division")
 
-        cursor.execute(
-            "SELECT * FROM students WHERE class_name=%s",
-            (teacher_class,)
-        )
+        cursor.execute("""
+            SELECT * FROM students
+            WHERE class_name=%s AND division=%s
+        """, (teacher_class, teacher_division))
+
     else:
         cursor.execute("SELECT * FROM students")
 
@@ -1125,10 +1126,7 @@ def web_attendance(request: Request):
     return templates.TemplateResponse(
         request=request,
         name="attendance.html",
-        context={
-            "students": students,
-            "success": False
-        }
+        context={"students": students}
     )
 
 @app.post("/save_attendance_web")
@@ -2549,3 +2547,35 @@ def fix_db():
     conn.close()
 
     return {"status": "database fixed"}
+
+@app.post("/save_attendance")
+async def save_attendance(request: Request):
+    form = await request.form()
+
+    attendance_date = form.get("attendance_date")
+
+    conn = connect_db()
+    cursor = conn.cursor()
+
+    for key in form.keys():
+        if key.startswith("status_"):
+            student_id = key.split("_")[1]
+            status = form.get(key)
+
+            cursor.execute("""
+                INSERT INTO attendance
+                (student_id, date, status)
+                VALUES (%s, %s, %s)
+            """, (
+                student_id,
+                attendance_date,
+                status
+            ))
+
+    conn.commit()
+    conn.close()
+
+    return RedirectResponse(
+        "/web_attendance",
+        status_code=303
+    )
