@@ -2,42 +2,89 @@
 <html>
 <head>
     <title>Edit Teacher</title>
-    <link rel="stylesheet" href="/static/style.css">
-</head>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/static/style.css?v=3.5"> </head>
 <body>
 
-<div class="sidebar">
-    <h2>School ERP</h2>
-    <a href="/admin_dashboard">Dashboard</a>
-    <a href="/web_teachers">Teacher List</a>
-    <a href="/add_teacher_web">Add Teacher</a>
-</div>
+<div class="dashboard-container">
+    <div class="sidebar">
+        <div class="logo-area">
+            <i class="fa-solid fa-graduation-cap"></i>
+            <h2>THE RISING STAR</h2>
+        </div>
+        
+        <div class="nav-links">
+            <a href="/admin_dashboard"><i class="fa-solid fa-chart-line"></i> Dashboard</a>
+            <a href="/web_students"><i class="fa-solid fa-user-graduate"></i> Students</a>
+            
+            <a href="/web_teachers" class="active"><i class="fa-solid fa-chalkboard-user"></i> Teachers</a>
+            
+            <a href="/web_attendance"><i class="fa-regular fa-calendar-check"></i> Attendance</a>
+            <a href="/web_fees"><i class="fa-solid fa-credit-card"></i> Fees</a>
+            <a href="/web_results"><i class="fa-solid fa-square-poll-vertical"></i> Results</a>
+            <a href="/web_homework"><i class="fa-solid fa-book-open"></i> Homework</a>
+            <a href="/view_notices"><i class="fa-solid fa-bullhorn"></i> Notices</a>
+            <a href="/admission_requests"><i class="fa-solid fa-user-plus"></i> Admission</a>
+            <a href="/web_reports"><i class="fa-solid fa-chart-pie"></i> Reports</a>
+            
+            <a href="/logout" class="logout-link" style="margin-top: auto;"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
+        </div>
+    </div>
 
-<div class="main">
-    <div class="login-box">
-        <h2>Edit Teacher</h2>
+    <div class="main">
+        <div class="topbar">
+            <h1>Edit Teacher Profile</h1>
+            <div class="user-profile">
+                <a href="/web_teachers" style="text-decoration: none; margin-right: 15px;">
+                    <button class="btn-idcard" style="padding: 8px 14px; background: #f0fdf4; color: #16a34a; border: 1px solid #bbf7d0;">
+                        <i class="fa-solid fa-arrow-left"></i> Back to List
+                    </button>
+                </a>
+                <div class="avatar">A</div>
+            </div>
+        </div>
 
-        <form action="/update_teacher_web/{{ teacher.id }}" method="post">
+        <div class="form-container" style="max-width: 650px; margin-top: 20px;">
+            <div class="form-header">
+                <h2><i class="fa-solid fa-user-pen" style="color: #16a34a;"></i> Modify Teacher Details</h2>
+                <p>Update the professional information, subject, or salary records for this staff member.</p>
+            </div>
 
-            <input type="text"
-                   name="teacher_name"
-                   value="{{ teacher.teacher_name }}"><br><br>
+            <form action="/update_teacher_web/{{ teacher.id }}" method="post">
 
-            <input type="text"
-                   name="mobile"
-                   value="{{ teacher.mobile }}"><br><br>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                    <div class="form-group">
+                        <label><i class="fa-solid fa-user-tie"></i> Teacher Name</label>
+                        <input type="text" name="teacher_name" value="{{ teacher.teacher_name }}" placeholder="Enter full name" required>
+                    </div>
 
-            <input type="text"
-                   name="subject"
-                   value="{{ teacher.subject }}"><br><br>
+                    <div class="form-group">
+                        <label><i class="fa-solid fa-phone"></i> Mobile Number</label>
+                        <input type="text" name="mobile" value="{{ teacher.mobile }}" placeholder="10-digit number" required>
+                    </div>
+                </div>
 
-            <input type="text"
-                   name="salary"
-                   value="{{ teacher.salary }}"><br><br>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 15px;">
+                    <div class="form-group">
+                        <label><i class="fa-solid fa-book"></i> Specialized Subject</label>
+                        <input type="text" name="subject" value="{{ teacher.subject }}" placeholder="e.g. Mathematics" required>
+                    </div>
 
-            <button type="submit">Update Teacher</button>
+                    <div class="form-group">
+                        <label><i class="fa-solid fa-money-bill-wave"></i> Monthly Salary</label>
+                        <input type="text" name="salary" value="{{ teacher.salary }}" placeholder="e.g. 25000" required>
+                    </div>
+                </div>
 
-        </form>
+                <div class="form-actions" style="margin-top: 25px;">
+                    <button type="submit" class="btn-submit" style="width: 100%; justify-content: center; padding: 12px; background: #16a34a; box-shadow: 0 4px 12px rgba(22, 163, 74, 0.15);">
+                        <i class="fa-solid fa-check-double"></i> Update & Save Teacher
+                    </button>
+                </div>
+
+            </form>
+        </div>
     </div>
 </div>
 
