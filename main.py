@@ -55,7 +55,7 @@ def login(
 
     cursor.execute("""
         SELECT * FROM users
-        WHERE username=%s
+        WHERE mobile=%s
     """, (username,))
 
     user = cursor.fetchone()
@@ -466,20 +466,43 @@ def add_teacher(
     teacher_name: str,
     mobile: str,
     subject: str,
-    salary: float
+    salary: float,
+    password: str,
+    class_name: str
 ):
     conn = connect_db()
     cursor = conn.cursor()
 
+    # teachers table मध्ये save
     cursor.execute("""
         INSERT INTO teachers
-        (teacher_name, mobile, subject, salary)
-        VALUES (%s, %s, %s, %s)
+        (teacher_name, mobile, subject, salary, class_name)
+        VALUES (%s, %s, %s, %s, %s)
     """, (
         teacher_name,
         mobile,
         subject,
-        salary
+        salary,
+        class_name
+    ))
+
+    # password hash
+    hashed_password = bcrypt.hashpw(
+        password.encode("utf-8"),
+        bcrypt.gensalt()
+    ).decode("utf-8")
+
+    # users table मध्ये login साठी save
+    cursor.execute("""
+        INSERT INTO users
+        (username, mobile, password, role, class_name)
+        VALUES (%s, %s, %s, %s, %s)
+    """, (
+        teacher_name,
+        mobile,
+        hashed_password,
+        "teacher",
+        class_name
     ))
 
     conn.commit()
@@ -787,20 +810,43 @@ def save_teacher_web(
     teacher_name: str = Form(...),
     mobile: str = Form(...),
     subject: str = Form(...),
-    salary: float = Form(...)
+    salary: float = Form(...),
+    password: str = Form(...),
+    class_name: str = Form(...)
 ):
     conn = connect_db()
     cursor = conn.cursor()
 
+    # teachers table मध्ये save
     cursor.execute("""
         INSERT INTO teachers
-        (teacher_name, mobile, subject, salary)
-        VALUES (%s,%s,%s,%s)
+        (teacher_name, mobile, subject, salary, class_name)
+        VALUES (%s, %s, %s, %s, %s)
     """, (
         teacher_name,
         mobile,
         subject,
-        salary
+        salary,
+        class_name
+    ))
+
+    # password hash
+    hashed_password = bcrypt.hashpw(
+        password.encode("utf-8"),
+        bcrypt.gensalt()
+    ).decode("utf-8")
+
+    # users table मध्ये login साठी save
+    cursor.execute("""
+        INSERT INTO users
+        (username, mobile, password, role, class_name)
+        VALUES (%s, %s, %s, %s, %s)
+    """, (
+        teacher_name,
+        mobile,
+        hashed_password,
+        "teacher",
+        class_name
     ))
 
     conn.commit()
@@ -1017,31 +1063,27 @@ def web_pending_fees(request: Request):
     )
 
 @app.get("/web_attendance", response_class=HTMLResponse)
-def web_attendance(
-    request: Request,
-    success: str = None
-):
+def web_attendance(request: Request):
 
     if "user" not in request.session:
         return RedirectResponse("/", status_code=303)
 
     user_role = request.session.get("role", "").lower()
 
-    if request.session.get("role") not in ["teacher", "admin"]:
-        return RedirectResponse("/", status_code=303)
-        
-
     conn = connect_db()
     cursor = conn.cursor(dictionary=True)
 
-    if request.session.get("role") == "teacher":
+    if user_role == "teacher":
+        teacher_class = request.session.get("class_name")
+
         cursor.execute(
             "SELECT * FROM students WHERE class_name=%s",
-            (request.session.get("class_name"),)
+            (teacher_class,)
         )
     else:
         cursor.execute("SELECT * FROM students")
-        students = cursor.fetchall()
+
+    students = cursor.fetchall()
 
     conn.close()
 
@@ -1050,7 +1092,7 @@ def web_attendance(
         name="attendance.html",
         context={
             "students": students,
-            "success": success
+            "success": False
         }
     )
 
