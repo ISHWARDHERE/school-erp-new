@@ -2,7 +2,10 @@
 <html>
 <head>
     <title>Add Result</title>
-    <link rel="stylesheet" href="/static/style.css">
+    <!-- Google Fonts & FontAwesome for Premium Design -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/static/style.css?v=3.1"> <!-- Cache Busting -->
 </head>
 <body>
 
@@ -12,60 +15,126 @@
 </script>
 {% endif %}
 
-<div class="sidebar">
-    <h2>School ERP</h2>
+<div class="dashboard-container">
+    <!-- SIDEBAR (ALL MODULES INTEGRATED & MATCHING WITH DASHBOARD) -->
+    <div class="sidebar">
+        <div class="logo-area">
+            <i class="fa-solid fa-graduation-cap"></i>
+            <h2>THE RISING STAR</h2>
+        </div>
+        
+        <div class="nav-links">
+            <!-- रोलनुसार योग्य डॅशबोर्ड लिंक (पायथन कंडिशन सुरक्षित) -->
+            {% if request.session.role == "admin" %}
+                <a href="/admin_dashboard"><i class="fa-solid fa-chart-line"></i> Dashboard</a>
+            {% else %}
+                <a href="/teacher_dashboard"><i class="fa-solid fa-chart-line"></i> Dashboard</a>
+            {% endif %}
+            
+            <a href="/web_students"><i class="fa-solid fa-user-graduate"></i> Students</a>
+            <a href="/web_teachers"><i class="fa-solid fa-chalkboard-user"></i> Teachers</a>
+            <a href="/web_attendance"><i class="fa-regular fa-calendar-check"></i> Attendance</a>
+            <a href="/web_fees"><i class="fa-solid fa-credit-card"></i> Fees</a>
+            
+            <!-- Results Active ठेवले आहे -->
+            <a href="/web_result_list" class="active"><i class="fa-solid fa-square-poll-vertical"></i> Results</a>
+            
+            <a href="/web_homework"><i class="fa-solid fa-book-open"></i> Homework</a>
+            <a href="/view_notices"><i class="fa-solid fa-bullhorn"></i> Notices</a>
+            <a href="/admission_requests"><i class="fa-solid fa-user-plus"></i> Admission</a>
+            <a href="/web_reports"><i class="fa-solid fa-chart-pie"></i> Reports</a>
+            
+            <a href="/logout" class="logout-link" style="margin-top: auto;"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
+        </div>
+    </div>
 
-    {% if request.session.role == "admin" %}
-        <a href="/admin_dashboard">Dashboard</a>
-    {% else %}
-        <a href="/teacher_dashboard">Dashboard</a>
-    {% endif %}
+    <!-- MAIN CONTENT AREA -->
+    <div class="main">
+        <div class="topbar">
+            <h1>Add Exam Result</h1>
+            <div class="user-profile">
+                <!-- एक्सेल डाउनलोड शॉर्टकट बटण वर उजवीकडे -->
+                <a href="/export_results_excel" style="text-decoration: none; margin-right: 15px;">
+                    <button class="btn-submit" style="margin-top: 0; padding: 10px 18px; background: #16a34a; box-shadow: 0 4px 12px rgba(22, 163, 74, 0.2);">
+                        <i class="fa-regular fa-file-excel"></i> Export Excel
+                    </button>
+                </a>
+                <div class="avatar">A</div>
+            </div>
+        </div>
 
-    <a href="/web_result">Add Result</a>
-    <a href="/web_result_list">Result Report</a>
+        <!-- QUICK SUB-NAVIGATION TABS -->
+        <div style="display: flex; gap: 10px; margin-bottom: 20px; margin-top: 10px;">
+            <span class="badge-class" style="background: #fff7ed; color: #ea580c; border: 1px solid #fed7aa; padding: 8px 16px;">
+                <i class="fa-solid fa-pen-to-square" style="margin-right: 4px;"></i> Add New Result Form
+            </span>
+            <a href="/web_result_list" style="text-decoration: none;">
+                <span class="badge-class" style="background: #ffffff; color: #64748b; border: 1px solid #e2e8f0; padding: 8px 16px; cursor: pointer;">
+                    <i class="fa-solid fa-file-invoice" style="margin-right: 4px;"></i> View Result Report
+                </span>
+            </a>
+        </div>
 
-    <a href="/export_results_excel">
-        Download Excel
-    </a>
-</div>
+        <!-- PREMIUM FORM CARD LAYOUT -->
+        <div class="form-container" style="max-width: 650px; margin-top: 10px;">
+            <div class="form-header">
+                <h2><i class="fa-solid fa-award" style="color: #ea580c;"></i> Student Marks Entry</h2>
+                <p>Select student and carefully enter subject-wise exam marks into the system.</p>
+            </div>
 
-<div class="main">
-    <div class="login-box">
-        <h2>Add Result</h2>
+            <!-- मूळ फॉर्म ॲक्शन आणि मेथड्स सुरक्षित ठेवल्या आहेत -->
+            <form action="/save_result_web" method="post">
 
-        <form action="/save_result_web" method="post">
+                <!-- 1. Student Selection Dropdown -->
+                <div class="form-group">
+                    <label><i class="fa-solid fa-user-graduate"></i> Select Student</label>
+                    <select name="student_id" required>
+                        <option value="" disabled selected>-- Choose Student --</option>
+                        {% for student in students %}
+                        <option value="{{ student.id }}">
+                            {{ student.student_name }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
 
-            <select name="student_id">
-                {% for student in students %}
-                <option value="{{ student.id }}">
-                    {{ student.student_name }}
-                </option>
-                {% endfor %}
-            </select><br><br>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 15px;">
+                    <!-- 2. Exam Name -->
+                    <div class="form-group">
+                        <label><i class="fa-solid fa-file-signature"></i> Exam Name</label>
+                        <input type="text" name="exam_name" placeholder="e.g. Final Exam, Unit Test-1" required>
+                    </div>
 
-            <input type="text"
-                   name="subject"
-                   placeholder="Subject"
-                   required><br><br>
+                    <!-- 3. Subject -->
+                    <div class="form-group">
+                        <label><i class="fa-solid fa-book"></i> Subject</label>
+                        <input type="text" name="subject" placeholder="e.g. Mathematics" required>
+                    </div>
+                </div>
 
-            <input type="text"
-                   name="marks"
-                   placeholder="Marks"
-                   required><br><br>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 15px;">
+                    <!-- 4. Obtained Marks -->
+                    <div class="form-group">
+                        <label><i class="fa-solid fa-star"></i> Marks Obtained</label>
+                        <input type="text" name="marks" placeholder="e.g. 85" required>
+                    </div>
 
-            <input type="text"
-                   name="total_marks"
-                   placeholder="Total Marks"
-                   required><br><br>
+                    <!-- 5. Total Marks -->
+                    <div class="form-group">
+                        <label><i class="fa-solid fa-square-poll-vertical"></i> Out Of (Total Marks)</label>
+                        <input type="text" name="total_marks" placeholder="e.g. 100" required>
+                    </div>
+                </div>
 
-            <input type="text"
-                   name="exam_name"
-                   placeholder="Exam Name"
-                   required><br><br>
+                <!-- Submit Button Area -->
+                <div class="form-actions" style="margin-top: 25px;">
+                    <button type="submit" class="btn-submit" style="width: 100%; justify-content: center; padding: 12px; background: #ea580c; box-shadow: 0 4px 12px rgba(234, 88, 12, 0.2);">
+                        <i class="fa-solid fa-floppy-disk"></i> Save & Publish Result
+                    </button>
+                </div>
 
-            <button type="submit">Save Result</button>
-
-        </form>
+            </form>
+        </div>
     </div>
 </div>
 
