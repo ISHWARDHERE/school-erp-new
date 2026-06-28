@@ -2498,3 +2498,16 @@ def web_reports(request: Request):
         name="web_reports.html",
         context={}
     )
+
+@app.get("/fix_db")
+def fix_db():
+    conn = connect_db()
+    cursor = conn.cursor()
+
+    cursor.execute("ALTER TABLE teachers ADD class_name VARCHAR(50)")
+    cursor.execute("ALTER TABLE teachers ADD division VARCHAR(20)")
+
+    conn.commit()
+    conn.close()
+
+    return {"status": "done"}
