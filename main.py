@@ -9,6 +9,8 @@ import shutil
 import os
 from starlette.middleware.sessions import SessionMiddleware
 import bcrypt
+import pandas as pd
+from fastapi.responses import FileResponse
 
 SECRET_KEY = os.getenv("SECRET_KEY")
 
@@ -2250,4 +2252,34 @@ def edit_notice(request: Request, notice_id: int):
         request=request,
         name="edit_notice.html",
         context={"notice": notice}
+    )
+
+@app.get("/export_students_excel")
+def export_students_excel():
+
+    conn = connect_db()
+    cursor = conn.cursor(dictionary=True)
+
+    cursor.execute("""
+        SELECT id,
+               student_name,
+               class_name,
+               father_name,
+               mobile,
+               yearly_fee
+        FROM students
+    """)
+
+    students = cursor.fetchall()
+    conn.close()
+
+    df = pd.DataFrame(students)
+
+    file_name = "students.xlsx"
+    df.to_excel(file_name, index=False)
+
+    return FileResponse(
+        path=file_name,
+        filename=file_name,
+        media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
     )
