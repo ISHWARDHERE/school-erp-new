@@ -11,6 +11,7 @@ from starlette.middleware.sessions import SessionMiddleware
 import bcrypt
 import pandas as pd
 from fastapi.responses import FileResponse
+from reportlab.lib.colors import HexColor
 
 SECRET_KEY = os.getenv("SECRET_KEY")
 
@@ -1358,114 +1359,178 @@ def marksheet(student_id: int):
     file_name = f"marksheet_{student_id}.pdf"
     c = canvas.Canvas(file_name)
 
-    # Outer Border
-    c.rect(40, 50, 520, 760)
+    # प्रीमियम रंग व्याख्या (Color Definitions)
+    primary_color = HexColor("#1e3a8a")    # Deep Royal Blue
+    secondary_color = HexColor("#f8fafc")  # Soft Gray Background
+    text_color = HexColor("#0f172a")       # Dark Charcoal Text
+    muted_text = HexColor("#475569")       # Slate Gray
+    border_color = HexColor("#cbd5e1")     # Light Border
+    pass_color = HexColor("#15803d")       # Forest Green for Pass
+    fail_color = HexColor("#b91c1c")       # Red for Fail
 
-    # Header
-    c.setFont("Helvetica-Bold", 22)
-    c.drawCentredString(300, 790, "REPORT CARD")
+    # १. आऊटर बॉर्डर (Double Border for Premium Look)
+    c.setStrokeColor(primary_color)
+    c.setLineWidth(2)
+    c.rect(35, 40, 525, 780)
+    
+    c.setStrokeColor(border_color)
+    c.setLineWidth(0.5)
+    c.rect(40, 45, 515, 770)
 
-    c.setFont("Helvetica-Bold", 14)
-    c.drawCentredString(300, 770, "Academic Session : 2025-26")
+    # २. हेडर डिझाईन (School Header)
+    c.setFillColor(primary_color)
+    c.setFont("Helvetica-Bold", 24)
+    c.drawCentredString(300, 775, "THE RISING STAR")
 
-    # Student Info
+    c.setFillColor(muted_text)
     c.setFont("Helvetica-Bold", 12)
+    c.drawCentredString(300, 755, "REPORT CARD (ACADEMIC SESSION : 2025-26)")
 
-    c.drawString(60, 720, "Admission No.")
-    c.drawString(180, 720, f": {results[0]['id']}")
+    # हेडर खाली एक सुंदर रेषा
+    c.setStrokeColor(primary_color)
+    c.setLineWidth(1.5)
+    c.line(55, 740, 545, 740)
 
-    c.drawString(60, 695, "Student Name")
-    c.drawString(180, 695, f": {results[0]['student_name']}")
+    # ३. विद्यार्थी माहिती विभाग (Student Info Box Background)
+    c.setFillColor(secondary_color)
+    c.setStrokeColor(border_color)
+    c.setLineWidth(1)
+    c.rect(55, 635, 490, 85, fill=1, stroke=1)
 
-    c.drawString(60, 670, "Class")
-    c.drawString(180, 670, f": {results[0]['class_name']}")
+    c.setFillColor(text_color)
+    # डावी बाजू
+    c.setFont("Helvetica-Bold", 11)
+    c.drawString(75, 695, "Admission No.")
+    c.setFont("Helvetica", 11)
+    c.drawString(175, 695, f":  {results[0]['id']}")
 
-    c.drawString(330, 720, "Roll No.")
-    c.drawString(430, 720, f": {results[0]['id']}")
+    c.setFont("Helvetica-Bold", 11)
+    c.drawString(75, 670, "Student Name")
+    c.setFont("Helvetica-Bold", 11)
+    c.setFillColor(primary_color) # विद्यार्थ्याचे नाव उठून दिसण्यासाठी निळा रंग
+    c.drawString(175, 670, f":  {results[0]['student_name'].upper()}")
 
-    c.drawString(330, 695, "Mobile")
-    c.drawString(430, 695, f": {results[0]['mobile']}")
+    c.setFillColor(text_color)
+    c.setFont("Helvetica-Bold", 11)
+    c.drawString(75, 645, "Class")
+    c.setFont("Helvetica", 11)
+    c.drawString(175, 645, f":  {results[0]['class_name']}")
 
-    c.drawString(330, 670, "Result Date")
-    c.drawString(430, 670, ": __________")
+    # उजवी बाजू
+    c.setFont("Helvetica-Bold", 11)
+    c.drawString(340, 695, "Roll No.")
+    c.setFont("Helvetica", 11)
+    c.drawString(440, 695, f":  {results[0]['id']}")
 
-    # Marks Table
-    c.rect(60, 430, 460, 190)
+    c.setFont("Helvetica-Bold", 11)
+    c.drawString(340, 670, "Mobile")
+    c.setFont("Helvetica", 11)
+    c.drawString(440, 670, f":  {results[0]['mobile']}")
 
-    c.line(200, 430, 200, 620)
-    c.line(320, 430, 320, 620)
-    c.line(420, 430, 420, 620)
+    from datetime import datetime
+    today_date = datetime.now().strftime("%d/%m/%Y")
+    c.setFont("Helvetica-Bold", 11)
+    c.drawString(340, 645, "Result Date")
+    c.setFont("Helvetica", 11)
+    c.drawString(440, 645, f":  {today_date}")
 
-    c.line(60, 590, 520, 590)
+    # ४. गुणतालिका (Marks Table Header Background)
+    table_top = 590
+    c.setFillColor(primary_color)
+    c.rect(55, table_top, 490, 25, fill=1, stroke=0)
 
-    c.setFont("Helvetica-Bold", 12)
+    # टेबल हेडर टेक्स्ट
+    c.setFillColor(HexColor("#ffffff"))
+    c.setFont("Helvetica-Bold", 11)
+    c.drawString(75, table_top + 8, "SUBJECT")
+    c.drawCentredString(250, table_top + 8, "MARKS OBTAINED")
+    c.drawCentredString(370, table_top + 8, "TOTAL MARKS")
+    c.drawCentredString(485, table_top + 8, "STATUS")
 
-    c.drawString(80, 600, "Subject")
-    c.drawString(240, 600, "Marks")
-    c.drawString(350, 600, "Total")
-    c.drawString(450, 600, "Status")
-
-    # Subject rows
-    y = 560
+    # विषयांच्या ओळी (Subject Rows Drawing)
+    y = table_top - 25
     total_obtained = 0
     grand_total = 0
-
-    c.setFont("Helvetica", 12)
+    row_count = 0
 
     for row in results:
-        c.drawString(80, y, row['subject'])
-        c.drawString(240, y, str(int(row['marks'])))
-        c.drawString(350, y, str(int(row['total_marks'])))
-        c.drawString(450, y, row['result_status'])
+        # अल्टरनेट ओळींना हलका राखाडी बॅकग्राउंड (Zebra Striping)
+        if row_count % 2 == 0:
+            c.setFillColor(HexColor("#f8fafc"))
+            c.rect(55, y, 490, 25, fill=1, stroke=0)
+        
+        # ओळींची हलकी बॉर्डर
+        c.setStrokeColor(HexColor("#f1f5f9"))
+        c.setLineWidth(0.5)
+        c.line(55, y, 545, y)
+
+        c.setFillColor(text_color)
+        c.setFont("Helvetica-Bold", 11) if row_count % 2 == 0 else c.setFont("Helvetica", 11)
+        c.drawString(75, y + 7, row['subject'].capitalize())
+        
+        c.setFont("Helvetica", 11)
+        c.drawCentredString(250, y + 7, str(int(row['marks'])))
+        c.drawCentredString(370, y + 7, str(int(row['total_marks'])))
+        
+        # पास किंवा फेलनुसार स्टेटसचा रंग बदलणे
+        status_text = row['result_status'].strip()
+        if status_text.lower() in ['pass', 'p']:
+            c.setFillColor(pass_color)
+            c.setFont("Helvetica-Bold", 11)
+            c.drawCentredString(485, y + 7, "PASS")
+        else:
+            c.setFillColor(fail_color)
+            c.setFont("Helvetica-Bold", 11)
+            c.drawCentredString(485, y + 7, "FAIL")
 
         total_obtained += row['marks']
         grand_total += row['total_marks']
+        y -= 25
+        row_count += 1
 
-        y -= 30
+    # टेबलचा संपूर्ण बाहेरील साचा पूर्ण करणे
+    c.setStrokeColor(primary_color)
+    c.setLineWidth(1)
+    c.rect(55, y + 25, 490, table_top - y, fill=0, stroke=1)
 
-    # Summary
+    # ५. एकत्रित निकाल बॉक्स (Summary Statistics Card)
+    summary_y = y - 25
+    c.setFillColor(HexColor("#f1f5f9"))
+    c.setStrokeColor(border_color)
+    c.rect(55, summary_y, 490, 45, fill=1, stroke=1)
+
     final_percentage = (total_obtained / grand_total) * 100
+    final_result = "PASS" if final_percentage >= 35 else "FAIL"
+    result_text_color = pass_color if final_result == "PASS" else "fail_color"
 
-    c.setFont("Helvetica-Bold", 12)
+    c.setFillColor(text_color)
+    c.setFont("Helvetica-Bold", 11)
+    c.drawString(75, summary_y + 16, f"TOTAL MARKS :  {int(total_obtained)} / {int(grand_total)}")
+    c.drawString(270, summary_y + 16, f"PERCENTAGE :  {round(final_percentage, 2)}%")
+    
+    c.setFillColor(result_text_color)
+    c.drawString(450, summary_y + 16, f"RESULT :  {final_result}")
 
-    c.drawString(
-        80,
-        380,
-        f"Total Marks : {int(total_obtained)}/{int(grand_total)}"
-    )
+    # ६. रिमार्क आणि सहीचा भाग (Footer Block)
+    c.setFillColor(muted_text)
+    c.setFont("Helvetica-Bold", 11)
+    c.drawString(55, summary_y - 40, "Class Teacher Remark : ")
+    c.setFont("Helvetica", 11)
+    c.setStrokeColor(border_color)
+    c.line(190, summary_y - 40, 545, summary_y - 40) # रिमार्कसाठी सरळ रेषा
 
-    c.drawString(
-        80,
-        350,
-        f"Percentage : {round(final_percentage,2)}%"
-    )
+    # स्वाक्षरी रेषा आणि मजकूर
+    c.setStrokeColor(muted_text)
+    c.setLineWidth(0.8)
+    c.line(75, summary_y - 120, 200, summary_y - 120)
+    c.line(400, summary_y - 120, 525, summary_y - 120)
 
-    if final_percentage >= 35:
-        final_result = "Pass"
-    else:
-        final_result = "Fail"
-
-    c.drawString(
-        300,
-        350,
-        f"Result : {final_result}"
-    )
-
-    # Footer
-    c.drawString(
-        80,
-        200,
-        "Class Teacher Remark : __________"
-    )
-
-    c.drawString(
-        380,
-        120,
-        "Principal Signature"
-    )
+    c.setFillColor(text_color)
+    c.setFont("Helvetica-Bold", 10)
+    c.drawCentredString(137, summary_y - 135, "CLASS TEACHER")
+    c.drawCentredString(462, summary_y - 135, "PRINCIPAL SIGNATURE")
 
     c.save()
-
     return FileResponse(file_name)
 
 @app.get("/id_card/{student_id}")
