@@ -55,8 +55,8 @@ def login(
 
     cursor.execute("""
         SELECT * FROM users
-        WHERE mobile=%s
-    """, (username,))
+        WHERE username=%s OR mobile=%s
+    """, (username, username))
 
     user = cursor.fetchone()
     conn.close()
