@@ -2399,3 +2399,17 @@ def web_homework_list(request: Request):
             "homework_list": homework_list
         }
     )
+
+@app.get("/teacher_reports", response_class=HTMLResponse)
+def teacher_reports(request: Request):
+    if "user" not in request.session:
+        return RedirectResponse("/", status_code=303)
+
+    if request.session.get("role") != "teacher":
+        return RedirectResponse("/", status_code=303)
+
+    return templates.TemplateResponse(
+        request=request,
+        name="teacher_reports.html",
+        context={}
+    )

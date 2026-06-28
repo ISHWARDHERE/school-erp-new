@@ -27,7 +27,11 @@
 
             {% if request.session.get("role") == "admin" %}
 
-                <a href="/admin_dashboard"><i class="fa-solid fa-chart-line"></i> Dashboard</a>
+                {% if request.session.get("role") == "admin" %}
+    <a href="/admin_dashboard"><i class="fa-solid fa-chart-line"></i> Dashboard</a>
+{% else %}
+    <a href="/teacher_dashboard"><i class="fa-solid fa-chart-line"></i> Dashboard</a>
+{% endif %}
                 <a href="/web_students"><i class="fa-solid fa-user-graduate"></i> Students</a>
                 <a href="/web_teachers"><i class="fa-solid fa-chalkboard-user"></i> Teachers</a>
                 <a href="/web_attendance"><i class="fa-regular fa-calendar-check"></i> Attendance</a>
@@ -36,7 +40,11 @@
                 <a href="/add_homework"><i class="fa-solid fa-book-open"></i> Homework</a>
                 <a href="/view_notices"><i class="fa-solid fa-bullhorn"></i> Notices</a>
                 <a href="/admission_requests"><i class="fa-solid fa-user-plus"></i> Admission</a>
-                <a href="/web_result_list"><i class="fa-solid fa-chart-pie"></i> Reports</a>
+                {% if request.session.get("role") == "admin" %}
+    <a href="/web_reports"><i class="fa-solid fa-chart-pie"></i> Reports</a>
+{% else %}
+    <a href="/teacher_reports"><i class="fa-solid fa-chart-pie"></i> Reports</a>
+{% endif %}
 
             {% else %}
 

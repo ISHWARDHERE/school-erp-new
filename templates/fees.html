@@ -15,7 +15,11 @@
         </div>
         
         <div class="nav-links">
-            <a href="/admin_dashboard"><i class="fa-solid fa-chart-line"></i> Dashboard</a>
+            {% if request.session.get("role") == "admin" %}
+    <a href="/admin_dashboard"><i class="fa-solid fa-chart-line"></i> Dashboard</a>
+{% else %}
+    <a href="/teacher_dashboard"><i class="fa-solid fa-chart-line"></i> Dashboard</a>
+{% endif %}
             <a href="/web_fees" class="active"><i class="fa-solid fa-credit-card"></i> Fees</a>
             <a href="/add_fee_web"><i class="fa-solid fa-hand-holding-dollar"></i> Collect Fee</a>
             <a href="/web_pending_fees"><i class="fa-solid fa-clock-rotate-left"></i> Pending Fees</a>

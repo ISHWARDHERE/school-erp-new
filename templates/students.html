@@ -15,7 +15,14 @@
         </div>
         
         <div class="nav-links">
-            <a href="/admin_dashboard"><i class="fa-solid fa-chart-line"></i> Dashboard</a>
+            {% if request.session.get("role") == "admin" %}
+    <a href="/admin_dashboard"><i class="fa-solid fa-chart-line"></i> Dashboard</a>
+{% else %}
+    <a href="/teacher_dashboard"><i class="fa-solid fa-chart-line"></i> Dashboard</a>
+{% endif %}
+        {% else %}
+            <a href="/teacher_dashboard"><i class="fa-solid fa-chart-line"></i> Dashboard</a>
+        {% endif %}
             <a href="/web_students" class="active"><i class="fa-solid fa-user-graduate"></i> Students</a>
             <a href="/add_student_web"><i class="fa-solid fa-user-plus"></i> Add Student</a>
             <a href="/export_students_excel" class="excel-btn"><i class="fa-solid fa-file-excel"></i> Download Excel</a>
