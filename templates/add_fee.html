@@ -2,7 +2,10 @@
 <html>
 <head>
     <title>Collect Fee</title>
-    <link rel="stylesheet" href="/static/style.css">
+    <!-- Google Fonts & FontAwesome for Premium Design -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/static/style.css?v=2.7"> <!-- Cache Busting -->
 </head>
 <body>
 
@@ -12,45 +15,115 @@
 </script>
 {% endif %}
 
-<div class="sidebar">
-    <h2>School ERP</h2>
-    <a href="/admin_dashboard">Dashboard</a>
-    <a href="/web_fees">Fees List</a>
-    <a href="/add_fee_web">Collect Fee</a>
-    <a href="/web_pending_fees">Pending Fees</a>
-</div>
+<div class="dashboard-container">
+    <!-- SIDEBAR (ALL MODULES INTEGRATED) -->
+    <div class="sidebar">
+        <div class="logo-area">
+            <i class="fa-solid fa-graduation-cap"></i>
+            <h2>THE RISING STAR</h2>
+        </div>
+        
+        <div class="nav-links">
+            <a href="/admin_dashboard"><i class="fa-solid fa-chart-line"></i> Dashboard</a>
+            <a href="/web_students"><i class="fa-solid fa-user-graduate"></i> Students</a>
+            <a href="/web_teachers"><i class="fa-solid fa-chalkboard-user"></i> Teachers</a>
+            <a href="/web_attendance"><i class="fa-regular fa-calendar-check"></i> Attendance</a>
+            
+            <!-- Fees Active ठेवली आहे -->
+            <a href="/web_fees" class="active"><i class="fa-solid fa-credit-card"></i> Fees</a>
+            
+            <a href="/web_results"><i class="fa-solid fa-square-poll-vertical"></i> Results</a>
+            <a href="/web_homework"><i class="fa-solid fa-book-open"></i> Homework</a>
+            <a href="/view_notices"><i class="fa-solid fa-bullhorn"></i> Notices</a>
+            <a href="/admission_requests"><i class="fa-solid fa-user-plus"></i> Admission</a>
+            <a href="/web_reports"><i class="fa-solid fa-chart-pie"></i> Reports</a>
+            
+            <a href="/logout" class="logout-link" style="margin-top: auto;"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
+        </div>
+    </div>
 
-<div class="main">
-    <div class="login-box">
-        <h2>Collect Fee</h2>
+    <!-- MAIN CONTENT AREA -->
+    <div class="main">
+        <div class="topbar">
+            <h1>Collect Fee</h1>
+            <div class="user-profile">
+                <!-- क्विक नेव्हिगेशन लिस्ट बटण -->
+                <a href="/web_fees" style="text-decoration: none; margin-right: 15px;">
+                    <button class="btn-idcard" style="padding: 8px 14px; background: #faf5ff; color: #7c3aed; border: 1px solid #e9d5ff;">
+                        <i class="fa-solid fa-list"></i> Fees List
+                    </button>
+                </a>
+                <div class="avatar">A</div>
+            </div>
+        </div>
 
-        <form action="/save_fee_web" method="post">
+        <!-- SUB NAVIGATION TABS -->
+        <div style="display: flex; gap: 10px; margin-bottom: 20px; margin-top: 10px;">
+            <span class="badge-class" style="background: #eff6ff; color: #2563eb; border: 1px solid #bfdbfe; padding: 8px 16px;">
+                <i class="fa-solid fa-hand-holding-dollar" style="margin-right: 4px;"></i> Collect Fee Form
+            </span>
+            <a href="/web_pending_fees" style="text-decoration: none;">
+                <span class="badge-class" style="background: #ffffff; color: #64748b; border: 1px solid #e2e8f0; padding: 8px 16px; cursor: pointer;">
+                    <i class="fa-solid fa-clock-rotate-left" style="margin-right: 4px;"></i> Pending Fees
+                </span>
+            </a>
+        </div>
 
-            <select name="student_id" required>
-                {% for student in students %}
-                <option value="{{ student.id }}">
-                    {{ student.student_name }}
-                </option>
-                {% endfor %}
-            </select><br><br>
+        <!-- PREMIUM FORM CARD LAYOUT -->
+        <div class="form-container" style="max-width: 600px; margin-top: 10px;">
+            <div class="form-header">
+                <h2><i class="fa-solid fa-calculator" style="color: #7c3aed;"></i> Student Fee Collection</h2>
+                <p>Select student and input fee details precisely to save the transaction.</p>
+            </div>
 
-            <input type="number"
-                   name="amount"
-                   placeholder="Paid Amount"
-                   required><br><br>
+            <!-- फॉर्म ॲक्शन आणि इनपुट नावे तुमच्या मूळ कोडप्रमाणे १००% मॅचिंग ठेवली आहेत -->
+            <form action="/save_fee_web" method="post">
 
-            <input type="date"
-                   name="paid_date"
-                   required><br><br>
+                <!-- Student Dropdown -->
+                <div class="form-group">
+                    <label><i class="fa-solid fa-user-graduate"></i> Select Student</label>
+                    <select name="student_id" required>
+                        <option value="" disabled selected>-- Choose Student --</option>
+                        {% for student in students %}
+                        <option value="{{ student.id }}">
+                            {{ student.student_name }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
 
-            <select name="status" required>
-                <option value="Paid">Paid</option>
-                <option value="Pending">Pending</option>
-            </select><br><br>
+                <!-- Paid Amount Input (name="amount" सुरक्षित) -->
+                <div class="form-group" style="margin-top: 15px;">
+                    <label><i class="fa-solid fa-indian-rupee-sign"></i> Paid Amount</label>
+                    <input type="number" name="amount" placeholder="Enter amount in ₹" required>
+                </div>
 
-            <button type="submit">Save Fee</button>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 15px;">
+                    <!-- Payment Date (name="paid_date" सुरक्षित) -->
+                    <div class="form-group">
+                        <label><i class="fa-regular fa-calendar-days"></i> Paid Date</label>
+                        <input type="date" name="paid_date" required>
+                    </div>
 
-        </form>
+                    <!-- Status Selection (name="status" व व्हॅल्यूज "Paid"/"Pending" सुरक्षित) -->
+                    <div class="form-group">
+                        <label><i class="fa-solid fa-circle-info"></i> Fee Status</label>
+                        <select name="status" required>
+                            <option value="Paid" style="color: #16a34a; font-weight: 600;">🟢 Paid</option>
+                            <option value="Pending" style="color: #dc2626; font-weight: 600;">🔴 Pending</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Submit Button -->
+                <div class="form-actions" style="margin-top: 25px;">
+                    <button type="submit" class="btn-submit" style="width: 100%; justify-content: center; padding: 12px; background: #7c3aed; box-shadow: 0 4px 12px rgba(124, 58, 237, 0.2);">
+                        <i class="fa-solid fa-floppy-disk"></i> Save Fee Record
+                    </button>
+                </div>
+
+            </form>
+        </div>
     </div>
 </div>
 
