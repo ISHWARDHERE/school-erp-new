@@ -14,34 +14,28 @@
 {% endif %}
 
 <div class="dashboard-container">
-    <div class="sidebar">
-        <div class="logo-area">
-            <i class="fa-solid fa-graduation-cap"></i>
-            <h2>THE RISING STAR</h2>
-        </div>
+    {% if request.session.role == "admin" %}
 
-        <div class="nav-links">
-            {% if request.session.role == "admin" %}
-                <a href="/admin_dashboard"><i class="fa-solid fa-chart-line"></i> Dashboard</a>
-            {% else %}
-                <a href="/teacher_dashboard"><i class="fa-solid fa-chart-line"></i> Dashboard</a>
-            {% endif %}
+        <a href="/web_students">Students</a>
+        <a href="/web_teachers">Teachers</a>
+        <a href="/web_attendance">Attendance</a>
+        <a href="/web_fees">Fees</a>
+        <a href="/web_result_list">Results</a>
+        <a href="/add_homework">Homework</a>
+        <a href="/view_notices">Notices</a>
+        <a href="/admission_requests">Admission</a>
 
-            <a href="/web_students"><i class="fa-solid fa-user-graduate"></i> Students</a>
-            <a href="/web_teachers"><i class="fa-solid fa-chalkboard-user"></i> Teachers</a>
-            <a href="/web_attendance"><i class="fa-regular fa-calendar-check"></i> Attendance</a>
-            <a href="/web_fees"><i class="fa-solid fa-credit-card"></i> Fees</a>
-            <a href="/web_result_list" class="active"><i class="fa-solid fa-square-poll-vertical"></i> Results</a>
-            <a href="/add_homework"><i class="fa-solid fa-book-open"></i> Homework</a>
-            <a href="/view_notices"><i class="fa-solid fa-bullhorn"></i> Notices</a>
-            <a href="/admission_requests"><i class="fa-solid fa-user-plus"></i> Admission</a>
-            <a href="/web_reports"><i class="fa-solid fa-chart-pie"></i> Reports</a>
+    {% else %}
 
-            <a href="/logout" class="logout-link" style="margin-top:auto;">
-                <i class="fa-solid fa-right-from-bracket"></i> Logout
-            </a>
-        </div>
-    </div>
+        <a href="/web_students">Students</a>
+        <a href="/web_attendance">Attendance</a>
+        <a href="/add_homework">Homework</a>
+        <a href="/view_notices">Notices</a>
+        <a href="/web_result_list">Results</a>
+
+    {% endif %}
+
+<a href="/logout">Logout</a>
 
     <div class="main">
         <div class="topbar">

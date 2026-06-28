@@ -4,40 +4,101 @@
     <title>Homework Report</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="/static/style.css?v=3.3"> </head>
+    <link rel="stylesheet" href="/static/style.css?v=3.4">
+</head>
 <body>
 
 <div class="dashboard-container">
+
+    <!-- Sidebar -->
     <div class="sidebar">
         <div class="logo-area">
             <i class="fa-solid fa-graduation-cap"></i>
             <h2>THE RISING STAR</h2>
         </div>
-        
+
         <div class="nav-links">
+
             {% if request.session.role == "admin" %}
-                <a href="/admin_dashboard"><i class="fa-solid fa-chart-line"></i> Dashboard</a>
+
+                <a href="/admin_dashboard">
+                    <i class="fa-solid fa-chart-line"></i> Dashboard
+                </a>
+
+                <a href="/web_students">
+                    <i class="fa-solid fa-user-graduate"></i> Students
+                </a>
+
+                <a href="/web_teachers">
+                    <i class="fa-solid fa-chalkboard-user"></i> Teachers
+                </a>
+
+                <a href="/web_attendance">
+                    <i class="fa-regular fa-calendar-check"></i> Attendance
+                </a>
+
+                <a href="/web_fees">
+                    <i class="fa-solid fa-credit-card"></i> Fees
+                </a>
+
+                <a href="/web_result_list">
+                    <i class="fa-solid fa-square-poll-vertical"></i> Results
+                </a>
+
+                <a href="/add_homework" class="active">
+                    <i class="fa-solid fa-book-open"></i> Homework
+                </a>
+
+                <a href="/view_notices">
+                    <i class="fa-solid fa-bullhorn"></i> Notices
+                </a>
+
+                <a href="/admission_requests">
+                    <i class="fa-solid fa-user-plus"></i> Admission
+                </a>
+
+                <a href="/web_result_list">
+                    <i class="fa-solid fa-chart-pie"></i> Reports
+                </a>
+
             {% else %}
-                <a href="/teacher_dashboard"><i class="fa-solid fa-chart-line"></i> Dashboard</a>
+
+                <a href="/teacher_dashboard">
+                    <i class="fa-solid fa-chart-line"></i> Dashboard
+                </a>
+
+                <a href="/web_students">
+                    <i class="fa-solid fa-user-graduate"></i> Students
+                </a>
+
+                <a href="/web_attendance">
+                    <i class="fa-regular fa-calendar-check"></i> Attendance
+                </a>
+
+                <a href="/add_homework" class="active">
+                    <i class="fa-solid fa-book-open"></i> Homework
+                </a>
+
+                <a href="/view_notices">
+                    <i class="fa-solid fa-bullhorn"></i> Notices
+                </a>
+
+                <a href="/web_result_list">
+                    <i class="fa-solid fa-square-poll-vertical"></i> Results
+                </a>
+
             {% endif %}
-            
-            <a href="/web_students"><i class="fa-solid fa-user-graduate"></i> Students</a>
-            <a href="/web_teachers"><i class="fa-solid fa-chalkboard-user"></i> Teachers</a>
-            <a href="/web_attendance"><i class="fa-regular fa-calendar-check"></i> Attendance</a>
-            <a href="/web_fees"><i class="fa-solid fa-credit-card"></i> Fees</a>
-            <a href="/web_result_list"><i class="fa-solid fa-square-poll-vertical"></i> Results</a>
-            
-            <a href="/add_homework" class="active"><i class="fa-solid fa-book-open"></i> Homework</a>
-            
-            <a href="/view_notices"><i class="fa-solid fa-bullhorn"></i> Notices</a>
-            <a href="/admission_requests"><i class="fa-solid fa-user-plus"></i> Admission</a>
-            <a href="/web_result_list"><i class="fa-solid fa-chart-pie"></i> Reports</a>
-            
-            <a href="/logout" class="logout-link" style="margin-top: auto;"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
+
+            <a href="/logout" class="logout-link" style="margin-top:auto;">
+                <i class="fa-solid fa-right-from-bracket"></i> Logout
+            </a>
+
         </div>
     </div>
 
+    <!-- Main Content -->
     <div class="main">
+
         <div class="topbar">
             <h1>Homework Report</h1>
             <div class="user-profile">
@@ -45,63 +106,84 @@
             </div>
         </div>
 
-        <div style="display: flex; gap: 10px; margin-bottom: 20px; margin-top: 10px;">
-            <a href="/add_homework" style="text-decoration: none;">
-                <span class="badge-class" style="background: #ffffff; color: #64748b; border: 1px solid #e2e8f0; padding: 8px 16px; cursor: pointer;">
-                    <i class="fa-solid fa-plus" style="margin-right: 4px;"></i> Add Homework
+        <!-- Top Buttons -->
+        <div style="display:flex; gap:10px; margin-bottom:20px; margin-top:10px;">
+            <a href="/add_homework" style="text-decoration:none;">
+                <span class="badge-class"
+                      style="background:#ffffff; color:#64748b; border:1px solid #e2e8f0; padding:8px 16px; cursor:pointer;">
+                    <i class="fa-solid fa-plus" style="margin-right:4px;"></i>
+                    Add Homework
                 </span>
             </a>
-            <span class="badge-class" style="background: #eff6ff; color: #2563eb; border: 1px solid #bfdbfe; padding: 8px 16px;">
-                <i class="fa-solid fa-list-check" style="margin-right: 4px;"></i> View Homework Report
+
+            <span class="badge-class"
+                  style="background:#eff6ff; color:#2563eb; border:1px solid #bfdbfe; padding:8px 16px;">
+                <i class="fa-solid fa-list-check" style="margin-right:4px;"></i>
+                View Homework Report
             </span>
         </div>
 
+        <!-- Homework Table -->
         <div class="table-container">
             <table>
                 <thead>
                     <tr>
-                        <th style="width: 15%;">Class</th>
-                        <th style="width: 20%;">Subject</th>
-                        <th style="width: 50%;">Homework Description</th>
-                        <th style="width: 15%;">Assigned Date</th>
+                        <th>Class</th>
+                        <th>Subject</th>
+                        <th>Homework Description</th>
+                        <th>Assigned Date</th>
                     </tr>
                 </thead>
+
                 <tbody>
                     {% if homework_list %}
+
                         {% for hw in homework_list %}
                         <tr>
+
                             <td>
-                                <span class="badge-class" style="background: #f1f5f9; color: #334155; border: 1px solid #cbd5e1; font-weight: 600; padding: 4px 10px;">
-                                    Class: {{ hw.class_name }}
+                                <span class="badge-class"
+                                      style="background:#f1f5f9; color:#334155; border:1px solid #cbd5e1; font-weight:600; padding:4px 10px;">
+                                    {{ hw.class_name }}
                                 </span>
                             </td>
-                            
-                            <td style="font-weight: 600; color: #0f172a; text-transform: capitalize;">
-                                <i class="fa-solid fa-book" style="color: #94a3b8; margin-right: 6px; font-size: 14px;"></i>
+
+                            <td style="font-weight:600; color:#0f172a;">
+                                <i class="fa-solid fa-book"
+                                   style="color:#94a3b8; margin-right:6px;"></i>
                                 {{ hw.subject }}
                             </td>
-                            
-                            <td style="color: #475569; line-height: 1.5; font-size: 14px; white-space: pre-line;">
+
+                            <td style="color:#475569; line-height:1.5;">
                                 {{ hw.homework_text }}
                             </td>
 
-                            <td style="color: #64748b; font-weight: 500;">
-                                <i class="fa-regular fa-calendar-days" style="color: #94a3b8; margin-right: 6px; font-size: 13px;"></i>
+                            <td style="color:#64748b; font-weight:500;">
+                                <i class="fa-regular fa-calendar-days"
+                                   style="color:#94a3b8; margin-right:6px;"></i>
                                 {{ hw.homework_date }}
                             </td>
+
                         </tr>
                         {% endfor %}
+
                     {% else %}
+
                         <tr>
-                            <td colspan="4" style="text-align: center; color: #94a3b8; padding: 40px; font-size: 15px;">
-                                <i class="fa-solid fa-folder-open" style="font-size: 32px; display: block; margin-bottom: 12px; color: #cbd5e1;"></i>
+                            <td colspan="4"
+                                style="text-align:center; color:#94a3b8; padding:40px; font-size:15px;">
+                                <i class="fa-solid fa-folder-open"
+                                   style="font-size:32px; display:block; margin-bottom:12px; color:#cbd5e1;"></i>
                                 No homework records assigned yet.
                             </td>
                         </tr>
+
                     {% endif %}
                 </tbody>
+
             </table>
         </div>
+
     </div>
 </div>
 
