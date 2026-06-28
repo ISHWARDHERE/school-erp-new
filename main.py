@@ -580,16 +580,15 @@ def admin_dashboard(request: Request):
         }
     )
 
-@app.get("/web_students")
+@app.get("/web_students", response_class=HTMLResponse)
 def web_students(request: Request):
-
     if "user" not in request.session:
         return RedirectResponse("/", status_code=303)
 
-    user_role = request.session.get("role", "").lower()
-
     conn = connect_db()
-    cursor = conn.cursor()
+    cursor = conn.cursor(dictionary=True)
+
+    user_role = request.session.get("role")
 
     if user_role == "teacher":
         teacher_class = request.session.get("class_name")
@@ -606,6 +605,8 @@ def web_students(request: Request):
         cursor.execute("SELECT * FROM students")
 
     students = cursor.fetchall()
+
+    conn.close()
 
     return templates.TemplateResponse(
         request=request,
@@ -704,7 +705,7 @@ async def save_student_web(
     except Exception as e:
         print("Student Save Error:", e)
         return {"error": str(e)}
-        
+
 @app.get("/delete_student_web/{student_id}")
 def delete_student_web(student_id: int):
     conn = connect_db()
