@@ -4,7 +4,8 @@
     <title>Add Result</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="/static/style.css?v=3.6"> </head>
+    <link rel="stylesheet" href="/static/style.css?v=3.7">
+</head>
 <body>
 
 {% if success %}
@@ -14,35 +15,54 @@
 {% endif %}
 
 <div class="dashboard-container">
-    {% if request.session.get("role") == "admin" %}
 
-        <a href="/web_students">Students</a>
-        <a href="/web_teachers">Teachers</a>
-        <a href="/web_attendance">Attendance</a>
-        <a href="/web_fees">Fees</a>
-        <a href="/web_result_list">Results</a>
-        <a href="/add_homework">Homework</a>
-        <a href="/view_notices">Notices</a>
-        <a href="/admission_requests">Admission</a>
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+        <div class="logo-area">
+            <i class="fa-solid fa-graduation-cap"></i>
+            <h2>THE RISING STAR</h2>
+        </div>
 
-    {% else %}
+        <div class="nav-links">
 
-        <a href="/web_students">Students</a>
-        <a href="/web_attendance">Attendance</a>
-        <a href="/add_homework">Homework</a>
-        <a href="/view_notices">Notices</a>
-        <a href="/web_result_list">Results</a>
+            {% if request.session.get("role") == "admin" %}
 
-    {% endif %}
+                <a href="/admin_dashboard"><i class="fa-solid fa-chart-line"></i> Dashboard</a>
+                <a href="/web_students"><i class="fa-solid fa-user-graduate"></i> Students</a>
+                <a href="/web_teachers"><i class="fa-solid fa-chalkboard-user"></i> Teachers</a>
+                <a href="/web_attendance"><i class="fa-regular fa-calendar-check"></i> Attendance</a>
+                <a href="/web_fees"><i class="fa-solid fa-credit-card"></i> Fees</a>
+                <a href="/web_result_list" class="active"><i class="fa-solid fa-square-poll-vertical"></i> Results</a>
+                <a href="/add_homework"><i class="fa-solid fa-book-open"></i> Homework</a>
+                <a href="/view_notices"><i class="fa-solid fa-bullhorn"></i> Notices</a>
+                <a href="/admission_requests"><i class="fa-solid fa-user-plus"></i> Admission</a>
+                <a href="/web_result_list"><i class="fa-solid fa-chart-pie"></i> Reports</a>
 
-<a href="/logout">Logout</a>
+            {% else %}
 
+                <a href="/teacher_dashboard"><i class="fa-solid fa-chart-line"></i> Dashboard</a>
+                <a href="/web_students"><i class="fa-solid fa-user-graduate"></i> Students</a>
+                <a href="/web_attendance"><i class="fa-regular fa-calendar-check"></i> Attendance</a>
+                <a href="/web_result_list" class="active"><i class="fa-solid fa-square-poll-vertical"></i> Results</a>
+                <a href="/add_homework"><i class="fa-solid fa-book-open"></i> Homework</a>
+                <a href="/view_notices"><i class="fa-solid fa-bullhorn"></i> Notices</a>
+
+            {% endif %}
+
+            <a href="/logout" class="logout-link" style="margin-top:auto;">
+                <i class="fa-solid fa-right-from-bracket"></i> Logout
+            </a>
+
+        </div>
+    </div>
+
+    <!-- MAIN -->
     <div class="main">
         <div class="topbar">
             <h1>Add Exam Result</h1>
             <div class="user-profile">
                 <a href="/export_results_excel" style="text-decoration:none; margin-right:15px;">
-                    <button class="btn-submit" style="margin-top:0; padding:10px 18px; background:#16a34a; box-shadow: 0 4px 12px rgba(22, 163, 74, 0.2);">
+                    <button class="btn-submit" style="margin-top:0; padding:10px 18px; background:#16a34a;">
                         <i class="fa-regular fa-file-excel"></i> Export Excel
                     </button>
                 </a>
@@ -51,25 +71,27 @@
         </div>
 
         <div style="display:flex; gap:10px; margin-bottom:20px; margin-top:10px;">
-            <span class="badge-class" style="background:#fff7ed; color:#ea580c; border:1px solid #fed7aa; padding:8px 16px;">
-                <i class="fa-solid fa-pen-to-square" style="margin-right: 4px;"></i> Add New Result Form
+            <span class="badge-class" style="background:#fff7ed; color:#ea580c; padding:8px 16px;">
+                <i class="fa-solid fa-pen-to-square"></i> Add New Result Form
             </span>
+
             <a href="/web_result_list" style="text-decoration:none;">
-                <span class="badge-class" style="background:#ffffff; color:#64748b; border:1px solid #e2e8f0; padding:8px 16px;">
-                    <i class="fa-solid fa-file-invoice" style="margin-right: 4px;"></i> View Result Report
+                <span class="badge-class" style="background:#ffffff; color:#64748b; padding:8px 16px;">
+                    <i class="fa-solid fa-file-invoice"></i> View Result Report
                 </span>
             </a>
         </div>
 
-        <div class="form-container" style="max-width:950px; margin-top:10px;">
+        <div class="form-container" style="max-width:950px;">
             <div class="form-header">
-                <h2><i class="fa-solid fa-award" style="color:#ea580c;"></i> Student Marks Entry</h2>
-                <p>Select student and carefully enter subject-wise exam marks into the system.</p>
+                <h2><i class="fa-solid fa-award"></i> Student Marks Entry</h2>
+                <p>Select student and enter subject-wise marks.</p>
             </div>
 
             <form action="/save_result_web" method="post">
+
                 <div class="form-group">
-                    <label><i class="fa-solid fa-user-graduate"></i> Select Student</label>
+                    <label>Select Student</label>
                     <select name="student_id" required>
                         <option value="" disabled selected>-- Choose Student --</option>
                         {% for student in students %}
@@ -78,81 +100,67 @@
                     </select>
                 </div>
 
-                <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px; margin-top:15px;">
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px;">
                     <div class="form-group">
-                        <label><i class="fa-solid fa-file-signature"></i> Exam Name</label>
-                        <input type="text" name="exam_name" placeholder="e.g. Primary Exam, Term-1" required>
+                        <label>Exam Name</label>
+                        <input type="text" name="exam_name" required>
                     </div>
 
                     <div class="form-group">
-                        <label><i class="fa-solid fa-school"></i> Class</label>
-                        <input type="text" name="class_name" placeholder="e.g. 5th, 6th" required>
+                        <label>Class</label>
+                        <input type="text" name="class_name" required>
                     </div>
                 </div>
 
                 <div class="form-group" style="margin-top:15px;">
-                    <label><i class="fa-solid fa-layer-group"></i> Division</label>
-                    <input type="text" name="division" placeholder="e.g. A, B or Rose" required>
+                    <label>Division</label>
+                    <input type="text" name="division" required>
                 </div>
 
                 <div style="margin-top:30px;">
-                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
-                        <h3 style="color:#0f172a; font-size:16px; font-weight:600; margin:0;">
-                            <i class="fa-solid fa-book-open-reader" style="color:#2563eb; margin-right:6px;"></i> Subject Marks
-                        </h3>
-                        <button type="button" onclick="addRow()" class="btn-submit" style="margin-top:0; padding:8px 14px; background:#2563eb; box-shadow: 0 4px 10px rgba(37, 99, 235, 0.2); font-size:13px;">
+                    <div style="display:flex; justify-content:space-between; margin-bottom:15px;">
+                        <h3>Subject Marks</h3>
+
+                        <button type="button" onclick="addRow()" class="btn-submit">
                             <i class="fa-solid fa-plus"></i> Add Subject
                         </button>
                     </div>
 
-                    <div class="table-container" style="border: 1px solid #e2e8f0; border-radius: 8px; box-shadow: none;">
-                        <table id="subjectTable" style="width:100%; border-collapse:collapse;">
-                            <thead>
-                                <tr>
-                                    <th style="width: 8%; text-align:center;">Sr No.</th>
-                                    <th style="width: 32%;">Subject Name</th>
-                                    <th style="width: 20%;">Marks Obtained</th>
-                                    <th style="width: 20%;">Out Of</th>
-                                    <th style="width: 12%;">Grade</th>
-                                    <th style="width: 8%; text-align:center;">Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td style="text-align:center; font-weight:600; color:#64748b;">1</td>
-                                    <td>
-                                        <input type="text" name="subject[]" placeholder="e.g. Mathematics" required 
-                                               style="width:100%; padding:8px 12px; border:1px solid #cbd5e1; border-radius:6px; font-size:14px;">
-                                    </td>
-                                    <td>
-                                        <input type="number" name="marks[]" placeholder="0" required 
-                                               style="width:100%; padding:8px 12px; border:1px solid #cbd5e1; border-radius:6px; font-size:14px;">
-                                    </td>
-                                    <td>
-                                        <input type="number" name="total_marks[]" placeholder="100" required 
-                                               style="width:100%; padding:8px 12px; border:1px solid #cbd5e1; border-radius:6px; font-size:14px;">
-                                    </td>
-                                    <td>
-                                        <input type="text" name="grade[]" placeholder="A+" required 
-                                               style="width:100%; padding:8px 12px; border:1px solid #cbd5e1; border-radius:6px; font-size:14px; text-transform:uppercase;">
-                                    </td>
-                                    <td style="text-align:center;">
-                                        <button type="button" onclick="deleteRow(this)" class="badge-class" 
-                                                style="background:#fef2f2; color:#dc2626; border:1px solid #fecaca; padding:8px 10px; cursor:pointer; border-radius:6px; font-size:14px;">
-                                            <i class="fa-solid fa-trash-can"></i>
-                                        </button>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
+                    <table id="subjectTable">
+                        <thead>
+                            <tr>
+                                <th>Sr No</th>
+                                <th>Subject</th>
+                                <th>Marks</th>
+                                <th>Out Of</th>
+                                <th>Grade</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td><input type="text" name="subject[]" required></td>
+                                <td><input type="number" name="marks[]" required></td>
+                                <td><input type="number" name="total_marks[]" required></td>
+                                <td><input type="text" name="grade[]" required></td>
+                                <td>
+                                    <button type="button" onclick="deleteRow(this)">
+                                        Delete
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
 
                 <div class="form-actions" style="margin-top:30px;">
-                    <button type="submit" class="btn-submit" style="width:100%; padding:12px; background:#ea580c; justify-content:center; box-shadow: 0 4px 12px rgba(234, 88, 12, 0.2); font-size:15px;">
-                        <i class="fa-solid fa-floppy-disk"></i> Save & Publish Result
+                    <button type="submit" class="btn-submit" style="width:100%;">
+                        Save & Publish Result
                     </button>
                 </div>
+
             </form>
         </div>
     </div>
@@ -163,48 +171,21 @@ function addRow() {
     let table = document.getElementById("subjectTable").getElementsByTagName('tbody')[0];
     let rowCount = table.rows.length + 1;
 
-    let newRow = table.insertRow(table.rows.length);
+    let newRow = table.insertRow();
 
     newRow.innerHTML = `
-        <td style="text-align:center; font-weight:600; color:#64748b;">${rowCount}</td>
-        <td>
-            <input type="text" name="subject[]" placeholder="e.g. Science" required 
-                   style="width:100%; padding:8px 12px; border:1px solid #cbd5e1; border-radius:6px; font-size:14px;">
-        </td>
-        <td>
-            <input type="number" name="marks[]" placeholder="0" required 
-                   style="width:100%; padding:8px 12px; border:1px solid #cbd5e1; border-radius:6px; font-size:14px;">
-        </td>
-        <td>
-            <input type="number" name="total_marks[]" placeholder="100" required 
-                   style="width:100%; padding:8px 12px; border:1px solid #cbd5e1; border-radius:6px; font-size:14px;">
-        </td>
-        <td>
-            <input type="text" name="grade[]" placeholder="A" required 
-                   style="width:100%; padding:8px 12px; border:1px solid #cbd5e1; border-radius:6px; font-size:14px; text-transform:uppercase;">
-        </td>
-        <td style="text-align:center;">
-            <button type="button" onclick="deleteRow(this)" class="badge-class" 
-                    style="background:#fef2f2; color:#dc2626; border:1px solid #fecaca; padding:8px 10px; cursor:pointer; border-radius:6px; font-size:14px;">
-                <i class="fa-solid fa-trash-can"></i>
-            </button>
-        </td>
+        <td>${rowCount}</td>
+        <td><input type="text" name="subject[]" required></td>
+        <td><input type="number" name="marks[]" required></td>
+        <td><input type="number" name="total_marks[]" required></td>
+        <td><input type="text" name="grade[]" required></td>
+        <td><button type="button" onclick="deleteRow(this)">Delete</button></td>
     `;
 }
 
 function deleteRow(btn) {
-    let table = document.getElementById("subjectTable").getElementsByTagName('tbody')[0];
-    if (table.rows.length > 1) {
-        let row = btn.parentNode.parentNode;
-        row.parentNode.removeChild(row);
-        
-        // अनुक्रमांक (Sr No.) पुन्हा री-सेट करण्यासाठी
-        for (let i = 0; i < table.rows.length; i++) {
-            table.rows[i].cells[0].innerText = i + 1;
-        }
-    } else {
-        alert("At least one subject row is required!");
-    }
+    let row = btn.parentNode.parentNode;
+    row.remove();
 }
 </script>
 
