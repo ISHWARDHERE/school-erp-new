@@ -4,7 +4,7 @@
     <title>Add Student</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="/static/style.css?v=2.5">
+    <link rel="stylesheet" href="/static/style.css?v=2.6">
 </head>
 <body>
 
@@ -55,7 +55,7 @@
 
         </div>
     </div>
-    
+
     <div class="main">
         <div class="topbar">
             <h1>Add New Student</h1>
@@ -106,32 +106,47 @@
                     </div>
 
                     <div class="form-group">
-                        <label>Father Name</label>
-                        <input type="text" name="father_name" required>
+                        <label>Division</label>
+                        <select name="division" required>
+                            <option value="">Select Division</option>
+                            <option>A</option>
+                            <option>B</option>
+                            <option>C</option>
+                            <option>D</option>
+                        </select>
                     </div>
 
                 </div>
 
                 <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px; margin-top:10px;">
+
+                    <div class="form-group">
+                        <label>Father Name</label>
+                        <input type="text" name="father_name" required>
+                    </div>
 
                     <div class="form-group">
                         <label>Mobile Number</label>
                         <input type="text" name="mobile" required>
                     </div>
 
-                    <div class="form-group">
-                        <label>Student Photo</label>
-                        <input type="file" name="photo" required>
-                    </div>
-
                 </div>
 
                 <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px; margin-top:10px;">
 
                     <div class="form-group">
+                        <label>Student Photo</label>
+                        <input type="file" name="photo" required>
+                    </div>
+
+                    <div class="form-group">
                         <label>Yearly Fee</label>
                         <input type="number" name="yearly_fee" required>
                     </div>
+
+                </div>
+
+                <div style="margin-top:10px;">
 
                     <div class="form-group">
                         <label>Discount Given</label>
@@ -155,12 +170,14 @@
 function validateForm() {
     let student_name = document.getElementsByName("student_name")[0].value;
     let class_name = document.getElementsByName("class_name")[0].value;
+    let division = document.getElementsByName("division")[0].value;
     let mobile = document.getElementsByName("mobile")[0].value;
     let yearly_fee = document.getElementsByName("yearly_fee")[0].value;
 
     if (
         student_name == "" ||
         class_name == "" ||
+        division == "" ||
         mobile == "" ||
         yearly_fee == ""
     ) {

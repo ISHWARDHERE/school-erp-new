@@ -634,6 +634,7 @@ async def save_student_web(
         admission_no = form.get("admission_no")
         student_name = form.get("student_name")
         student_class = form.get("class_name")
+        division = form.get("division")
         father_name = form.get("father_name")
         mobile = form.get("mobile")
         yearly_fee = form.get("yearly_fee")
@@ -670,6 +671,7 @@ async def save_student_web(
                 admission_no,
                 student_name,
                 class_name,
+                division,
                 father_name,
                 mobile,
                 yearly_fee,
@@ -677,11 +679,12 @@ async def save_student_web(
                 final_fee,
                 photo
             )
-            VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s)
+            VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
         """, (
             admission_no,
             student_name,
             student_class,
+            division,
             father_name,
             mobile,
             yearly_fee,
@@ -701,7 +704,7 @@ async def save_student_web(
     except Exception as e:
         print("Student Save Error:", e)
         return {"error": str(e)}
-
+        
 @app.get("/delete_student_web/{student_id}")
 def delete_student_web(student_id: int):
     conn = connect_db()
