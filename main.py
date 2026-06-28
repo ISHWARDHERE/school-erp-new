@@ -2413,3 +2413,17 @@ def teacher_reports(request: Request):
         name="teacher_reports.html",
         context={}
     )
+
+@app.get("/web_reports", response_class=HTMLResponse)
+def web_reports(request: Request):
+    if "user" not in request.session:
+        return RedirectResponse("/", status_code=303)
+
+    if request.session.get("role") != "admin":
+        return RedirectResponse("/", status_code=303)
+
+    return templates.TemplateResponse(
+        request=request,
+        name="web_reports.html",
+        context={}
+    )
