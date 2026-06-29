@@ -1199,6 +1199,17 @@ def web_result(request: Request):
         teacher_class = request.session.get("class_name")
         teacher_division = request.session.get("division")
 
+        # Teacher चे students
+        cursor.execute("""
+            SELECT * FROM students
+            WHERE class_name=%s AND division=%s
+        """, (
+            teacher_class,
+            teacher_division
+        ))
+        students = cursor.fetchall()
+
+        # Teacher चे results
         cursor.execute("""
             SELECT r.*, s.student_name
             FROM results r
@@ -1208,17 +1219,31 @@ def web_result(request: Request):
             teacher_class,
             teacher_division
         ))
+        results = cursor.fetchall()
 
     else:
+        # Admin ला सर्व students
+        cursor.execute("SELECT * FROM students")
+        students = cursor.fetchall()
+
+        # Admin ला सर्व results
         cursor.execute("""
             SELECT r.*, s.student_name
             FROM results r
             JOIN students s ON r.student_id = s.id
         """)
-
-    results = cursor.fetchall()
+        results = cursor.fetchall()
 
     conn.close()
+
+    return templates.TemplateResponse(
+        request=request,
+        name="result.html",
+        context={
+            "students": students,
+            "results": results
+        }
+    )
 
     return templates.TemplateResponse(
         request=request,
