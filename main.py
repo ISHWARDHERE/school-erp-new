@@ -1186,32 +1186,44 @@ def web_attendance_list(request: Request):
     )
 
 @app.get("/web_result", response_class=HTMLResponse)
-def web_result(
-    request: Request,
-    success: str = None
-):
-
+def web_result(request: Request):
     if "user" not in request.session:
-        return RedirectResponse("/", status_code=303)
-
-    if request.session.get("role") not in ["teacher", "admin"]:
         return RedirectResponse("/", status_code=303)
 
     conn = connect_db()
     cursor = conn.cursor(dictionary=True)
 
-    cursor.execute("SELECT id, student_name FROM students")
-    students = cursor.fetchall()
+    user_role = request.session.get("role")
+
+    if user_role == "teacher":
+        teacher_class = request.session.get("class_name")
+        teacher_division = request.session.get("division")
+
+        cursor.execute("""
+            SELECT r.*, s.student_name
+            FROM results r
+            JOIN students s ON r.student_id = s.id
+            WHERE s.class_name=%s AND s.division=%s
+        """, (
+            teacher_class,
+            teacher_division
+        ))
+
+    else:
+        cursor.execute("""
+            SELECT r.*, s.student_name
+            FROM results r
+            JOIN students s ON r.student_id = s.id
+        """)
+
+    results = cursor.fetchall()
 
     conn.close()
 
     return templates.TemplateResponse(
         request=request,
         name="result.html",
-        context={
-            "students": students,
-            "success": success
-        }
+        context={"results": results}
     )
 
 @app.post("/save_result_web")
