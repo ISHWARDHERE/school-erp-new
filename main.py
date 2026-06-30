@@ -1,5 +1,5 @@
 from database import connect_db
-from fastapi import FastAPI, Request, Form, UploadFile, File
+from fastapi import FastAPI, Request, Form, UploadFile, File, Query
 from fastapi.responses import HTMLResponse, RedirectResponse, FileResponse
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
@@ -2620,8 +2620,8 @@ async def save_attendance(request: Request):
 
 @app.post("/parent_login")
 def parent_login(
-    mobile: str = Form(...),
-    password: str = Form(...)
+    mobile: str = Query(...),
+    password: str = Query(...)
 ):
     conn = connect_db()
     cursor = conn.cursor(dictionary=True)
@@ -2692,43 +2692,4 @@ def parent_dashboard_api(student_id: int):
         "fee": fee,
         "attendance": attendance,
         "results": results
-    }
-
-@app.post("/parent_login")
-def parent_login(
-    mobile: str = Query(...),
-    password: str = Query(...)
-):
-    conn = connect_db()
-    cursor = conn.cursor(dictionary=True)
-
-    cursor.execute("""
-        SELECT * FROM users
-        WHERE mobile=%s AND role='parent'
-    """, (mobile,))
-
-    user = cursor.fetchone()
-
-    conn.close()
-
-    if not user:
-        return {
-            "status": "failed",
-            "message": "Parent not found"
-        }
-
-    if bcrypt.checkpw(
-        password.encode("utf-8"),
-        user["password"].encode("utf-8")
-    ):
-        return {
-            "status": "success",
-            "role": "parent",
-            "student_id": user["student_id"],
-            "message": "Login successful"
-        }
-
-    return {
-        "status": "failed",
-        "message": "Wrong password"
     }
