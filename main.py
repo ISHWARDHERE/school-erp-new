@@ -1,5 +1,5 @@
 from database import connect_db
-from fastapi import FastAPI, Request, Form, UploadFile, File
+from fastapi import FastAPI, Request, Form, UploadFile, File, Query
 from fastapi.responses import HTMLResponse, RedirectResponse, FileResponse
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
@@ -12,6 +12,7 @@ import bcrypt
 import pandas as pd
 from fastapi.responses import FileResponse
 from reportlab.lib.colors import HexColor
+from fastapi import Query
 
 SECRET_KEY = os.getenv("SECRET_KEY")
 
