@@ -2628,13 +2628,16 @@ def parent_login(
 
     cursor.execute("""
         SELECT * FROM users
-        WHERE mobile=%s AND role='parent'
+        WHERE mobile=%s
     """, (mobile,))
 
     user = cursor.fetchone()
+
     conn.close()
 
-    if not user:
+    print("User Found:", user)
+
+    if user is None:
         return {
             "status": "failed",
             "message": "Parent not found"
@@ -2646,7 +2649,7 @@ def parent_login(
     ):
         return {
             "status": "success",
-            "role": "parent",
+            "role": user["role"],
             "student_id": user["student_id"],
             "message": "Login successful"
         }
