@@ -1354,17 +1354,18 @@ def web_result_list(request: Request):
         }
     )
 
-@app.get("/parent_details")
-def parent_details():
+@app.get("/parent_details/{student_id}")
+def parent_details(student_id: int):
     conn = connect_db()
     cursor = conn.cursor(dictionary=True)
 
     cursor.execute("""
         SELECT * FROM students
-        LIMIT 1
-    """)
+        WHERE id=%s
+    """, (student_id,))
 
     student = cursor.fetchone()
+
     conn.close()
 
     return student
@@ -2666,29 +2667,35 @@ def parent_dashboard_api(student_id: int):
     conn = connect_db()
     cursor = conn.cursor(dictionary=True)
 
+    print("Student ID Received:", student_id)
+
     cursor.execute(
         "SELECT * FROM students WHERE id=%s",
         (student_id,)
     )
     student = cursor.fetchone()
+    print("Student Data:", student)
 
     cursor.execute(
         "SELECT * FROM fees WHERE student_id=%s",
         (student_id,)
     )
     fee = cursor.fetchone()
+    print("Fee Data:", fee)
 
     cursor.execute(
         "SELECT * FROM attendance WHERE student_id=%s",
         (student_id,)
     )
     attendance = cursor.fetchall()
+    print("Attendance:", attendance)
 
     cursor.execute(
         "SELECT * FROM results WHERE student_id=%s",
         (student_id,)
     )
     results = cursor.fetchall()
+    print("Results:", results)
 
     conn.close()
 
