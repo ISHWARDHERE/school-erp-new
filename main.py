@@ -2707,3 +2707,51 @@ def parent_dashboard_api(student_id: int):
         "attendance": attendance,
         "results": results
     }
+
+@app.get("/view_notices_api")
+def view_notices_api():
+    conn = connect_db()
+    cursor = conn.cursor(dictionary=True)
+
+    cursor.execute("""
+        SELECT * FROM notices
+        ORDER BY id DESC
+    """)
+
+    notices = cursor.fetchall()
+
+    conn.close()
+
+    return notices
+
+@app.get("/parent_homework_api/{student_id}")
+def parent_homework_api(student_id: int):
+    conn = connect_db()
+    cursor = conn.cursor(dictionary=True)
+
+    cursor.execute("""
+        SELECT class_name
+        FROM students
+        WHERE id=%s
+    """, (student_id,))
+
+    student = cursor.fetchone()
+
+    if not student:
+        conn.close()
+        return []
+
+    class_name = student["class_name"]
+
+    cursor.execute("""
+        SELECT *
+        FROM homework
+        WHERE class_name=%s
+        ORDER BY id DESC
+    """, (class_name,))
+
+    homework = cursor.fetchall()
+
+    conn.close()
+
+    return homework    
