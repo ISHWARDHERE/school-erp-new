@@ -2624,16 +2624,22 @@ def parent_login(
     password: str = Query(...)
 ):
     conn = connect_db()
-    cursor = conn.cursor(dictionary=True)
+    cursor = conn.cursor()
 
-    mobile = mobile.strip()
+    print("Mobile Received:", mobile)
+
+    cursor.execute("SELECT * FROM users")
+    all_users = cursor.fetchall()
+    print("All Users:", all_users)
 
     cursor.execute("""
         SELECT * FROM users
-        WHERE TRIM(mobile)=%s
+        WHERE mobile=?
     """, (mobile,))
 
     user = cursor.fetchone()
+
+    print("User Found:", user)
 
     conn.close()
 
