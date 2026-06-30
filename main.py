@@ -2624,27 +2624,21 @@ def parent_login(
     password: str = Query(...)
 ):
     conn = connect_db()
-    cursor = conn.cursor()
+    cursor = conn.cursor(dictionary=True)
 
-    print("Mobile Received:", mobile)
-
-    cursor.execute("SELECT * FROM users")
-    all_users = cursor.fetchall()
-    print("All Users:", all_users)
+    mobile = mobile.strip()
 
     cursor.execute("""
         SELECT * FROM users
-        WHERE mobile=?
+        WHERE mobile=%s
     """, (mobile,))
 
     user = cursor.fetchone()
 
+    print("Mobile Received:", mobile)
     print("User Found:", user)
 
     conn.close()
-
-    print("Mobile Received:", mobile)
-    print("User Found:", user)
 
     if user is None:
         return {
