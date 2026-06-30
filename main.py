@@ -2667,37 +2667,39 @@ def parent_dashboard_api(student_id: int):
     conn = connect_db()
     cursor = conn.cursor(dictionary=True)
 
-    print("Student ID Received:", student_id)
-
     cursor.execute(
         "SELECT * FROM students WHERE id=%s",
         (student_id,)
     )
     student = cursor.fetchone()
-    print("Student Data:", student)
 
     cursor.execute(
         "SELECT * FROM fees WHERE student_id=%s",
         (student_id,)
     )
     fee = cursor.fetchone()
-    print("Fee Data:", fee)
 
     cursor.execute(
         "SELECT * FROM attendance WHERE student_id=%s",
         (student_id,)
     )
     attendance = cursor.fetchall()
-    print("Attendance:", attendance)
 
     cursor.execute(
         "SELECT * FROM results WHERE student_id=%s",
         (student_id,)
     )
     results = cursor.fetchall()
-    print("Results:", results)
 
     conn.close()
+
+    # हे इथे add कर
+    print("Returning:", {
+        "student": student,
+        "fee": fee,
+        "attendance": attendance,
+        "results": results
+    })
 
     return {
         "student": student,
