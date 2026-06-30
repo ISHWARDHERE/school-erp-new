@@ -2626,15 +2626,18 @@ def parent_login(
     conn = connect_db()
     cursor = conn.cursor(dictionary=True)
 
+    mobile = mobile.strip()
+
     cursor.execute("""
         SELECT * FROM users
-        WHERE mobile=%s
+        WHERE TRIM(mobile)=%s
     """, (mobile,))
 
     user = cursor.fetchone()
 
     conn.close()
 
+    print("Mobile Received:", mobile)
     print("User Found:", user)
 
     if user is None:
@@ -2650,8 +2653,7 @@ def parent_login(
         return {
             "status": "success",
             "role": user["role"],
-            "student_id": user["student_id"],
-            "message": "Login successful"
+            "student_id": user["student_id"]
         }
 
     return {
