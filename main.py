@@ -1,5 +1,5 @@
 from database import connect_db
-from fastapi import FastAPI, Request, Form, UploadFile, File, Query
+from fastapi import FastAPI, Request, Form, UploadFile, File
 from fastapi.responses import HTMLResponse, RedirectResponse, FileResponse
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
@@ -2632,11 +2632,13 @@ def parent_login(
     """, (mobile,))
 
     user = cursor.fetchone()
-
     conn.close()
 
     if not user:
-        return {"status": "error", "message": "Parent not found"}
+        return {
+            "status": "failed",
+            "message": "Parent not found"
+        }
 
     if bcrypt.checkpw(
         password.encode("utf-8"),
@@ -2644,12 +2646,13 @@ def parent_login(
     ):
         return {
             "status": "success",
+            "role": "parent",
             "student_id": user["student_id"],
             "message": "Login successful"
         }
 
     return {
-        "status": "error",
+        "status": "failed",
         "message": "Wrong password"
     }
 
